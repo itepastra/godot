@@ -3,8 +3,8 @@
 #include "core/object/ref_counted.h"
 #include "stim.h"
 
-class QEC : public RefCounted {
-	GDCLASS(QEC, RefCounted);
+class Qec : public RefCounted {
+	GDCLASS(Qec, RefCounted);
 
 	int count;
 
@@ -16,5 +16,5 @@ public:
 	void reset();
 	int get_total() const;
 
-	QEC();
+	Qec();
 };
