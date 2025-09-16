@@ -3,9 +3,9 @@
 
 #include <iostream>
 
-#include "../dem/detector_error_model.h"
-#include "../diagram/basic_3d_diagram.h"
-#include "../diagram/circuit_timeline_helper.h"
+#include "../../dem/detector_error_model.h"
+#include "../../diagram/basic_3d_diagram.h"
+#include "../../diagram/circuit_timeline_helper.h"
 
 namespace stim_draw_internal {
 

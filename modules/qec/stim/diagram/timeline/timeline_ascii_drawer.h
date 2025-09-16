@@ -19,10 +19,10 @@
 
 #include <iostream>
 
-#include "../circuit/circuit.h"
-#include "../diagram/ascii_diagram.h"
-#include "../diagram/circuit_timeline_helper.h"
-#include "../diagram/lattice_map.h"
+#include "../../circuit/circuit.h"
+#include "../../diagram/ascii_diagram.h"
+#include "../../diagram/circuit_timeline_helper.h"
+#include "../../diagram/lattice_map.h"
 
 namespace stim_draw_internal {
 

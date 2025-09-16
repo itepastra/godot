@@ -1,8 +1,8 @@
-#include "../diagram/timeline/timeline_ascii_drawer.h"
+#include "../../diagram/timeline/timeline_ascii_drawer.h"
 
-#include "../diagram/circuit_timeline_helper.h"
-#include "../diagram/diagram_util.h"
-#include "../util_bot/str_util.h"
+#include "../../diagram/circuit_timeline_helper.h"
+#include "../../diagram/diagram_util.h"
+#include "../../util_bot/str_util.h"
 
 using namespace stim;
 using namespace stim_draw_internal;

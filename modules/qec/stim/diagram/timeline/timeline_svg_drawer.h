@@ -19,13 +19,13 @@
 
 #include <iostream>
 
-#include "../circuit/circuit.h"
-#include "../diagram/ascii_diagram.h"
-#include "../diagram/circuit_timeline_helper.h"
-#include "../diagram/detector_slice/detector_slice_set.h"
-#include "../diagram/gate_data_svg.h"
-#include "../diagram/lattice_map.h"
-#include "../util_bot/str_util.h"
+#include "../../circuit/circuit.h"
+#include "../../diagram/ascii_diagram.h"
+#include "../../diagram/circuit_timeline_helper.h"
+#include "../../diagram/detector_slice/detector_slice_set.h"
+#include "../../diagram/gate_data_svg.h"
+#include "../../diagram/lattice_map.h"
+#include "../../util_bot/str_util.h"
 
 namespace stim_draw_internal {
 

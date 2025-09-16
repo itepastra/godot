@@ -1,12 +1,12 @@
-#include "../diagram/detector_slice/detector_slice_set.h"
+#include "detector_slice_set.h"
 
-#include "../dem/detector_error_model.h"
-#include "../diagram/coord.h"
-#include "../diagram/diagram_util.h"
-#include "../diagram/timeline/timeline_ascii_drawer.h"
-#include "../simulators/error_analyzer.h"
-#include "../util_bot/arg_parse.h"
-#include "../util_bot/str_util.h"
+#include "../../dem/detector_error_model.h"
+#include "../../diagram/coord.h"
+#include "../../diagram/diagram_util.h"
+#include "../../diagram/timeline/timeline_ascii_drawer.h"
+#include "../../simulators/error_analyzer.h"
+#include "../../util_bot/arg_parse.h"
+#include "../../util_bot/str_util.h"
 
 constexpr float SLICE_WINDOW_GAP = 1.1f;
 
