@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/mem/simd_bits.h"
+#include "../mem/simd_bits.h"
 
 #include <cstring>
 
-#include "stim/perf.perf.h"
+#include "../perf.perf.h"
 
 using namespace stim;
 

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/mem/simd_util.h"
+#include "../mem/simd_util.h"
 
 template <uint64_t mask, uint64_t shift>
 void inplace_transpose_64x64_pass(uint64_t* data, size_t stride) {

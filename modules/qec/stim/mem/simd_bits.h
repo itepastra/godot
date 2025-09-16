@@ -20,8 +20,8 @@
 #include <cstdint>
 #include <random>
 
-#include "stim/mem/bit_ref.h"
-#include "stim/mem/simd_bits_range_ref.h"
+#include "../mem/bit_ref.h"
+#include "../mem/simd_bits_range_ref.h"
 
 namespace stim {
 
@@ -205,6 +205,6 @@ std::ostream &operator<<(std::ostream &out, const simd_bits<W> m);
 
 }  // namespace stim
 
-#include "stim/mem/simd_bits.inl"
+#include "../mem/simd_bits.inl"
 
 #endif

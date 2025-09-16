@@ -17,7 +17,7 @@
 #ifndef _STIM_MEM_SIMD_BIT_TABLE_H
 #define _STIM_MEM_SIMD_BIT_TABLE_H
 
-#include "stim/mem/simd_bits.h"
+#include "../mem/simd_bits.h"
 
 namespace stim {
 
@@ -188,6 +188,6 @@ constexpr uint8_t lg(size_t k) {
 
 }  // namespace stim
 
-#include "stim/mem/simd_bit_table.inl"
+#include "../mem/simd_bit_table.inl"
 
 #endif

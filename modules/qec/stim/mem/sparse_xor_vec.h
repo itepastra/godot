@@ -25,7 +25,7 @@
 #include <sstream>
 #include <vector>
 
-#include "stim/mem/monotonic_buffer.h"
+#include "../mem/monotonic_buffer.h"
 
 namespace stim {
 

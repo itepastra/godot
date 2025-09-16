@@ -18,7 +18,7 @@
 #include <random>
 #include <sstream>
 
-#include "stim/mem/simd_util.h"
+#include "../mem/simd_util.h"
 
 namespace stim {
 

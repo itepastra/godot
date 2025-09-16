@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-#include "stim/mem/sparse_xor_vec.h"
+#include "../mem/sparse_xor_vec.h"

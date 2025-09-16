@@ -22,8 +22,8 @@
 #include <random>
 #include <vector>
 
-#include "stim/mem/bit_ref.h"
-#include "stim/mem/simd_word.h"
+#include "../mem/bit_ref.h"
+#include "../mem/simd_word.h"
 
 namespace stim {
 
@@ -335,6 +335,6 @@ std::ostream &operator<<(std::ostream &out, const simd_bits_range_ref<W> m);
 
 }  // namespace stim
 
-#include "stim/mem/simd_bits_range_ref.inl"
+#include "../mem/simd_bits_range_ref.inl"
 
 #endif

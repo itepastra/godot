@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/mem/bit_ref.h"
+#include "../mem/bit_ref.h"
 
 using namespace stim;
 
