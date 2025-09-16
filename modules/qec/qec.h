@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/object/ref_counted.h"
-#include "stim.h"
+// #include "stim.h"
 
 class Qec : public RefCounted {
 	GDCLASS(Qec, RefCounted);
