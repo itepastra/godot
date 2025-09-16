@@ -3,4 +3,4 @@ Import('env')
 qec_env = env.Clone()
 qec_env.add_source_files(env.modules_sources, "*.cc")
 # Append CCFLAGS flags for both C and C++ code.
-qec_env.Append(CXXFLAGS=['-fexception', '-std=c++20'])
+qec_env.Append(CXXFLAGS=['-fexceptions', '-std=c++20'])
