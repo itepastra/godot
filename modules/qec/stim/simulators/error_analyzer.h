@@ -20,7 +20,7 @@
 #include <algorithm>
 #include <map>
 #include <memory>
-#include <../stabilizers/pauli_string.h>
+#include "../stabilizers/pauli_string.h"
 #include <vector>
 
 #include "sparse_rev_frame_tracker.h"
