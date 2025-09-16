@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/cmd/command_help.h"
+#include "../cmd/command_help.h"
 
 #include <algorithm>
 #include <cstring>
@@ -20,23 +20,23 @@
 #include <map>
 #include <set>
 
-#include "stim/circuit/circuit.h"
-#include "stim/cmd/command_analyze_errors.h"
-#include "stim/cmd/command_convert.h"
-#include "stim/cmd/command_detect.h"
-#include "stim/cmd/command_diagram.h"
-#include "stim/cmd/command_explain_errors.h"
-#include "stim/cmd/command_gen.h"
-#include "stim/cmd/command_m2d.h"
-#include "stim/cmd/command_repl.h"
-#include "stim/cmd/command_sample.h"
-#include "stim/cmd/command_sample_dem.h"
-#include "stim/gates/gates.h"
-#include "stim/io/stim_data_formats.h"
-#include "stim/stabilizers/flow.h"
-#include "stim/stabilizers/tableau.h"
-#include "stim/util_bot/arg_parse.h"
-#include "stim/util_top/mbqc_decomposition.h"
+#include "../circuit/circuit.h"
+#include "../cmd/command_analyze_errors.h"
+#include "../cmd/command_convert.h"
+#include "../cmd/command_detect.h"
+#include "../cmd/command_diagram.h"
+#include "../cmd/command_explain_errors.h"
+#include "../cmd/command_gen.h"
+#include "../cmd/command_m2d.h"
+#include "../cmd/command_repl.h"
+#include "../cmd/command_sample.h"
+#include "../cmd/command_sample_dem.h"
+#include "../gates/gates.h"
+#include "../io/stim_data_formats.h"
+#include "../stabilizers/flow.h"
+#include "../stabilizers/tableau.h"
+#include "../util_bot/arg_parse.h"
+#include "../util_top/mbqc_decomposition.h"
 
 using namespace stim;
 

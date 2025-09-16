@@ -1,4 +1,4 @@
-#include "stim/util_top/reference_sample_tree.h"
+#include "../util_top/reference_sample_tree.h"
 
 #if defined(_WIN32)
 #include <intrin.h>

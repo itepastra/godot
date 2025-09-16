@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "stim/circuit/circuit.h"
+#include "../circuit/circuit.h"
 
 namespace stim_draw_internal {
 

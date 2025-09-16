@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "stim/circuit/circuit.h"
+#include "../circuit/circuit.h"
 
 namespace stim {
 struct CircuitGenParameters {

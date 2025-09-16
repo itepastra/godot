@@ -21,7 +21,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "stim/mem/span_ref.h"
+#include "../mem/span_ref.h"
 
 namespace stim {
 

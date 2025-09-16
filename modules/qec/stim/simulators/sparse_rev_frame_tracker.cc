@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/simulators/sparse_rev_frame_tracker.h"
+#include "../simulators/sparse_rev_frame_tracker.h"
 
-#include "stim/circuit/gate_decomposition.h"
+#include "../circuit/gate_decomposition.h"
 
 using namespace stim;
 

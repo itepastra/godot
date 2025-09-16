@@ -1,4 +1,4 @@
-#include "stim/diagram/crumble_data.h"
+#include "../diagram/crumble_data.h"
 
 std::string stim_draw_internal::make_crumble_html() {
     std::string result;
@@ -59,7 +59,7 @@ std::string stim_draw_internal::make_crumble_html() {
 )CRUMBLE_PART");
     result.append(R"CRUMBLE_PART(                <br>
 )CRUMBLE_PART");
-    result.append(R"CRUMBLE_PART(                <a href="https://github.com/quantumlib/Stim/blob/main/glue/crumble/README.md">Read the manual</a>
+    result.append(R"CRUMBLE_PART(                <a href="https://github.com/quantumlib/../blob/main/glue/crumble/README.md">Read the manual</a>
 )CRUMBLE_PART");
     result.append(R"CRUMBLE_PART(                <br>
 )CRUMBLE_PART");

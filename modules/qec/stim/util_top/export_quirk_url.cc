@@ -1,6 +1,6 @@
-#include "stim/util_top/export_quirk_url.h"
+#include "../util_top/export_quirk_url.h"
 
-#include "stim/circuit/gate_decomposition.h"
+#include "../circuit/gate_decomposition.h"
 
 using namespace stim;
 

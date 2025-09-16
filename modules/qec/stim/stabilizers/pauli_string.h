@@ -20,8 +20,8 @@
 #include <functional>
 #include <iostream>
 
-#include "stim/mem/simd_bits.h"
-#include "stim/stabilizers/pauli_string_ref.h"
+#include "../mem/simd_bits.h"
+#include "../stabilizers/pauli_string_ref.h"
 
 namespace stim {
 
@@ -149,6 +149,6 @@ std::ostream &operator<<(std::ostream &out, const PauliString<W> &ps);
 
 }  // namespace stim
 
-#include "stim/stabilizers/pauli_string.inl"
+#include "../stabilizers/pauli_string.inl"
 
 #endif

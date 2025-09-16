@@ -17,7 +17,7 @@
 #ifndef _STIM_UTIL_TOP_COUNT_DETERMINED_MEASUREMENTS_H
 #define _STIM_UTIL_TOP_COUNT_DETERMINED_MEASUREMENTS_H
 
-#include "stim/circuit/circuit.h"
+#include "../circuit/circuit.h"
 
 namespace stim {
 
@@ -26,6 +26,6 @@ uint64_t count_determined_measurements(const Circuit &circuit, bool unknown_inpu
 
 }  // namespace stim
 
-#include "stim/util_top/count_determined_measurements.inl"
+#include "../util_top/count_determined_measurements.inl"
 
 #endif

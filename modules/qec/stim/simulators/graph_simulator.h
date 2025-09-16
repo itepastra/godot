@@ -17,10 +17,10 @@
 #ifndef _STIM_SIMULATORS_GRAPH_SIMULATOR_H
 #define _STIM_SIMULATORS_GRAPH_SIMULATOR_H
 
-#include "stim/circuit/circuit.h"
-#include "stim/mem/simd_bit_table.h"
-#include "stim/mem/simd_bits.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../circuit/circuit.h"
+#include "../mem/simd_bit_table.h"
+#include "../mem/simd_bits.h"
+#include "../stabilizers/pauli_string.h"
 
 namespace stim {
 

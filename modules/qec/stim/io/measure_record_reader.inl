@@ -16,7 +16,7 @@
 
 #include <algorithm>
 
-#include "stim/io/measure_record_reader.h"
+#include "../io/measure_record_reader.h"
 
 namespace stim {
 

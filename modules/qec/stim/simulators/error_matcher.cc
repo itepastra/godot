@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/simulators/error_matcher.h"
+#include "../simulators/error_matcher.h"
 
 #include <queue>
 #include <sstream>

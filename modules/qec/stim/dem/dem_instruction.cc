@@ -1,10 +1,10 @@
-#include "stim/dem/dem_instruction.h"
+#include "../dem/dem_instruction.h"
 
 #include <cmath>
 
-#include "stim/dem/detector_error_model.h"
-#include "stim/util_bot/arg_parse.h"
-#include "stim/util_bot/str_util.h"
+#include "../dem/detector_error_model.h"
+#include "../util_bot/arg_parse.h"
+#include "../util_bot/str_util.h"
 
 using namespace stim;
 

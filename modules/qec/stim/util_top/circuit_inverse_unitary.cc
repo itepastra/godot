@@ -1,4 +1,4 @@
-#include "stim/util_top/circuit_inverse_unitary.h"
+#include "../util_top/circuit_inverse_unitary.h"
 
 using namespace stim;
 

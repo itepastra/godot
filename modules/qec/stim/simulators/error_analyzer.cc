@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/simulators/error_analyzer.h"
+#include "../simulators/error_analyzer.h"
 
 #include <algorithm>
 #include <queue>
 #include <sstream>
 
-#include "stim/circuit/gate_decomposition.h"
-#include "stim/stabilizers/pauli_string.h"
-#include "stim/util_bot/error_decomp.h"
+#include "../circuit/gate_decomposition.h"
+#include "../stabilizers/pauli_string.h"
+#include "../util_bot/error_decomp.h"
 
 using namespace stim;
 

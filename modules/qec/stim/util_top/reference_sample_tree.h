@@ -1,7 +1,7 @@
 #ifndef _STIM_UTIL_TOP_REFERENCE_SAMPLE_TREE_H
 #define _STIM_UTIL_TOP_REFERENCE_SAMPLE_TREE_H
 
-#include "stim/simulators/tableau_simulator.h"
+#include "../simulators/tableau_simulator.h"
 
 namespace stim {
 
@@ -79,6 +79,6 @@ uint64_t max_feedback_lookback_in_loop(const Circuit &loop);
 
 }  // namespace stim
 
-#include "stim/util_top/reference_sample_tree.inl"
+#include "../util_top/reference_sample_tree.inl"
 
 #endif

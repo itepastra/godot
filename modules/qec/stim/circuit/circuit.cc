@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/circuit/circuit.h"
+#include "../circuit/circuit.h"
 
 #include <algorithm>
 #include <string>
 #include <utility>
 
-#include "stim/circuit/gate_target.h"
-#include "stim/gates/gates.h"
-#include "stim/util_bot/str_util.h"
+#include "../circuit/gate_target.h"
+#include "../gates/gates.h"
+#include "../util_bot/str_util.h"
 
 using namespace stim;
 

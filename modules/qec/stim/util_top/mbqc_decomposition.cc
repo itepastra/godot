@@ -1,4 +1,4 @@
-#include "stim/util_top/mbqc_decomposition.h"
+#include "../util_top/mbqc_decomposition.h"
 
 using namespace stim;
 

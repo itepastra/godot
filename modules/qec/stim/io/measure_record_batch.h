@@ -17,8 +17,8 @@
 #ifndef _STIM_IO_MEASURE_RECORD_BATCH_H
 #define _STIM_IO_MEASURE_RECORD_BATCH_H
 
-#include "stim/circuit/circuit_instruction.h"
-#include "stim/io/measure_record_batch_writer.h"
+#include "../circuit/circuit_instruction.h"
+#include "../io/measure_record_batch_writer.h"
 
 namespace stim {
 
@@ -83,6 +83,6 @@ struct MeasureRecordBatch {
 
 }  // namespace stim
 
-#include "stim/io/measure_record_batch.inl"
+#include "../io/measure_record_batch.inl"
 
 #endif

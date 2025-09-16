@@ -1,8 +1,8 @@
 #ifndef _STIM_UTIL_TOP_CIRCUIT_VS_TABLEAU_H
 #define _STIM_UTIL_TOP_CIRCUIT_VS_TABLEAU_H
 
-#include "stim/circuit/circuit.h"
-#include "stim/stabilizers/tableau.h"
+#include "../circuit/circuit.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 
@@ -63,6 +63,6 @@ Circuit tableau_to_circuit_elimination_method(const Tableau<W> &tableau);
 
 }  // namespace stim
 
-#include "stim/util_top/circuit_vs_tableau.inl"
+#include "../util_top/circuit_vs_tableau.inl"
 
 #endif

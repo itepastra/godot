@@ -1,4 +1,4 @@
-#include "stim/gen/gen_rep_code.h"
+#include "../gen/gen_rep_code.h"
 
 using namespace stim;
 

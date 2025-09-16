@@ -24,10 +24,10 @@
 #include <random>
 #include <sstream>
 
-#include "stim/circuit/circuit.h"
-#include "stim/io/measure_record.h"
-#include "stim/stabilizers/tableau.h"
-#include "stim/stabilizers/tableau_transposed_raii.h"
+#include "../circuit/circuit.h"
+#include "../io/measure_record.h"
+#include "../stabilizers/tableau.h"
+#include "../stabilizers/tableau_transposed_raii.h"
 
 namespace stim {
 
@@ -325,6 +325,6 @@ void perform_pauli_errors_via_correlated_errors(
 
 }  // namespace stim
 
-#include "stim/simulators/tableau_simulator.inl"
+#include "../simulators/tableau_simulator.inl"
 
 #endif

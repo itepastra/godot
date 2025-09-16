@@ -21,10 +21,10 @@
 #include <iostream>
 #include <unordered_map>
 
-#include "stim/mem/simd_bit_table.h"
-#include "stim/mem/simd_util.h"
-#include "stim/mem/span_ref.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../mem/simd_bit_table.h"
+#include "../mem/simd_util.h"
+#include "../mem/span_ref.h"
+#include "../stabilizers/pauli_string.h"
 
 namespace stim {
 
@@ -245,7 +245,7 @@ std::ostream &operator<<(std::ostream &out, const Tableau<W> &ps);
 
 }  // namespace stim
 
-#include "stim/stabilizers/tableau.inl"
-#include "stim/stabilizers/tableau_specialized_prepend.inl"
+#include "../stabilizers/tableau.inl"
+#include "../stabilizers/tableau_specialized_prepend.inl"
 
 #endif

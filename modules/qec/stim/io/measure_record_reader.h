@@ -19,10 +19,10 @@
 
 #include <memory>
 
-#include "stim/io/sparse_shot.h"
-#include "stim/io/stim_data_formats.h"
-#include "stim/mem/simd_bit_table.h"
-#include "stim/mem/span_ref.h"
+#include "../io/sparse_shot.h"
+#include "../io/stim_data_formats.h"
+#include "../mem/simd_bit_table.h"
+#include "../mem/span_ref.h"
 
 namespace stim {
 
@@ -283,6 +283,6 @@ size_t read_file_data_into_shot_table(
 
 }  // namespace stim
 
-#include "stim/io/measure_record_reader.inl"
+#include "../io/measure_record_reader.inl"
 
 #endif

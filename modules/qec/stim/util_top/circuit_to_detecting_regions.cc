@@ -1,6 +1,6 @@
-#include "stim/util_top/circuit_to_detecting_regions.h"
+#include "../util_top/circuit_to_detecting_regions.h"
 
-#include "stim/simulators/sparse_rev_frame_tracker.h"
+#include "../simulators/sparse_rev_frame_tracker.h"
 
 using namespace stim;
 

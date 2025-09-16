@@ -20,9 +20,9 @@
 #include <functional>
 #include <iostream>
 
-#include "stim/circuit/circuit.h"
-#include "stim/dem/detector_error_model.h"
-#include "stim/diagram/coord.h"
+#include "../circuit/circuit.h"
+#include "../dem/detector_error_model.h"
+#include "../diagram/coord.h"
 
 namespace stim_draw_internal {
 

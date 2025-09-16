@@ -1,8 +1,8 @@
 #ifndef _STIM_UTIL_TOP_STABILIZERS_VS_AMPLITUDES_H
 #define _STIM_UTIL_TOP_STABILIZERS_VS_AMPLITUDES_H
 
-#include "stim/circuit/circuit.h"
-#include "stim/stabilizers/tableau.h"
+#include "../circuit/circuit.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 
@@ -26,6 +26,6 @@ Tableau<W> unitary_to_tableau(const std::vector<std::vector<std::complex<float>>
 
 }  // namespace stim
 
-#include "stim/util_top/stabilizers_vs_amplitudes.inl"
+#include "../util_top/stabilizers_vs_amplitudes.inl"
 
 #endif

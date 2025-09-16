@@ -1,4 +1,4 @@
-#include "stim/gen/gen_surface_code.h"
+#include "../gen/gen_surface_code.h"
 
 #include <algorithm>
 #include <array>

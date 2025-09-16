@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/cmd/command_repl.h"
+#include "../cmd/command_repl.h"
 
 #include "command_help.h"
-#include "stim/simulators/tableau_simulator.h"
-#include "stim/util_bot/arg_parse.h"
-#include "stim/util_bot/probability_util.h"
+#include "../simulators/tableau_simulator.h"
+#include "../util_bot/arg_parse.h"
+#include "../util_bot/probability_util.h"
 
 using namespace stim;
 

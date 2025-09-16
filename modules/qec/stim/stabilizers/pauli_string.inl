@@ -16,8 +16,8 @@
 #include <cstring>
 #include <string>
 
-#include "stim/mem/simd_util.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../mem/simd_util.h"
+#include "../stabilizers/pauli_string.h"
 
 namespace stim {
 

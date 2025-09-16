@@ -1,6 +1,6 @@
-#include "stim/gen/circuit_gen_params.h"
+#include "../gen/circuit_gen_params.h"
 
-#include "stim/util_bot/arg_parse.h"
+#include "../util_bot/arg_parse.h"
 
 using namespace stim;
 

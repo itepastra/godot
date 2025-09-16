@@ -22,8 +22,8 @@
 #include <random>
 #include <unordered_map>
 
-#include "stim/circuit/circuit.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../circuit/circuit.h"
+#include "../stabilizers/pauli_string.h"
 
 namespace stim {
 

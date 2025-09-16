@@ -1,7 +1,7 @@
 #ifndef _STIM_UTIL_TOP_CIRCUIT_TO_DEM_H
 #define _STIM_UTIL_TOP_CIRCUIT_TO_DEM_H
 
-#include "stim/simulators/error_analyzer.h"
+#include "../simulators/error_analyzer.h"
 
 namespace stim {
 

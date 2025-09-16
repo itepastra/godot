@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include "stim/circuit/gate_decomposition.h"
+#include "../circuit/gate_decomposition.h"
 
 #include <span>
 
-#include "stim/stabilizers/pauli_string.h"
+#include "../stabilizers/pauli_string.h"
 
 using namespace stim;
 

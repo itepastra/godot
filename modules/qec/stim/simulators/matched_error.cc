@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/simulators/matched_error.h"
+#include "../simulators/matched_error.h"
 
 #include <algorithm>
 #include <queue>
 #include <sstream>
 
-#include "stim/util_bot/str_util.h"
+#include "../util_bot/str_util.h"
 
 using namespace stim;
 

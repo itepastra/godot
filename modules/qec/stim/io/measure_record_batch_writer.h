@@ -17,8 +17,8 @@
 #ifndef _STIM_IO_MEASURE_RECORD_BATCH_WRITER_H
 #define _STIM_IO_MEASURE_RECORD_BATCH_WRITER_H
 
-#include "stim/io/measure_record_writer.h"
-#include "stim/mem/simd_bit_table.h"
+#include "../io/measure_record_writer.h"
+#include "../mem/simd_bit_table.h"
 
 namespace stim {
 

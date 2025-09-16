@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include "stim/io/sparse_shot.h"
+#include "../io/sparse_shot.h"
 
 #include <sstream>
 
-#include "stim/util_bot/str_util.h"
+#include "../util_bot/str_util.h"
 
 using namespace stim;
 

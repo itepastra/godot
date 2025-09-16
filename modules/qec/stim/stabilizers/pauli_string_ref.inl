@@ -15,11 +15,11 @@
 #include <cassert>
 #include <sstream>
 
-#include "stim/circuit/circuit.h"
-#include "stim/circuit/gate_decomposition.h"
-#include "stim/mem/simd_util.h"
-#include "stim/stabilizers/pauli_string.h"
-#include "stim/stabilizers/tableau.h"
+#include "../circuit/circuit.h"
+#include "../circuit/gate_decomposition.h"
+#include "../mem/simd_util.h"
+#include "../stabilizers/pauli_string.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 

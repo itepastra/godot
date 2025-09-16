@@ -1,4 +1,4 @@
-#include "stim/diagram/gate_data_3d_texture_data.h"
+#include "../diagram/gate_data_3d_texture_data.h"
 
 std::string stim_draw_internal::make_gate_3d_texture_data_uri() {
     std::string result;

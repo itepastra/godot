@@ -17,8 +17,8 @@
 #ifndef _STIM_SEARCH_GRAPHLIKE_GRAPH_H
 #define _STIM_SEARCH_GRAPHLIKE_GRAPH_H
 
-#include "stim/dem/detector_error_model.h"
-#include "stim/search/graphlike/node.h"
+#include "../dem/detector_error_model.h"
+#include "../search/graphlike/node.h"
 
 namespace stim {
 

@@ -17,13 +17,13 @@
 #ifndef _STIM_CMD_COMMAND_CONVERT_H
 #define _STIM_CMD_COMMAND_CONVERT_H
 
-#include "stim/util_bot/arg_parse.h"
+#include "../util_bot/arg_parse.h"
 
 namespace stim {
 
 int command_convert(int argc, const char **argv);
 SubCommandHelp command_convert_help();
 
-}  // namespace stim
+} // namespace stim
 
 #endif

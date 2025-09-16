@@ -1,4 +1,4 @@
-#include "stim/diagram/gltf.h"
+#include "../diagram/gltf.h"
 
 #include <iostream>
 

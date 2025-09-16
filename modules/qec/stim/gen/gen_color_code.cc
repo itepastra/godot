@@ -1,4 +1,4 @@
-#include "stim/gen/gen_color_code.h"
+#include "../gen/gen_color_code.h"
 
 #include <algorithm>
 #include <array>

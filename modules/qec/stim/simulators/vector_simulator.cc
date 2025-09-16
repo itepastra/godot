@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/simulators/vector_simulator.h"
+#include "../simulators/vector_simulator.h"
 
 #include <cassert>
 
-#include "stim/gates/gates.h"
-#include "stim/mem/simd_util.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../gates/gates.h"
+#include "../mem/simd_util.h"
+#include "../stabilizers/pauli_string.h"
 
 using namespace stim;
 

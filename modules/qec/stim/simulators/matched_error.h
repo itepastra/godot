@@ -17,8 +17,8 @@
 #ifndef _STIM_SIMULATORS_MATCHED_ERROR_H
 #define _STIM_SIMULATORS_MATCHED_ERROR_H
 
-#include "stim/circuit/gate_target.h"
-#include "stim/dem/detector_error_model.h"
+#include "../circuit/gate_target.h"
+#include "../dem/detector_error_model.h"
 
 namespace stim {
 

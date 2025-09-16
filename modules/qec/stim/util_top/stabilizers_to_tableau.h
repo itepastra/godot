@@ -1,10 +1,10 @@
 #ifndef _STIM_STABILIZERS_CONVERSIONS_H
 #define _STIM_STABILIZERS_CONVERSIONS_H
 
-#include "stim/circuit/circuit.h"
-#include "stim/dem/dem_instruction.h"
-#include "stim/stabilizers/flex_pauli_string.h"
-#include "stim/stabilizers/tableau.h"
+#include "../circuit/circuit.h"
+#include "../dem/dem_instruction.h"
+#include "../stabilizers/flex_pauli_string.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 
@@ -30,6 +30,6 @@ Tableau<W> stabilizers_to_tableau(
 
 }  // namespace stim
 
-#include "stim/util_top/stabilizers_to_tableau.inl"
+#include "../util_top/stabilizers_to_tableau.inl"
 
 #endif

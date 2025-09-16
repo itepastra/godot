@@ -14,7 +14,7 @@
 
 #include <cassert>
 
-#include "stim/stabilizers/tableau.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 

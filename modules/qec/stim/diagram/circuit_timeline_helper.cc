@@ -1,4 +1,4 @@
-#include "stim/diagram/circuit_timeline_helper.h"
+#include "../diagram/circuit_timeline_helper.h"
 
 using namespace stim;
 using namespace stim_draw_internal;

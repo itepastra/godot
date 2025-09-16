@@ -1,4 +1,4 @@
-#include "stim/util_bot/error_decomp.h"
+#include "../util_bot/error_decomp.h"
 
 #include <algorithm>
 #include <cmath>

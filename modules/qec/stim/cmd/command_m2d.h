@@ -17,7 +17,7 @@
 #ifndef _STIM_CMD_COMMAND_M2D_H
 #define _STIM_CMD_COMMAND_M2D_H
 
-#include "stim/util_bot/arg_parse.h"
+#include "../util_bot/arg_parse.h"
 
 namespace stim {
 

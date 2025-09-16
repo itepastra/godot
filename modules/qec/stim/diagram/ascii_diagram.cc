@@ -1,8 +1,8 @@
-#include "stim/diagram/ascii_diagram.h"
+#include "../diagram/ascii_diagram.h"
 
 #include <cmath>
 
-#include "stim/mem/span_ref.h"
+#include "../mem/span_ref.h"
 
 using namespace stim;
 using namespace stim_draw_internal;

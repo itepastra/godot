@@ -21,8 +21,8 @@
 #include <string>
 #include <vector>
 
-#include "stim/circuit/gate_target.h"
-#include "stim/gates/gates.h"
+#include "../circuit/gate_target.h"
+#include "../gates/gates.h"
 
 namespace stim {
 

@@ -1,5 +1,5 @@
-#include "stim/util_top/circuit_vs_tableau.h"
-#include "stim/util_top/stabilizers_to_tableau.h"
+#include "../util_top/circuit_vs_tableau.h"
+#include "../util_top/stabilizers_to_tableau.h"
 
 namespace stim {
 

@@ -1,4 +1,4 @@
-#include "stim/diagram/gate_data_svg.h"
+#include "../diagram/gate_data_svg.h"
 
 using namespace stim_draw_internal;
 

@@ -1,9 +1,9 @@
-#include "stim/util_top/simplified_circuit.h"
+#include "../util_top/simplified_circuit.h"
 
 #include <functional>
 
-#include "stim/circuit/gate_decomposition.h"
-#include "stim/mem/simd_bits.h"
+#include "../circuit/gate_decomposition.h"
+#include "../mem/simd_bits.h"
 
 using namespace stim;
 

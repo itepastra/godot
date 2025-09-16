@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/util_top/transform_without_feedback.h"
+#include "../util_top/transform_without_feedback.h"
 
 #include <algorithm>
 #include <queue>
 #include <sstream>
 
-#include "stim/circuit/gate_decomposition.h"
-#include "stim/simulators/sparse_rev_frame_tracker.h"
+#include "../circuit/gate_decomposition.h"
+#include "../simulators/sparse_rev_frame_tracker.h"
 
 using namespace stim;
 

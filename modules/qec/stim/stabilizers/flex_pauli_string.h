@@ -17,8 +17,8 @@
 
 #include <complex>
 
-#include "stim/mem/sparse_xor_vec.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../mem/sparse_xor_vec.h"
+#include "../stabilizers/pauli_string.h"
 
 namespace stim {
 

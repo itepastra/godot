@@ -20,10 +20,10 @@
 #include <iostream>
 #include <unordered_map>
 
-#include "stim/mem/simd_bit_table.h"
-#include "stim/mem/simd_util.h"
-#include "stim/stabilizers/pauli_string.h"
-#include "stim/stabilizers/tableau.h"
+#include "../mem/simd_bit_table.h"
+#include "../mem/simd_util.h"
+#include "../stabilizers/pauli_string.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 
@@ -60,6 +60,6 @@ struct TableauTransposedRaii {
 
 }  // namespace stim
 
-#include "stim/stabilizers/tableau_transposed_raii.inl"
+#include "../stabilizers/tableau_transposed_raii.inl"
 
 #endif

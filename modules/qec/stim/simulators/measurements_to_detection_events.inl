@@ -14,15 +14,15 @@
 
 #include <cassert>
 
-#include "stim/gates/gates.h"
-#include "stim/io/measure_record_batch_writer.h"
-#include "stim/io/measure_record_reader.h"
-#include "stim/io/stim_data_formats.h"
-#include "stim/mem/simd_util.h"
-#include "stim/simulators/frame_simulator.h"
-#include "stim/simulators/measurements_to_detection_events.h"
-#include "stim/simulators/tableau_simulator.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../gates/gates.h"
+#include "../io/measure_record_batch_writer.h"
+#include "../io/measure_record_reader.h"
+#include "../io/stim_data_formats.h"
+#include "../mem/simd_util.h"
+#include "../simulators/frame_simulator.h"
+#include "../simulators/measurements_to_detection_events.h"
+#include "../simulators/tableau_simulator.h"
+#include "../stabilizers/pauli_string.h"
 
 namespace stim {
 

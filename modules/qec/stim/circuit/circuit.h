@@ -27,11 +27,11 @@
 #include <unordered_map>
 #include <vector>
 
-#include "stim/circuit/circuit_instruction.h"
-#include "stim/circuit/gate_target.h"
-#include "stim/gates/gates.h"
-#include "stim/mem/monotonic_buffer.h"
-#include "stim/mem/span_ref.h"
+#include "../circuit/circuit_instruction.h"
+#include "../circuit/gate_target.h"
+#include "../gates/gates.h"
+#include "../mem/monotonic_buffer.h"
+#include "../mem/span_ref.h"
 
 namespace stim {
 

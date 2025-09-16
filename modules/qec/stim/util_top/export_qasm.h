@@ -17,7 +17,7 @@
 #ifndef _STIM_CIRCUIT_EXPORT_CIRCUIT_H
 #define _STIM_CIRCUIT_EXPORT_CIRCUIT_H
 
-#include "stim/circuit/circuit.h"
+#include "../circuit/circuit.h"
 
 namespace stim {
 

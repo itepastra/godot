@@ -17,8 +17,8 @@
 #ifndef _STIM_SIMULATORS_ERROR_MATCHER_H
 #define _STIM_SIMULATORS_ERROR_MATCHER_H
 
-#include "stim/simulators/error_analyzer.h"
-#include "stim/simulators/matched_error.h"
+#include "../simulators/error_analyzer.h"
+#include "../simulators/matched_error.h"
 
 namespace stim {
 

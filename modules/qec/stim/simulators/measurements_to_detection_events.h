@@ -24,10 +24,10 @@
 #include <random>
 #include <sstream>
 
-#include "stim/circuit/circuit.h"
-#include "stim/io/measure_record.h"
-#include "stim/stabilizers/tableau.h"
-#include "stim/stabilizers/tableau_transposed_raii.h"
+#include "../circuit/circuit.h"
+#include "../io/measure_record.h"
+#include "../stabilizers/tableau.h"
+#include "../stabilizers/tableau_transposed_raii.h"
 
 namespace stim {
 
@@ -121,6 +121,6 @@ void measurements_to_detection_events_helper(
 
 }  // namespace stim
 
-#include "stim/simulators/measurements_to_detection_events.inl"
+#include "../simulators/measurements_to_detection_events.inl"
 
 #endif

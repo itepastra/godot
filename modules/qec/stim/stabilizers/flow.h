@@ -17,7 +17,7 @@
 #ifndef _STIM_STABILIZERS_FLOW_H
 #define _STIM_STABILIZERS_FLOW_H
 
-#include "stim/stabilizers/pauli_string.h"
+#include "../stabilizers/pauli_string.h"
 
 namespace stim {
 
@@ -52,6 +52,6 @@ std::ostream &operator<<(std::ostream &out, const Flow<W> &flow);
 
 }  // namespace stim
 
-#include "stim/stabilizers/flow.inl"
+#include "../stabilizers/flow.inl"
 
 #endif

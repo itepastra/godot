@@ -6,9 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "stim/circuit/circuit.h"
-#include "stim/dem/dem_instruction.h"
-#include "stim/mem/monotonic_buffer.h"
+#include "../circuit/circuit.h"
+#include "../dem/dem_instruction.h"
+#include "../mem/monotonic_buffer.h"
 
 namespace stim {
 

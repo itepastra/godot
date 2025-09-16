@@ -17,7 +17,7 @@
 #ifndef _STIM_UTIL_TOP_MISSING_DETECTORS_H
 #define _STIM_UTIL_TOP_MISSING_DETECTORS_H
 
-#include "stim/circuit/circuit.h"
+#include "../circuit/circuit.h"
 
 namespace stim {
 

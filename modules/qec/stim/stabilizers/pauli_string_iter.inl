@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/stabilizers/pauli_string.h"
-#include "stim/stabilizers/pauli_string_iter.h"
+#include "../stabilizers/pauli_string.h"
+#include "../stabilizers/pauli_string_iter.h"
 
 namespace stim {
 

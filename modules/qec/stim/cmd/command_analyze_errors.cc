@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/cmd/command_analyze_errors.h"
+#include "../cmd/command_analyze_errors.h"
 
-#include "stim/cmd/command_help.h"
-#include "stim/simulators/error_analyzer.h"
-#include "stim/util_bot/arg_parse.h"
+#include "../cmd/command_help.h"
+#include "../simulators/error_analyzer.h"
+#include "../util_bot/arg_parse.h"
 
 using namespace stim;
 
@@ -414,7 +414,7 @@ SubCommandHelp stim::command_analyze_errors_help() {
             specified, the circuit is instead read from the file at $FILEPATH.
 
             The input should be a stim circuit. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/file_format_stim_circuit.md
+            https://github.com/quantumlib/../blob/main/doc/file_format_stim_circuit.md
         )PARAGRAPH"),
         });
 
@@ -431,7 +431,7 @@ SubCommandHelp stim::command_analyze_errors_help() {
             is specified, the output is instead written to the file at $FILEPATH.
 
             The output is a stim detector error model. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/file_format_dem_detector_error_model.md
+            https://github.com/quantumlib/../blob/main/doc/file_format_dem_detector_error_model.md
         )PARAGRAPH"),
         });
 

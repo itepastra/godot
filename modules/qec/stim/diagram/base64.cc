@@ -1,4 +1,4 @@
-#include "stim/diagram/base64.h"
+#include "../diagram/base64.h"
 
 using namespace stim_draw_internal;
 

@@ -15,10 +15,10 @@
 #include <algorithm>
 #include <cstring>
 
-#include "stim/circuit/gate_decomposition.h"
-#include "stim/simulators/frame_simulator.h"
-#include "stim/simulators/tableau_simulator.h"
-#include "stim/util_bot/probability_util.h"
+#include "../circuit/gate_decomposition.h"
+#include "../simulators/frame_simulator.h"
+#include "../simulators/tableau_simulator.h"
+#include "../util_bot/probability_util.h"
 
 namespace stim {
 

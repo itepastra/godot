@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/cmd/command_detect.h"
+#include "../cmd/command_detect.h"
 
 #include "command_help.h"
-#include "stim/io/raii_file.h"
-#include "stim/io/stim_data_formats.h"
-#include "stim/simulators/frame_simulator_util.h"
-#include "stim/util_bot/arg_parse.h"
-#include "stim/util_bot/probability_util.h"
+#include "../io/raii_file.h"
+#include "../io/stim_data_formats.h"
+#include "../simulators/frame_simulator_util.h"
+#include "../util_bot/arg_parse.h"
+#include "../util_bot/probability_util.h"
 
 using namespace stim;
 
@@ -149,7 +149,7 @@ SubCommandHelp stim::command_detect_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -258,7 +258,7 @@ SubCommandHelp stim::command_detect_help() {
             written to a file.
 
             The output is in a format specified by `--obs_out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -284,7 +284,7 @@ SubCommandHelp stim::command_detect_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -301,7 +301,7 @@ SubCommandHelp stim::command_detect_help() {
             specified, the circuit is instead read from the file at $FILEPATH.
 
             The input should be a stim circuit. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/file_format_stim_circuit.md
+            https://github.com/quantumlib/../blob/main/doc/file_format_stim_circuit.md
         )PARAGRAPH"),
         });
 
@@ -318,7 +318,7 @@ SubCommandHelp stim::command_detect_help() {
             is specified, the output is instead written to the file at $FILEPATH.
 
             The output is in a format specified by `--out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 

@@ -1,4 +1,4 @@
-#include "stim/simulators/force_streaming.h"
+#include "../simulators/force_streaming.h"
 
 #include <cstddef>
 

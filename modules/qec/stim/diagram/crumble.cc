@@ -1,6 +1,6 @@
-#include "stim/diagram/crumble.h"
+#include "../diagram/crumble.h"
 
-#include "stim/diagram/crumble_data.h"
+#include "../diagram/crumble_data.h"
 
 using namespace stim;
 using namespace stim_draw_internal;

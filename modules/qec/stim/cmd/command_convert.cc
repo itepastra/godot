@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/cmd/command_convert.h"
+#include "../cmd/command_convert.h"
 
 #include <stdexcept>
 
 #include "command_help.h"
-#include "stim/dem/detector_error_model.h"
-#include "stim/io/measure_record_batch_writer.h"
-#include "stim/io/measure_record_reader.h"
-#include "stim/io/stim_data_formats.h"
-#include "stim/mem/simd_bits.h"
-#include "stim/util_bot/arg_parse.h"
+#include "../dem/detector_error_model.h"
+#include "../io/measure_record_batch_writer.h"
+#include "../io/measure_record_reader.h"
+#include "../io/stim_data_formats.h"
+#include "../mem/simd_bits.h"
+#include "../util_bot/arg_parse.h"
 
 using namespace stim;
 
@@ -251,7 +251,7 @@ SubCommandHelp stim::command_convert_help() {
         Convert data between result formats.
 
         See the various formats here:
-        https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+        https://github.com/quantumlib/../blob/main/doc/result_formats.md
 
         To read and write data, the size of the records must be known.
         If writing to a dets file, then the number of measurements, detectors
@@ -366,7 +366,7 @@ SubCommandHelp stim::command_convert_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -390,7 +390,7 @@ SubCommandHelp stim::command_convert_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -416,7 +416,7 @@ SubCommandHelp stim::command_convert_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -433,7 +433,7 @@ SubCommandHelp stim::command_convert_help() {
             specified, the circuit is instead read from the file at $FILEPATH.
 
             The input's format is specified by `--in_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -450,7 +450,7 @@ SubCommandHelp stim::command_convert_help() {
             is specified, the output is instead written to the file at $FILEPATH.
 
             The output's format is specified by `--out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -472,7 +472,7 @@ SubCommandHelp stim::command_convert_help() {
             written to a file.
 
             The output is in a format specified by `--obs_out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -489,7 +489,7 @@ SubCommandHelp stim::command_convert_help() {
             measurements, detectors and observables to use per record.
 
             The circuit file should be a stim circuit. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/file_format_stim_circuit.md
+            https://github.com/quantumlib/../blob/main/doc/file_format_stim_circuit.md
         )PARAGRAPH"),
         });
 
@@ -512,7 +512,7 @@ SubCommandHelp stim::command_convert_help() {
 
             The type values (M, D, L) correspond to the value prefix letters
             in dets files. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md#dets
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md#dets
         )PARAGRAPH"),
         });
 

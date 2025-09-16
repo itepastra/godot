@@ -1,4 +1,4 @@
-#include "stim/diagram/basic_3d_diagram.h"
+#include "../diagram/basic_3d_diagram.h"
 
 #include "gate_data_3d.h"
 

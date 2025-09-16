@@ -17,11 +17,11 @@
 #ifndef _STIM_SIMULATORS_SPARSE_REV_FRAME_TRACKER_H
 #define _STIM_SIMULATORS_SPARSE_REV_FRAME_TRACKER_H
 
-#include "stim/circuit/circuit.h"
-#include "stim/dem/detector_error_model.h"
-#include "stim/mem/sparse_xor_vec.h"
-#include "stim/stabilizers/pauli_string.h"
-#include "stim/stabilizers/tableau.h"
+#include "../circuit/circuit.h"
+#include "../dem/detector_error_model.h"
+#include "../mem/sparse_xor_vec.h"
+#include "../stabilizers/pauli_string.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 

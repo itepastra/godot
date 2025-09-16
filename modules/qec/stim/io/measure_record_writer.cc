@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "stim/io/measure_record_writer.h"
+#include "../io/measure_record_writer.h"
 
 #include <algorithm>
 

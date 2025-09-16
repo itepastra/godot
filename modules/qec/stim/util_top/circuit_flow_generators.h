@@ -3,8 +3,8 @@
 
 #include <optional>
 
-#include "stim/circuit/circuit.h"
-#include "stim/mem/simd_bits.h"
+#include "../circuit/circuit.h"
+#include "../mem/simd_bits.h"
 
 namespace stim {
 
@@ -70,6 +70,6 @@ struct CircuitFlowGeneratorSolver {
 
 }  // namespace stim
 
-#include "stim/util_top/circuit_flow_generators.inl"
+#include "../util_top/circuit_flow_generators.inl"
 
 #endif

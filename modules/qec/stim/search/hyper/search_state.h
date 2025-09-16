@@ -17,9 +17,9 @@
 #ifndef _STIM_SEARCH_HYPER_SEARCH_STATE_H
 #define _STIM_SEARCH_HYPER_SEARCH_STATE_H
 
-#include "stim/dem/detector_error_model.h"
-#include "stim/mem/simd_bits.h"
-#include "stim/mem/sparse_xor_vec.h"
+#include "../dem/detector_error_model.h"
+#include "../mem/simd_bits.h"
+#include "../mem/sparse_xor_vec.h"
 
 namespace stim {
 

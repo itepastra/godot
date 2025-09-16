@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/search/hyper/graph.h"
+#include "../search/hyper/graph.h"
 
 #include <algorithm>
 #include <map>

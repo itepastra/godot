@@ -1,4 +1,4 @@
-#include "stim/util_top/has_flow.h"
+#include "../util_top/has_flow.h"
 
 using namespace stim;
 

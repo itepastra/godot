@@ -1,6 +1,6 @@
-#include "stim/util_top/export_crumble_url.h"
+#include "../util_top/export_crumble_url.h"
 
-#include "stim/simulators/matched_error.h"
+#include "../simulators/matched_error.h"
 
 using namespace stim;
 

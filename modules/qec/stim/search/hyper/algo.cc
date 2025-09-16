@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/search/hyper/algo.h"
+#include "../search/hyper/algo.h"
 
 #include <algorithm>
 #include <map>
 #include <queue>
 #include <sstream>
 
-#include "stim/search/graphlike/algo.h"
-#include "stim/search/hyper/edge.h"
-#include "stim/search/hyper/graph.h"
-#include "stim/search/hyper/search_state.h"
+#include "../search/graphlike/algo.h"
+#include "../search/hyper/edge.h"
+#include "../search/hyper/graph.h"
+#include "../search/hyper/search_state.h"
 
 using namespace stim;
 using namespace stim::impl_search_hyper;

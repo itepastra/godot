@@ -1,4 +1,4 @@
-#include "stim/diagram/json_obj.h"
+#include "../diagram/json_obj.h"
 
 #include <limits>
 

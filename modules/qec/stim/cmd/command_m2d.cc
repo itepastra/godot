@@ -1,10 +1,10 @@
-#include "stim/cmd/command_m2d.h"
+#include "../cmd/command_m2d.h"
 
 #include "command_help.h"
-#include "stim/io/stim_data_formats.h"
-#include "stim/simulators/measurements_to_detection_events.h"
-#include "stim/util_bot/arg_parse.h"
-#include "stim/util_top/transform_without_feedback.h"
+#include "../io/stim_data_formats.h"
+#include "../simulators/measurements_to_detection_events.h"
+#include "../util_bot/arg_parse.h"
+#include "../util_top/transform_without_feedback.h"
 
 using namespace stim;
 
@@ -148,7 +148,7 @@ SubCommandHelp stim::command_m2d_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -170,7 +170,7 @@ SubCommandHelp stim::command_m2d_help() {
             written to a file.
 
             The output is in a format specified by `--obs_out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -196,7 +196,7 @@ SubCommandHelp stim::command_m2d_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -220,7 +220,7 @@ SubCommandHelp stim::command_m2d_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -244,7 +244,7 @@ SubCommandHelp stim::command_m2d_help() {
             read from the specified file.
 
             The sweep data's format is specified by `--sweep_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -268,7 +268,7 @@ SubCommandHelp stim::command_m2d_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -285,7 +285,7 @@ SubCommandHelp stim::command_m2d_help() {
             specified, the circuit is instead read from the file at $FILEPATH.
 
             The input's format is specified by `--in_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -302,7 +302,7 @@ SubCommandHelp stim::command_m2d_help() {
             is specified, the output is instead written to the file at $FILEPATH.
 
             The output's format is specified by `--out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -319,7 +319,7 @@ SubCommandHelp stim::command_m2d_help() {
             to derive detection event data from measurement data.
 
             The circuit file should be a stim circuit. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/file_format_stim_circuit.md
+            https://github.com/quantumlib/../blob/main/doc/file_format_stim_circuit.md
         )PARAGRAPH"),
         });
 

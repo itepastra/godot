@@ -1,7 +1,7 @@
 #ifndef _STIM_UTIL_TOP_CIRCUIT_VS_AMPLITUDES_H
 #define _STIM_UTIL_TOP_CIRCUIT_VS_AMPLITUDES_H
 
-#include "stim/circuit/circuit.h"
+#include "../circuit/circuit.h"
 
 namespace stim {
 

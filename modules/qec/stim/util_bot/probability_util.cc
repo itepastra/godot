@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/util_bot/probability_util.h"
+#include "../util_bot/probability_util.h"
 
 #include <cstring>
 
-#include "stim/util_bot/arg_parse.h"
+#include "../util_bot/arg_parse.h"
 
 using namespace stim;
 
@@ -44,7 +44,7 @@ std::vector<size_t> stim::sample_hit_indices(float probability, size_t attempts,
 std::mt19937_64 stim::externally_seeded_rng() {
 #if defined(__linux) && defined(__GLIBCXX__) && __GLIBCXX__ >= 20200128
     // Workaround for https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94087
-    // See https://github.com/quantumlib/Stim/issues/26
+    // See https://github.com/quantumlib/../issues/26
     std::random_device d("/dev/urandom");
 #else
     std::random_device d;

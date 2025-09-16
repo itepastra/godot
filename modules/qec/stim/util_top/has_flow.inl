@@ -1,7 +1,7 @@
-#include "stim/util_top/has_flow.h"
-#include "stim/simulators/frame_simulator_util.h"
-#include "stim/simulators/tableau_simulator.h"
-#include "stim/simulators/sparse_rev_frame_tracker.h"
+#include "../util_top/has_flow.h"
+#include "../simulators/frame_simulator_util.h"
+#include "../simulators/tableau_simulator.h"
+#include "../simulators/sparse_rev_frame_tracker.h"
 
 namespace stim {
 

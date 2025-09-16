@@ -14,11 +14,11 @@
 
 #include <set>
 
-#include "stim/circuit/gate_decomposition.h"
-#include "stim/gates/gates.h"
-#include "stim/simulators/tableau_simulator.h"
-#include "stim/simulators/vector_simulator.h"
-#include "stim/util_bot/probability_util.h"
+#include "../circuit/gate_decomposition.h"
+#include "../gates/gates.h"
+#include "../simulators/tableau_simulator.h"
+#include "../simulators/vector_simulator.h"
+#include "../util_bot/probability_util.h"
 
 namespace stim {
 

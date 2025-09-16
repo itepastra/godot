@@ -20,15 +20,15 @@
 #include <algorithm>
 #include <map>
 #include <memory>
-#include <stim/stabilizers/pauli_string.h>
+#include <../stabilizers/pauli_string.h>
 #include <vector>
 
 #include "sparse_rev_frame_tracker.h"
-#include "stim/circuit/circuit.h"
-#include "stim/dem/detector_error_model.h"
-#include "stim/mem/fixed_cap_vector.h"
-#include "stim/mem/monotonic_buffer.h"
-#include "stim/mem/sparse_xor_vec.h"
+#include "../circuit/circuit.h"
+#include "../dem/detector_error_model.h"
+#include "../mem/fixed_cap_vector.h"
+#include "../mem/monotonic_buffer.h"
+#include "../mem/sparse_xor_vec.h"
 
 namespace stim {
 

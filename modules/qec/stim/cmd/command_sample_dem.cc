@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/cmd/command_sample_dem.h"
+#include "../cmd/command_sample_dem.h"
 
 #include "command_help.h"
-#include "stim/io/raii_file.h"
-#include "stim/simulators/dem_sampler.h"
-#include "stim/util_bot/arg_parse.h"
-#include "stim/util_bot/probability_util.h"
+#include "../io/raii_file.h"
+#include "../simulators/dem_sampler.h"
+#include "../util_bot/arg_parse.h"
+#include "../util_bot/probability_util.h"
 
 using namespace stim;
 
@@ -143,7 +143,7 @@ SubCommandHelp stim::command_sample_dem_help() {
             `--err_out`.
 
             The input is in a format specified by `--err_in_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -169,7 +169,7 @@ SubCommandHelp stim::command_sample_dem_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -186,7 +186,7 @@ SubCommandHelp stim::command_sample_dem_help() {
             then given to `--replay_err_in` to see the effects of changes.
 
             The output is in a format specified by `--err_out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -212,7 +212,7 @@ SubCommandHelp stim::command_sample_dem_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -234,7 +234,7 @@ SubCommandHelp stim::command_sample_dem_help() {
             written to a file.
 
             The output is in a format specified by `--obs_out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -260,7 +260,7 @@ SubCommandHelp stim::command_sample_dem_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -284,7 +284,7 @@ SubCommandHelp stim::command_sample_dem_help() {
 
             For a detailed description of each result format, see the result
             format reference:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 
@@ -359,7 +359,7 @@ SubCommandHelp stim::command_sample_dem_help() {
             read from the file at $FILEPATH.
 
             The input should be a stim detector error model. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/file_format_dem_detector_error_model.md
+            https://github.com/quantumlib/../blob/main/doc/file_format_dem_detector_error_model.md
         )PARAGRAPH"),
         });
 
@@ -376,7 +376,7 @@ SubCommandHelp stim::command_sample_dem_help() {
             is specified, the output is instead written to the file at $FILEPATH.
 
             The output is in a format specified by `--out_format`. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/result_formats.md
+            https://github.com/quantumlib/../blob/main/doc/result_formats.md
         )PARAGRAPH"),
         });
 

@@ -1,9 +1,9 @@
 #ifndef _STIM_UTIL_TOP_CIRCUIT_TO_DETECTING_REGIONS
 #define _STIM_UTIL_TOP_CIRCUIT_TO_DETECTING_REGIONS
 
-#include "stim/circuit/circuit.h"
-#include "stim/dem/dem_instruction.h"
-#include "stim/stabilizers/flex_pauli_string.h"
+#include "../circuit/circuit.h"
+#include "../dem/dem_instruction.h"
+#include "../stabilizers/flex_pauli_string.h"
 
 namespace stim {
 

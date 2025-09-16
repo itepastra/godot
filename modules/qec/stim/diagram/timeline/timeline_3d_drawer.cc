@@ -1,10 +1,10 @@
-#include "stim/diagram/timeline/timeline_3d_drawer.h"
+#include "../diagram/timeline/timeline_3d_drawer.h"
 
-#include "stim/circuit/gate_decomposition.h"
-#include "stim/diagram/circuit_timeline_helper.h"
-#include "stim/diagram/detector_slice/detector_slice_set.h"
-#include "stim/diagram/diagram_util.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../circuit/gate_decomposition.h"
+#include "../diagram/circuit_timeline_helper.h"
+#include "../diagram/detector_slice/detector_slice_set.h"
+#include "../diagram/diagram_util.h"
+#include "../stabilizers/pauli_string.h"
 
 using namespace stim;
 using namespace stim_draw_internal;

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/io/raii_file.h"
+#include "../io/raii_file.h"
 
 #include <sstream>
 

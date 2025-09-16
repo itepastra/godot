@@ -1,8 +1,8 @@
-#include "stim/circuit/circuit.h"
-#include "stim/stabilizers/flex_pauli_string.h"
-#include "stim/stabilizers/flow.h"
-#include "stim/util_bot/arg_parse.h"
-#include "stim/mem/span_ref.h"
+#include "../circuit/circuit.h"
+#include "../stabilizers/flex_pauli_string.h"
+#include "../stabilizers/flow.h"
+#include "../util_bot/arg_parse.h"
+#include "../mem/span_ref.h"
 
 namespace stim {
 

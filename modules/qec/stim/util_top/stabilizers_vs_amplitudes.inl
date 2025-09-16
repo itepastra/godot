@@ -1,7 +1,7 @@
-#include "stim/util_bot/twiddle.h"
-#include "stim/util_top/circuit_inverse_unitary.h"
-#include "stim/util_top/circuit_vs_amplitudes.h"
-#include "stim/util_top/circuit_vs_tableau.h"
+#include "../util_bot/twiddle.h"
+#include "../util_top/circuit_inverse_unitary.h"
+#include "../util_top/circuit_vs_amplitudes.h"
+#include "../util_top/circuit_vs_tableau.h"
 
 namespace stim {
 

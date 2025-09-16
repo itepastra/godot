@@ -1,9 +1,9 @@
 #ifndef _STIM_UTIL_TOP_CIRCUIT_INVERSE_QEC_H
 #define _STIM_UTIL_TOP_CIRCUIT_INVERSE_QEC_H
 
-#include "stim/circuit/circuit.h"
-#include "stim/simulators/sparse_rev_frame_tracker.h"
-#include "stim/stabilizers/flow.h"
+#include "../circuit/circuit.h"
+#include "../simulators/sparse_rev_frame_tracker.h"
+#include "../stabilizers/flow.h"
 
 namespace stim {
 
@@ -68,6 +68,6 @@ struct CircuitFlowReverser {
 }  // namespace internal
 }  // namespace stim
 
-#include "stim/util_top/circuit_inverse_qec.inl"
+#include "../util_top/circuit_inverse_qec.inl"
 
 #endif

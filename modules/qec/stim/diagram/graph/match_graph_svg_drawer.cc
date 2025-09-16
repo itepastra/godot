@@ -1,6 +1,6 @@
-#include "stim/diagram/graph/match_graph_svg_drawer.h"
+#include "../diagram/graph/match_graph_svg_drawer.h"
 
-#include "stim/diagram/graph/match_graph_3d_drawer.h"
+#include "../diagram/graph/match_graph_3d_drawer.h"
 
 using namespace stim;
 using namespace stim_draw_internal;

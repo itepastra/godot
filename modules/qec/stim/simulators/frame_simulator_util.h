@@ -19,9 +19,9 @@
 
 #include <random>
 
-#include "stim/circuit/circuit.h"
-#include "stim/io/stim_data_formats.h"
-#include "stim/mem/simd_bit_table.h"
+#include "../circuit/circuit.h"
+#include "../io/stim_data_formats.h"
+#include "../mem/simd_bit_table.h"
 
 namespace stim {
 
@@ -131,6 +131,6 @@ void sample_batch_measurements_writing_results_to_disk(
 
 }  // namespace stim
 
-#include "stim/simulators/frame_simulator_util.inl"
+#include "../simulators/frame_simulator_util.inl"
 
 #endif

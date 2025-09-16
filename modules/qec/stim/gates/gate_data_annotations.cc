@@ -1,4 +1,4 @@
-#include "stim/gates/gates.h"
+#include "../gates/gates.h"
 
 using namespace stim;
 

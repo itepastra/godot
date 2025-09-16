@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include "stim/io/measure_record.h"
+#include "../io/measure_record.h"
 
 #include <algorithm>
 
-#include "stim/io/measure_record_writer.h"
+#include "../io/measure_record_writer.h"
 
 using namespace stim;
 

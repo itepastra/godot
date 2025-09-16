@@ -19,10 +19,10 @@
 
 #include <random>
 
-#include "stim/circuit/circuit.h"
-#include "stim/io/measure_record_batch.h"
-#include "stim/mem/simd_bit_table.h"
-#include "stim/stabilizers/pauli_string.h"
+#include "../circuit/circuit.h"
+#include "../io/measure_record_batch.h"
+#include "../mem/simd_bit_table.h"
+#include "../stabilizers/pauli_string.h"
 
 namespace stim {
 
@@ -157,6 +157,6 @@ struct FrameSimulator {
 
 }  // namespace stim
 
-#include "stim/simulators/frame_simulator.inl"
+#include "../simulators/frame_simulator.inl"
 
 #endif

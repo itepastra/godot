@@ -1,4 +1,4 @@
-#include "stim/simulators/graph_simulator.h"
+#include "../simulators/graph_simulator.h"
 
 using namespace stim;
 

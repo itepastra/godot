@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/stabilizers/flex_pauli_string.h"
+#include "../stabilizers/flex_pauli_string.h"
 
 using namespace stim;
 

@@ -17,9 +17,9 @@
 #ifndef _STIM_STABILIZERS_TABLEAU_ITER_H
 #define _STIM_STABILIZERS_TABLEAU_ITER_H
 
-#include "stim/mem/fixed_cap_vector.h"
-#include "stim/mem/span_ref.h"
-#include "stim/stabilizers/tableau.h"
+#include "../mem/fixed_cap_vector.h"
+#include "../mem/span_ref.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 
@@ -97,6 +97,6 @@ struct TableauIterator {
 
 }  // namespace stim
 
-#include "stim/stabilizers/tableau_iter.inl"
+#include "../stabilizers/tableau_iter.inl"
 
 #endif

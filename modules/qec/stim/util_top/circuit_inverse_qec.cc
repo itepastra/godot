@@ -1,4 +1,4 @@
-#include "stim/util_top/circuit_inverse_qec.h"
+#include "../util_top/circuit_inverse_qec.h"
 
 using namespace stim;
 using namespace stim::internal;

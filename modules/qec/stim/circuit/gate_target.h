@@ -19,8 +19,8 @@
 
 #include <iostream>
 
-#include "stim/gates/gates.h"
-#include "stim/mem/span_ref.h"
+#include "../gates/gates.h"
+#include "../mem/span_ref.h"
 
 namespace stim {
 

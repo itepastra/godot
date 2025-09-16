@@ -19,9 +19,9 @@
 
 #include <random>
 
-#include "stim/dem/detector_error_model.h"
-#include "stim/io/stim_data_formats.h"
-#include "stim/mem/simd_bit_table.h"
+#include "../dem/detector_error_model.h"
+#include "../io/stim_data_formats.h"
+#include "../mem/simd_bit_table.h"
 
 namespace stim {
 
@@ -77,6 +77,6 @@ struct DemSampler {
 
 }  // namespace stim
 
-#include "stim/simulators/dem_sampler.inl"
+#include "../simulators/dem_sampler.inl"
 
 #endif

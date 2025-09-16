@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/simulators/force_streaming.h"
-#include "stim/simulators/frame_simulator.h"
-#include "stim/simulators/frame_simulator_util.h"
+#include "../simulators/force_streaming.h"
+#include "../simulators/frame_simulator.h"
+#include "../simulators/frame_simulator_util.h"
 
 namespace stim {
 

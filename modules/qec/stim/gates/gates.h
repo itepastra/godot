@@ -25,7 +25,7 @@
 #include <iostream>
 #include <vector>
 
-#include "stim/mem/fixed_cap_vector.h"
+#include "../mem/fixed_cap_vector.h"
 
 namespace stim {
 

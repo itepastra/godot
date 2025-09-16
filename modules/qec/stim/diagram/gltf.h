@@ -5,9 +5,9 @@
 #include <iostream>
 
 #include "base64.h"
-#include "stim/diagram/coord.h"
-#include "stim/diagram/json_obj.h"
-#include "stim/mem/span_ref.h"
+#include "../diagram/coord.h"
+#include "../diagram/json_obj.h"
+#include "../mem/span_ref.h"
 
 namespace stim_draw_internal {
 

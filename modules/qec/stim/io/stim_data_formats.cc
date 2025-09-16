@@ -1,4 +1,4 @@
-#include "stim/io/stim_data_formats.h"
+#include "../io/stim_data_formats.h"
 
 using namespace stim;
 

@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "stim/util_top/export_qasm.h"
+#include "../util_top/export_qasm.h"
 
 #include <bitset>
 
-#include "stim/simulators/tableau_simulator.h"
+#include "../simulators/tableau_simulator.h"
 
 using namespace stim;
 

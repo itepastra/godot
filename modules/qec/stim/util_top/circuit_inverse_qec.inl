@@ -1,5 +1,5 @@
-#include "stim/stabilizers/flow.h"
-#include "stim/util_top/circuit_inverse_qec.h"
+#include "../stabilizers/flow.h"
+#include "../util_top/circuit_inverse_qec.h"
 
 namespace stim {
 

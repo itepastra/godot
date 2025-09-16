@@ -15,8 +15,8 @@
 #include <cstring>
 #include <map>
 
-#include "stim/stabilizers/pauli_string.h"
-#include "stim/stabilizers/tableau_transposed_raii.h"
+#include "../stabilizers/pauli_string.h"
+#include "../stabilizers/tableau_transposed_raii.h"
 
 namespace stim {
 

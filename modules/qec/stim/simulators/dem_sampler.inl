@@ -16,10 +16,10 @@
 
 #include <algorithm>
 
-#include "stim/io/measure_record_reader.h"
-#include "stim/io/measure_record_writer.h"
-#include "stim/simulators/dem_sampler.h"
-#include "stim/util_bot/probability_util.h"
+#include "../io/measure_record_reader.h"
+#include "../io/measure_record_writer.h"
+#include "../simulators/dem_sampler.h"
+#include "../util_bot/probability_util.h"
 
 namespace stim {
 

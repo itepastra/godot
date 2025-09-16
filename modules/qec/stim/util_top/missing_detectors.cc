@@ -1,5 +1,5 @@
-#include "stim/util_top/missing_detectors.h"
-#include "stim/util_top/circuit_flow_generators.h"
+#include "../util_top/missing_detectors.h"
+#include "../util_top/circuit_flow_generators.h"
 
 using namespace stim;
 

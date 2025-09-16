@@ -1,11 +1,11 @@
-#include "stim/cmd/command_gen.h"
+#include "../cmd/command_gen.h"
 
 #include "command_help.h"
-#include "stim/gen/circuit_gen_params.h"
-#include "stim/gen/gen_color_code.h"
-#include "stim/gen/gen_rep_code.h"
-#include "stim/gen/gen_surface_code.h"
-#include "stim/util_bot/arg_parse.h"
+#include "../gen/circuit_gen_params.h"
+#include "../gen/gen_color_code.h"
+#include "../gen/gen_rep_code.h"
+#include "../gen/gen_surface_code.h"
+#include "../util_bot/arg_parse.h"
 
 using namespace stim;
 
@@ -314,7 +314,7 @@ SubCommandHelp stim::command_gen_help() {
             is specified, the output is instead written to the file at $FILEPATH.
 
             The output is a stim circuit. See:
-            https://github.com/quantumlib/Stim/blob/main/doc/file_format_stim_circuit.md
+            https://github.com/quantumlib/../blob/main/doc/file_format_stim_circuit.md
         )PARAGRAPH"),
         });
 

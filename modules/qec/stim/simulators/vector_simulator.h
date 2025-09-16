@@ -22,9 +22,9 @@
 #include <random>
 #include <unordered_map>
 
-#include "stim/circuit/circuit.h"
-#include "stim/mem/simd_word.h"
-#include "stim/util_bot/probability_util.h"
+#include "../circuit/circuit.h"
+#include "../mem/simd_word.h"
+#include "../util_bot/probability_util.h"
 
 namespace stim {
 

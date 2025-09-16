@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#include "stim/dem/detector_error_model.h"
+#include "../dem/detector_error_model.h"
 
 #include <cmath>
 #include <iomanip>
 #include <limits>
 
-#include "stim/util_bot/str_util.h"
+#include "../util_bot/str_util.h"
 
 using namespace stim;
 

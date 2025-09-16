@@ -19,10 +19,10 @@
 #include <map>
 #include <random>
 
-#include "stim/gates/gates.h"
-#include "stim/simulators/vector_simulator.h"
-#include "stim/stabilizers/pauli_string.h"
-#include "stim/stabilizers/tableau.h"
+#include "../gates/gates.h"
+#include "../simulators/vector_simulator.h"
+#include "../stabilizers/pauli_string.h"
+#include "../stabilizers/tableau.h"
 
 namespace stim {
 

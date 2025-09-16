@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-#include "stim/diagram/gltf.h"
+#include "../diagram/gltf.h"
 
 namespace stim_draw_internal {
 

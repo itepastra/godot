@@ -20,8 +20,8 @@
 #include <iostream>
 #include <span>
 
-#include "stim/circuit/circuit.h"
-#include "stim/stabilizers/flow.h"
+#include "../circuit/circuit.h"
+#include "../stabilizers/flow.h"
 
 namespace stim {
 
@@ -54,6 +54,6 @@ Circuit flow_test_block_for_circuit(
 
 }  // namespace stim
 
-#include "stim/util_top/has_flow.inl"
+#include "../util_top/has_flow.inl"
 
 #endif

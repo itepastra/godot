@@ -19,9 +19,9 @@
 
 #include <iostream>
 
-#include "stim/mem/bit_ref.h"
-#include "stim/mem/simd_bits_range_ref.h"
-#include "stim/mem/span_ref.h"
+#include "../mem/bit_ref.h"
+#include "../mem/simd_bits_range_ref.h"
+#include "../mem/span_ref.h"
 
 namespace stim {
 
@@ -230,6 +230,6 @@ std::ostream &operator<<(std::ostream &out, const PauliStringRef<W> &ps);
 
 }  // namespace stim
 
-#include "stim/stabilizers/pauli_string_ref.inl"
+#include "../stabilizers/pauli_string_ref.inl"
 
 #endif
