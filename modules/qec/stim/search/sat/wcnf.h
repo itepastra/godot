@@ -1,7 +1,7 @@
 #ifndef _STIM_SEARCH_SAT_WCNF_H
 #define _STIM_SEARCH_SAT_WCNF_H
 
-#include "../dem/detector_error_model.h"
+#include "../../dem/detector_error_model.h"
 
 namespace stim {
 

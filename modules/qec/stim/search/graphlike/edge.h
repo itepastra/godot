@@ -21,7 +21,7 @@
 #include <iostream>
 #include <string>
 
-#include "../mem/simd_bits.h"
+#include "../../mem/simd_bits.h"
 
 namespace stim {
 

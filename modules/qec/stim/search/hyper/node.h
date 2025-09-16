@@ -19,7 +19,7 @@
 
 #include <vector>
 
-#include "../search/hyper/edge.h"
+#include "../../search/hyper/edge.h"
 
 namespace stim {
 

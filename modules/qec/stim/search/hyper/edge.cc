@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../search/hyper/edge.h"
+#include "../../search/hyper/edge.h"
 
 #include <algorithm>
 #include <sstream>

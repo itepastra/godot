@@ -17,7 +17,7 @@
 #ifndef _STIM_SEARCH_GRAPHLIKE_ALGO_H
 #define _STIM_SEARCH_GRAPHLIKE_ALGO_H
 
-#include "../dem/detector_error_model.h"
+#include "../../dem/detector_error_model.h"
 
 namespace stim {
 

@@ -17,8 +17,8 @@
 #ifndef _STIM_SEARCH_HYPER_GRAPH_H
 #define _STIM_SEARCH_HYPER_GRAPH_H
 
-#include "../dem/detector_error_model.h"
-#include "../search/hyper/node.h"
+#include "../../dem/detector_error_model.h"
+#include "../../search/hyper/node.h"
 
 namespace stim {
 

@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../search/graphlike/algo.h"
+#include "../../search/graphlike/algo.h"
 
 #include <algorithm>
 #include <map>
 #include <queue>
 #include <sstream>
 
-#include "../search/graphlike/edge.h"
-#include "../search/graphlike/graph.h"
-#include "../search/graphlike/node.h"
-#include "../search/graphlike/search_state.h"
+#include "../../search/graphlike/edge.h"
+#include "../../search/graphlike/graph.h"
+#include "../../search/graphlike/node.h"
+#include "../../search/graphlike/search_state.h"
 
 using namespace stim;
 using namespace stim::impl_search_graphlike;

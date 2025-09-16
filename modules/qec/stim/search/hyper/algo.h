@@ -19,7 +19,7 @@
 
 #include <cstdint>
 
-#include "../dem/detector_error_model.h"
+#include "../../dem/detector_error_model.h"
 
 namespace stim {
 

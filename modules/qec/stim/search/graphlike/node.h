@@ -19,7 +19,7 @@
 
 #include <vector>
 
-#include "../search/graphlike/edge.h"
+#include "../../search/graphlike/edge.h"
 
 namespace stim {
 

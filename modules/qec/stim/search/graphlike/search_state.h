@@ -17,8 +17,8 @@
 #ifndef _STIM_SEARCH_GRAPHLIKE_SEARCH_STATE_H
 #define _STIM_SEARCH_GRAPHLIKE_SEARCH_STATE_H
 
-#include "../dem/detector_error_model.h"
-#include "../mem/simd_bits.h"
+#include "../../dem/detector_error_model.h"
+#include "../../mem/simd_bits.h"
 
 namespace stim {
 

@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "../search/hyper/search_state.h"
+#include "../../search/hyper/search_state.h"
 
 #include <algorithm>
 
-#include "../search/hyper/node.h"
+#include "../../search/hyper/node.h"
 
 using namespace stim;
 using namespace stim::impl_search_hyper;
