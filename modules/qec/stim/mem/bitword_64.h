@@ -22,8 +22,8 @@
 #include <sstream>
 #include <stdlib.h>
 
-#include "stim/mem/bitword.h"
-#include "stim/mem/simd_util.h"
+#include "../mem/bitword.h"
+#include "../mem/simd_util.h"
 
 namespace stim {
 

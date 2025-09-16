@@ -24,7 +24,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "stim/mem/bitword.h"
+#include "../mem/bitword.h"
 
 namespace stim {
 
