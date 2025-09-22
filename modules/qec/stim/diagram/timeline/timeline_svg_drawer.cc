@@ -210,8 +210,7 @@ void DiagramTimelineSvgDrawer::draw_generic_box(
     float cx, float cy, std::string_view text, SpanRef<const double> end_args) {
     auto f = gate_data_map.find(text);
     if (f == gate_data_map.end()) {
-        throw std::invalid_argument(
-            "DiagramTimelineSvgDrawer::draw_generic_box unhandled gate case: " + std::string(text));
+        abort();
     }
     SvgGateData data = f->second;
     draw_annotated_gate(cx, cy, data, end_args);

@@ -186,9 +186,7 @@ bool MeasureRecordReaderFormat01<W>::start_and_read_entire_record_helper(SAW0 sa
             case '\r':
                 [[fallthrough]];
             case '\n':
-                throw std::invalid_argument(
-                    "01 data ended in middle of record at byte position " + std::to_string(k) +
-                    ".\nExpected bits per record was " + std::to_string(n) + ".");
+                abort();
             default:
                 abort();
         }
@@ -201,8 +199,7 @@ bool MeasureRecordReaderFormat01<W>::start_and_read_entire_record_helper(SAW0 sa
         last = getc(in);
     }
     if (last != '\n') {
-        throw std::invalid_argument(
-            "01 data didn't end with a newline after the expected data length of '" + std::to_string(n) + "'.");
+        abort();
     }
     return true;
 }
@@ -224,11 +221,7 @@ bool MeasureRecordReaderFormatB8<W>::start_and_read_entire_record(simd_bits_rang
         return false;
     }
     if (nr != nb) {
-        throw std::invalid_argument(
-            "b8 data ended in middle of record at byte position " + std::to_string(nr) +
-            ".\n"
-            "Expected bytes per record was " +
-            std::to_string(nb) + " (" + std::to_string(n) + " bits padded).");
+        abort();
     }
     return true;
 }
@@ -273,11 +266,7 @@ bool MeasureRecordReaderFormatB8<W>::start_and_read_entire_record(SparseShot &cl
             if (k == 0) {
                 return false;
             }
-            throw std::invalid_argument(
-                "b8 data ended in middle of record at byte position " + std::to_string(k) +
-                ".\n"
-                "Expected bytes per record was " +
-                std::to_string(nb) + " (" + std::to_string(n) + " bits padded).");
+            abort();
         }
 
         size_t bit_offset = k << 3;
@@ -461,16 +450,12 @@ bool MeasureRecordReaderFormatR8<W>::start_and_read_entire_record_helper(HANDLE_
             } else if (pos == n) {
                 return true;
             } else {
-                throw std::invalid_argument(
-                    "r8 data jumped past expected end of encoded data. Expected to decode " +
-                    std::to_string(this->bits_per_record()) + " bits.");
+                abort();
             }
         }
         next_char = getc(in);
         if (next_char == EOF) {
-            throw std::invalid_argument(
-                "End of file before end of r8 data. Expected to decode " + std::to_string(this->bits_per_record()) +
-                " bits.");
+            abort();
         }
     }
 }
@@ -571,8 +556,7 @@ bool MeasureRecordReaderFormatDets<W>::start_and_read_entire_record_helper(HANDL
             offset = this->num_measurements + this->num_detectors;
             length = this->num_observables;
         } else {
-            throw std::invalid_argument(
-                "Unrecognized DETS prefix. Expected M or D or L not '" + std::to_string(next_char) + "'");
+            abort();
         }
         char prefix = next_char;
 
@@ -617,11 +601,7 @@ bool MeasureRecordReaderFormatPTB64<W>::load_cache() {
         return false;
     }
     if (nr != nb) {
-        throw std::invalid_argument(
-            "ptb64 data ended in middle of 64 record group at byte position " + std::to_string(nr) +
-            ".\n"
-            "Expected bytes per 64 records was " +
-            std::to_string(nb) + " (" + std::to_string(n) + " bits padded).");
+        abort();
     }
 
     // Convert from bit interleaving to uint64_t interleaving.

@@ -171,8 +171,7 @@ inline GateTarget read_pauli_target(int &c, SOURCE read_char) {
     }
     c = read_char();
     if (c == ' ') {
-        throw std::invalid_argument(
-            "Pauli target '" + std::string(1, c) + "' followed by a space instead of a qubit index.");
+        abort();
     }
     uint32_t q = read_uint24_t(c, read_char);
 

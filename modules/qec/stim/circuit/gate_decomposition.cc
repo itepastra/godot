@@ -77,8 +77,7 @@ bool stim::accumulate_next_obs_terms_to_pauli_string_helper(
     }
 
     if (imag && !allow_imaginary) {
-        throw std::invalid_argument(
-            "Acted on an anti-Hermitian operator (e.g. X0*Z0 instead of Y0) in " + instruction.str());
+        abort();
     }
 
     *start = end;

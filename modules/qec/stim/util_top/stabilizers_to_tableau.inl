@@ -38,9 +38,7 @@ Tableau<W> stabilizers_to_tableau(
                 }
             }
         }
-        throw std::invalid_argument(
-            "The given stabilizers commute but the solver failed in a way that suggests they anticommute. Please "
-            "report this as a bug.");
+        abort();
     };
 
     auto print_redundant_z_product_parts = [&](size_t stabilizer_index, std::ostream &out) {
@@ -204,9 +202,7 @@ Tableau<W> stabilizers_to_tableau(
 
     if (used < num_qubits) {
         if (!allow_underconstrained) {
-            throw std::invalid_argument(
-                "There weren't enough stabilizers to uniquely specify the state. "
-                "To allow underspecifying the state, pass the argument allow_underconstrained=True.");
+            abort();
         }
     }
 

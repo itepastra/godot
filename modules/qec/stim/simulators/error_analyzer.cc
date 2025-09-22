@@ -218,8 +218,7 @@ void ErrorAnalyzer::undo_gate(const CircuitInstruction &inst) {
             undo_SWAPCX(inst);
             break;
         default:
-            throw std::invalid_argument(
-                "Not implemented by ErrorAnalyzer::undo_gate: " + std::string(GATE_DATA[inst.gate_type].name));
+            abort();
     }
 }
 
@@ -681,8 +680,7 @@ void ErrorAnalyzer::undo_circuit(const Circuit &circuit) {
                 correlated_error_block(stacked_else_correlated_errors);
                 stacked_else_correlated_errors.clear();
             } else if (!stacked_else_correlated_errors.empty()) {
-                throw std::invalid_argument(
-                    "ELSE_CORRELATED_ERROR wasn't preceded by ELSE_CORRELATED_ERROR or CORRELATED_ERROR (E)");
+                abort();
             } else if (op.gate_type == GateType::REPEAT) {
                 const auto &loop_body = op.repeat_block_body(circuit);
                 uint64_t repeats = op.repeat_block_rep_count();
@@ -717,8 +715,7 @@ void ErrorAnalyzer::undo_circuit(const Circuit &circuit) {
     }
 
     if (!stacked_else_correlated_errors.empty()) {
-        throw std::invalid_argument(
-            "ELSE_CORRELATED_ERROR wasn't preceded by ELSE_CORRELATED_ERROR or CORRELATED_ERROR (E)");
+        abort();
     }
 }
 
@@ -796,13 +793,7 @@ void ErrorAnalyzer::correlated_error_block(const std::vector<CircuitInstruction>
         double actual_p = dat.args[0] * remaining_p;
         remaining_p *= 1 - dat.args[0];
         if (actual_p > approximate_disjoint_errors_threshold) {
-            throw std::invalid_argument(
-                "CORRELATED_ERROR/ELSE_CORRELATED_ERROR block has a component probability '" +
-                std::to_string(actual_p) +
-                "' larger than the "
-                "`approximate_disjoint_errors` threshold of "
-                "'" +
-                std::to_string(approximate_disjoint_errors_threshold) + "'.");
+            abort();
         }
         add_composite_error(actual_p, dat.targets, dat.tag);
     }

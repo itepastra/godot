@@ -130,8 +130,7 @@ void CircuitFlowReverser::do_measuring_instruction(const CircuitInstruction &ins
 void CircuitFlowReverser::do_feedback_capable_instruction(const CircuitInstruction &inst) {
     for (GateTarget t : inst.targets) {
         if (t.is_measurement_record_target()) {
-            throw std::invalid_argument(
-                "Time-reversing feedback isn't supported yet. Found feedback in: " + inst.str());
+            abort();
         }
     }
     do_simple_instruction(inst);

@@ -46,9 +46,7 @@ void measurements_to_detection_events_helper(
     // Tables should have the right number of bits per shot.
     if (out_detection_results__minor_shot_index.num_major_bits_padded() <
         circuit_stats.num_detectors + circuit_stats.num_observables * append_observables) {
-        throw std::invalid_argument(
-            "out_detection_results__minor_shot_index.num_major_bits_padded() < num_detectors + num_observables * "
-            "append_observables");
+        abort();
     }
     if (measurements__minor_shot_index.num_major_bits_padded() < circuit_stats.num_measurements) {
         abort();
@@ -231,9 +229,7 @@ void stream_measurements_to_detection_events_helper(
     simd_bit_table<W> out__major_shot_index(num_buffered_shots, num_out_bits_including_any_obs);
     simd_bit_table<W> sweep_bits__minor_shot_index(num_sweep_bits_available, num_buffered_shots);
     if (reader->expects_empty_serialized_data_for_each_shot()) {
-        throw std::invalid_argument(
-            "Can't tell how many shots are in the measurement data.\n"
-            "The circuit has no measurements and the measurement format encodes empty shots into no bytes.");
+        abort();
     }
 
     // Data streaming loop.

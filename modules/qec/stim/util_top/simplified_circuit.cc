@@ -530,8 +530,7 @@ struct Simplifier {
                 } else if (g.flags & GATE_TARGETS_PAIRS) {
                     simplify_potentially_overlapping_2q_instruction(inst);
                 } else {
-                    throw std::invalid_argument(
-                        "Unhandled in simplify_potentially_overlapping_instruction: " + inst.str());
+                    abort();
                 }
             }
         }

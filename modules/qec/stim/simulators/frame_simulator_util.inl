@@ -47,9 +47,7 @@ void rerun_frame_sim_while_streaming_dets_to_disk(
     FILE *obs_out,
     SampleFormat obs_out_format) {
     if (prepend_observables) {
-        throw std::invalid_argument(
-            "--prepend_observables isn't supported when sampling circuits so large that they require streaming the "
-            "results");
+        abort();
     }
 
     MeasureRecordBatchWriter writer(out, num_shots, format);

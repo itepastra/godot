@@ -566,9 +566,7 @@ std::vector<std::optional<std::vector<int32_t>>> solve_for_flow_measurements(con
         num_flow_qubits = std::max(num_flow_qubits, flow.input.num_qubits);
         num_flow_qubits = std::max(num_flow_qubits, flow.output.num_qubits);
         if (flow.input.ref().has_no_pauli_terms() && flow.output.ref().has_no_pauli_terms()) {
-            throw std::invalid_argument(
-                "Given a 1 -> 1 flow (empty input, empty output). "
-                "Only solving non-empty flows is supported by this method.");
+            abort();
         }
     }
 

@@ -98,8 +98,7 @@ struct Tableau {
     /// If a Tableau fixes each pauli upto sign, then it is conjugation by a pauli
     bool is_pauli_product() const;
 
-    /// If tableau is conjugation by a pauli, then return that pauli. Else throw exception.
-    PauliString<W> to_pauli_string() const;
+    /// If tableau is conjugation by a pauli, then return that pauli. Else abort();
 
     /// Creates a Tableau representing a single qubit gate.
     ///

@@ -13,27 +13,15 @@ Tableau<W> circuit_to_tableau(
     circuit.for_each_operation([&](const CircuitInstruction &op) {
         const auto &flags = GATE_DATA[op.gate_type].flags;
         if (!ignore_measurement && (flags & GATE_PRODUCES_RESULTS)) {
-            throw std::invalid_argument(
-                "The circuit has no well-defined tableau because it contains measurement operations.\n"
-                "To ignore measurement operations, pass the argument ignore_measurement=True.\n"
-                "The first measurement operation is: " +
-                op.str());
+            abort();
         }
         if (!ignore_reset && (flags & GATE_IS_RESET)) {
-            throw std::invalid_argument(
-                "The circuit has no well-defined tableau because it contains reset operations.\n"
-                "To ignore reset operations, pass the argument ignore_reset=True.\n"
-                "The first reset operation is: " +
-                op.str());
+            abort();
         }
         if (!ignore_noise && (flags & GATE_IS_NOISY)) {
             for (const auto &f : op.args) {
                 if (f > 0) {
-                    throw std::invalid_argument(
-                        "The circuit has no well-defined tableau because it contains noisy operations.\n"
-                        "To ignore noisy operations, pass the argument ignore_noise=True.\n"
-                        "The first noisy operation is: " +
-                        op.str());
+                    abort();
                 }
             }
         }

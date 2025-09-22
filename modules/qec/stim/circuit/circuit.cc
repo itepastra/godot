@@ -929,24 +929,17 @@ Circuit Circuit::inverse(bool allow_weak_inverse) const {
             // Noise isn't invertible, but it is weakly invertible.
             // ELSE_CORRELATED_ERROR isn't implemented due to complex order dependencies.
             if (!allow_weak_inverse || op.gate_type == GateType::ELSE_CORRELATED_ERROR) {
-                throw std::invalid_argument(
-                    "The circuit has no well-defined inverse because it contains noise.\n"
-                    "For example it contains a '" +
-                    op.str() + "' instruction.");
+                abort();
             }
         } else if (flags & (GATE_IS_RESET | GATE_PRODUCES_RESULTS)) {
             // Dissipative operations aren't invertible, but they are weakly invertible.
             if (!allow_weak_inverse) {
-                throw std::invalid_argument(
-                    "The circuit has no well-defined inverse because it contains resets or measurements.\n"
-                    "For example it contains a '" +
-                    op.str() + "' instruction.");
+                abort();
             }
         } else if (op.gate_type == GateType::QUBIT_COORDS) {
             // Qubit coordinate headers are kept at the beginning.
             if (k > skip_reversing) {
-                throw std::invalid_argument(
-                    "Inverting QUBIT_COORDS is not implemented except at the start of the circuit.");
+                abort();
             }
             skip_reversing++;
         } else if (op.gate_type == GateType::SHIFT_COORDS) {

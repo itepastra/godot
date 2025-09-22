@@ -110,8 +110,7 @@ Flow<W> Flow<W>::from_str(std::string_view text) {
             }
             observables.push_back(rec);
         } else {
-            throw std::invalid_argument("Parsing reached an expected-to-be-impossible state. "
-                                        "Failed to understand a Pauli term.");
+            abort();
         }
         out.sign ^= flip_out;
         k++;

@@ -30,11 +30,7 @@ struct color_coord {
 
 GeneratedCircuit stim::generate_color_code_circuit(const CircuitGenParameters &params) {
     if (params.task != "memory_xyz") {
-        throw std::invalid_argument(
-            "Unrecognized task '" + params.task +
-            "'. Known color_code tasks:\n"
-            "    'memory_xyz': Initialize logical |0>, protect by cycling X then Y then Z stabilizer measurements, "
-            "measure logical Z.\n");
+        abort();
     }
     if (params.rounds < 2) {
         abort();

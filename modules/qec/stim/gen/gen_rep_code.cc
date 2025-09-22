@@ -4,10 +4,7 @@ using namespace stim;
 
 GeneratedCircuit stim::generate_rep_code_circuit(const CircuitGenParameters &params) {
     if (params.task != "memory") {
-        throw std::invalid_argument(
-            "Unrecognized task '" + params.task +
-            "'. Known repetition_code tasks:\n"
-            "    'memory': Initialize |0>, protect with parity measurements, measure.\n");
+        abort();
     }
     if (params.rounds < 1) {
         abort();

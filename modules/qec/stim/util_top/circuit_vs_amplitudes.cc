@@ -137,10 +137,7 @@ std::vector<std::complex<float>> stim::circuit_to_output_state_vector(const Circ
         if (flags & GATE_IS_UNITARY) {
             sim.do_gate(op);
         } else if (flags & (GATE_IS_NOISY | GATE_IS_RESET | GATE_PRODUCES_RESULTS)) {
-            throw std::invalid_argument(
-                "The circuit has no well-defined tableau because it contains noisy or dissipative operations.\n"
-                "The first such operation is: " +
-                op.str());
+            abort();
         } else {
             // Operation should be an annotation like TICK or DETECTOR.
         }

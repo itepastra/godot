@@ -305,8 +305,7 @@ simd_bit_table<W> simd_bit_table<W>::from_text(const char *text, size_t min_rows
             lines.back().push_back(true);
             c++;
         } else {
-            throw std::invalid_argument(
-                "Expected indented characters from \"10._\\n\". Got '" + std::string(1, *c) + "'.");
+            abort();
         }
     }
 

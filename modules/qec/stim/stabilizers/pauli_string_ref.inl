@@ -1045,8 +1045,7 @@ void PauliStringRef<W>::do_single_cx(const CircuitInstruction &inst, uint32_t c,
         x2 ^= x1;
         sign ^= x1 && z2 && (z1 == x2);
     } else if (t & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument(
-            "CX had a bit (" + GateTarget{t}.str() + ") as its target, instead of its control.");
+        abort();
     } else {
         if (zs[t]) {
             std::stringstream ss;
@@ -1070,8 +1069,7 @@ void PauliStringRef<W>::do_single_cy(const CircuitInstruction &inst, uint32_t c,
         sign ^= x1 && !z1 && x2 && !z2;
         sign ^= x1 && z1 && !x2 && z2;
     } else if (t & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument(
-            "CY had a bit (" + GateTarget{t}.str() + ") as its target, instead of its control.");
+        abort();
     } else {
         if (xs[t] ^ zs[t]) {
             std::stringstream ss;

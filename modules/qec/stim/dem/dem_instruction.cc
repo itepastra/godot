@@ -193,19 +193,14 @@ void DemInstruction::validate() const {
     switch (type) {
         case DemInstructionType::DEM_ERROR:
             if (arg_data.size() != 1) {
-                throw std::invalid_argument(
-                    "'error' instruction takes 1 argument (a probability), but got " + std::to_string(arg_data.size()) +
-                    " arguments.");
+                abort();
             }
             if (arg_data[0] < 0 || arg_data[0] > 1) {
-                throw std::invalid_argument(
-                    "'error' instruction argument must be a probability (0 to 1) but got " +
-                    std::to_string(arg_data[0]));
+                abort();
             }
             if (!target_data.empty()) {
                 if (target_data.front() == DemTarget::separator() || target_data.back() == DemTarget::separator()) {
-                    throw std::invalid_argument(
-                        "First/last targets of 'error' instruction shouldn't be separators (^).");
+                    abort();
                 }
             }
             for (size_t k = 1; k < target_data.size(); k++) {
@@ -216,38 +211,26 @@ void DemInstruction::validate() const {
             break;
         case DemInstructionType::DEM_SHIFT_DETECTORS:
             if (target_data.size() != 1) {
-                throw std::invalid_argument(
-                    "'shift_detectors' instruction takes 1 target, but got " + std::to_string(target_data.size()) +
-                    " targets.");
+                abort();
             }
             break;
         case DemInstructionType::DEM_DETECTOR:
             if (target_data.size() != 1) {
-                throw std::invalid_argument(
-                    "'detector' instruction takes 1 target but got " + std::to_string(target_data.size()) +
-                    " arguments.");
+                abort();
             }
             if (!target_data[0].is_relative_detector_id()) {
-                throw std::invalid_argument(
-                    "'detector' instruction takes a relative detector target (D#) but got " + target_data[0].str() +
-                    " arguments.");
+                abort();
             }
             break;
         case DemInstructionType::DEM_LOGICAL_OBSERVABLE:
             if (arg_data.size() != 0) {
-                throw std::invalid_argument(
-                    "'logical_observable' instruction takes 0 arguments but got " + std::to_string(arg_data.size()) +
-                    " arguments.");
+                abort();
             }
             if (target_data.size() != 1) {
-                throw std::invalid_argument(
-                    "'logical_observable' instruction takes 1 target but got " + std::to_string(target_data.size()) +
-                    " arguments.");
+                abort();
             }
             if (!target_data[0].is_observable_id()) {
-                throw std::invalid_argument(
-                    "'logical_observable' instruction takes a logical observable target (L#) but got " +
-                    target_data[0].str() + " arguments.");
+                abort();
             }
             break;
         case DemInstructionType::DEM_REPEAT_BLOCK:

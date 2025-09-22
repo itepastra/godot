@@ -1807,8 +1807,7 @@ void TableauSimulator<W>::do_gate(const CircuitInstruction &inst) {
             do_HERALDED_PAULI_CHANNEL_1(inst);
             break;
         default:
-            throw std::invalid_argument(
-                "Not implemented by TableauSimulator::do_gate: " + std::string(GATE_DATA[inst.gate_type].name));
+            abort();
     }
 }
 

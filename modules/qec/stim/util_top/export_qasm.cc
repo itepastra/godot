@@ -233,31 +233,22 @@ struct QasmExporter {
                         target = t1;
                         break;
                     default:
-                        throw std::invalid_argument(
-                            "Not implemented in output_two_qubit_unitary_instruction_with_possible_feedback: " +
-                            instruction.str());
+                        abort();
                 }
 
                 out << "if (";
                 if (control.is_measurement_record_target()) {
                     if (open_qasm_version == 2) {
-                        throw std::invalid_argument(
-                            "The circuit contains feedback, but OPENQASM 2 doesn't support feedback.\n"
-                            "You can use `stim.Circuit.with_inlined_feedback` to drop feedback operations.\n"
-                            "Alternatively, pass the argument `open_qasm_version=3`.");
+                        abort();
                     }
                     out << "ms[" << (measurement_offset + control.rec_offset()) << "]";
                 } else if (control.is_sweep_bit_target()) {
                     if (open_qasm_version == 2) {
-                        throw std::invalid_argument(
-                            "The circuit contains sweep operation, but OPENQASM 2 doesn't support feedback.\n"
-                            "Remove these operations, or pass the argument `open_qasm_version=3`.");
+                        abort();
                     }
                     out << "sweep[" << control.value() << "]";
                 } else {
-                    throw std::invalid_argument(
-                        "Not implemented in output_two_qubit_unitary_instruction_with_possible_feedback: " +
-                        instruction.str());
+                    abort();
                 }
                 out << ") {\n";
                 out << "    " << basis << " q[" << target.qubit_value() << "];\n";
@@ -451,10 +442,7 @@ struct QasmExporter {
                         out << "rec[" << measurement_offset << "] = " << t.qubit_value() << ";\n";
                     } else {
                         if (t.qubit_value()) {
-                            throw std::invalid_argument(
-                                "The circuit contains a vacuous measurement with a non-zero result "
-                                "(like MPAD 1 or MPP !X1*X1) but OPENQASM 2 doesn't support classical assignment.\n"
-                                "Pass the argument `open_qasm_version=3` to fix this.");
+                            abort();
                         }
                     }
                     measurement_offset++;
@@ -494,11 +482,7 @@ struct QasmExporter {
                     return;
                 }
                 if (open_qasm_version == 2) {
-                    throw std::invalid_argument(
-                        "The circuit contains detectors or observables, but OPENQASM 2 doesn't support the operations "
-                        "needed for accumulating detector and observable values.\n"
-                        "To simply ignore detectors and observables, pass the argument `skip_dets_and_obs=True`.\n"
-                        "Alternatively, pass the argument `open_qasm_version=3`.");
+                    abort();
                 }
                 if (instruction.gate_type == GateType::DETECTOR) {
                     out << "dets[" << detector_offset << "] = ";
@@ -539,9 +523,7 @@ struct QasmExporter {
             case GateType::ELSE_CORRELATED_ERROR:
             case GateType::HERALDED_ERASE:
             case GateType::HERALDED_PAULI_CHANNEL_1:
-                throw std::invalid_argument(
-                    "The circuit contains noise, but OPENQASM 2 doesn't support noise operations.\n"
-                    "Use `stim.Circuit.without_noise` to get a version of the circuit without noise.");
+                abort();
 
             case GateType::MPP:
                 output_decomposed_mpp_operation(instruction);

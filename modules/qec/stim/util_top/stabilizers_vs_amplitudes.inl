@@ -24,8 +24,7 @@ Tableau<W> unitary_to_tableau(const std::vector<std::vector<std::complex<float>>
     // Verify matrix is square.
     size_t num_amplitudes = matrix.size();
     if (!is_power_of_2(num_amplitudes)) {
-        throw std::invalid_argument(
-            "Matrix width and height must be a power of 2. Height was " + std::to_string(num_amplitudes));
+        abort();
     }
     for (size_t r = 0; r < num_amplitudes; r++) {
         if (matrix[r].size() != num_amplitudes) {
