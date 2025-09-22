@@ -1210,12 +1210,7 @@ void TableauSimulator<W>::sample_stream(
     while (true) {
         unprocessed.clear();
         if (interactive) {
-            try {
                 unprocessed.append_from_file(in, true);
-            } catch (const std::exception &ex) {
-                std::cerr << "\033[31m" << ex.what() << "\033[0m\n";
-                continue;
-            }
         } else {
             unprocessed.append_from_file(in, true);
         }

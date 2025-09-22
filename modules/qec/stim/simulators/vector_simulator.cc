@@ -72,19 +72,11 @@ void VectorSimulator::apply(
 }
 
 void VectorSimulator::apply(GateType gate, size_t qubit) {
-    try {
         apply(GATE_DATA[gate].unitary(), {qubit});
-    } catch (const std::out_of_range &) {
-        abort();
-    }
 }
 
 void VectorSimulator::apply(GateType gate, size_t qubit1, size_t qubit2) {
-    try {
         apply(GATE_DATA[gate].unitary(), {qubit1, qubit2});
-    } catch (const std::out_of_range &) {
-        abort();
-    }
 }
 
 void VectorSimulator::smooth_stabilizer_state(std::complex<float> base_value) {

@@ -153,12 +153,7 @@ int stim::command_convert(int argc, const char **argv) {
     // list of value types.
     const char *circuit_path_c_str = find_argument("--circuit", argc, argv);
     const char *types = find_argument("--types", argc, argv);
-    try {
         process_circuit(circuit_path_c_str, types, &details);
-    } catch (std::exception &e) {
-        std::cerr << "\033[31m" << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
 
     // Not enough information to infer types, at this point we can only
     // convert arbitrary bits.

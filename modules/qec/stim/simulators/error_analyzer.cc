@@ -672,7 +672,6 @@ void ErrorAnalyzer::undo_circuit(const Circuit &circuit) {
     std::vector<CircuitInstruction> stacked_else_correlated_errors;
     for (size_t k = circuit.operations.size(); k--;) {
         const auto &op = circuit.operations[k];
-        try {
             if (op.gate_type == GateType::ELSE_CORRELATED_ERROR) {
                 stacked_else_correlated_errors.push_back(op);
             } else if (op.gate_type == GateType::E) {
@@ -688,30 +687,6 @@ void ErrorAnalyzer::undo_circuit(const Circuit &circuit) {
             } else {
                 undo_gate(op);
             }
-        } catch (std::invalid_argument &ex) {
-            std::stringstream error_msg;
-            std::string body = ex.what();
-            const char *marker = "\n\nCircuit stack trace:\n    at instruction";
-            size_t p = body.find(marker);
-            if (p == std::string::npos) {
-                error_msg << body;
-            } else {
-                error_msg << body.substr(0, p);
-            }
-            error_msg << "\n\nCircuit stack trace:";
-            if (&circuit == current_circuit_being_analyzed) {
-                auto total_ticks = circuit.count_ticks();
-                if (total_ticks) {
-                    uint64_t current_tick = num_ticks_in_past;
-                    error_msg << "\n    during TICK layer #" << (current_tick + 1) << " of " << (total_ticks + 1);
-                }
-            }
-            error_msg << '\n' << circuit.describe_instruction_location(k);
-            if (p != std::string::npos) {
-                error_msg << "\n    at block's instruction" << body.substr(p + strlen(marker));
-            }
-            abort();
-        }
     }
 
     if (!stacked_else_correlated_errors.empty()) {
@@ -1114,13 +1089,7 @@ void ErrorAnalyzer::run_loop(const Circuit &loop, uint64_t iterations, std::stri
 
     // Perform tortoise-and-hare cycle finding.
     while (hare_iter < iterations) {
-        try {
             hare.undo_circuit(loop);
-        } catch (const std::invalid_argument &) {
-            // Encountered an error. Abort loop folding so it can be re-triggered in a normal way.
-            hare_iter = iterations;
-            break;
-        }
         hare_iter++;
         if (hare.tracker.is_shifted_copy(tracker)) {
             break;
@@ -1587,25 +1556,7 @@ void ErrorAnalyzer::add_error_combinations(
                 if (id.is_relative_detector_id()) {
                     auto r = involved_detectors.find(id);
                     if (r == involved_detectors.end()) {
-                        try {
                             involved_detectors.push_back(id);
-                        } catch (const std::out_of_range &) {
-                            std::stringstream message;
-                            message
-                                << "An error case in a composite error exceeded the max supported number of symptoms "
-                                   "(<=15).";
-                            message << "\nThe " << std::to_string(s)
-                                    << " basis error cases (e.g. X, Z) used to form the combined ";
-                            message << "error cases (e.g. Y = X*Z) are:\n";
-                            for (size_t k2 = 0; k2 < s; k2++) {
-                                message << std::to_string(k2) << ":";
-                                if (!basis_errors[k2].empty()) {
-                                    message << ' ';
-                                }
-                                message << comma_sep_workaround(basis_errors[k2]) << "\n";
-                            }
-                            abort();
-                        }
                     }
                     detector_masks[1 << k] ^= 1 << (r - involved_detectors.begin());
                 }

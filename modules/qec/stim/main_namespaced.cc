@@ -32,7 +32,6 @@
 using namespace stim;
 
 int stim::main(int argc, const char **argv) {
-    try {
         const char *mode = argc > 1 ? argv[1] : "";
         if (mode[0] == '-') {
             mode = "";
@@ -110,14 +109,4 @@ int stim::main(int argc, const char **argv) {
         }
 
         abort();
-    } catch (const std::invalid_argument &ex) {
-        std::string_view s = ex.what();
-        std::cerr << "\033[31m";
-        std::cerr << s;
-        if (s.empty() || s.back() != '\n') {
-            std::cerr << '\n';
-        }
-        std::cerr << "\033[0m";
-        return EXIT_FAILURE;
-    }
 }

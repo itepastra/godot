@@ -156,11 +156,7 @@ inline const Gate &read_gate_name(int &c, SOURCE read_char) {
         n++;
     }
     // Note: in the name-too-long case, the full buffer name won't match any gate and an exception will fire.
-    try {
         return GATE_DATA.at(std::string_view{&name_buf[0], n});
-    } catch (const std::out_of_range &ex) {
-        abort();
-    }
 }
 
 template <typename SOURCE>
@@ -204,7 +200,6 @@ void circuit_read_single_operation(Circuit &circuit, char lead_char, SOURCE read
     int c = (int)lead_char;
     const auto &gate = read_gate_name(c, read_char);
     std::string_view tail_tag;
-    try {
         read_tag(c, gate.name, read_char, circuit.tag_buf);
         if (!circuit.tag_buf.tail.empty()) {
             tail_tag = std::string_view(circuit.tag_buf.tail.ptr_start, circuit.tag_buf.tail.size());
@@ -223,11 +218,6 @@ void circuit_read_single_operation(Circuit &circuit, char lead_char, SOURCE read
             }
             CircuitInstruction(gate.id, circuit.arg_buf.tail, circuit.target_buf.tail, tail_tag).validate();
         }
-    } catch (const std::invalid_argument &ex) {
-        circuit.target_buf.discard_tail();
-        circuit.arg_buf.discard_tail();
-        abort();
-    }
 
     circuit.tag_buf.commit_tail();
     circuit.operations.push_back(
@@ -449,12 +439,7 @@ void Circuit::safe_append_reversed_targets(CircuitInstruction instruction, bool 
     }
 
     CircuitInstruction to_add = instruction;
-    try {
         to_add.validate();
-    } catch (const std::invalid_argument &ex) {
-        target_buf.discard_tail();
-        throw;
-    }
 
     // Commit reversed tail data.
     to_add.targets = target_buf.commit_tail();

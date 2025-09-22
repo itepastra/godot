@@ -277,7 +277,6 @@ void dem_read_instruction(DetectorErrorModel &model, char lead_char, SOURCE read
     int c = lead_char;
     DemInstructionType type = read_instruction_name(c, read_char);
     std::string_view tail_tag;
-    try {
         read_tag(c, "", read_char, model.tag_buf);
         if (!model.tag_buf.tail.empty()) {
             tail_tag = std::string_view(model.tag_buf.tail.ptr_start, model.tag_buf.tail.size());
@@ -306,12 +305,6 @@ void dem_read_instruction(DetectorErrorModel &model, char lead_char, SOURCE read
             }
             DemInstruction{model.arg_buf.tail, model.target_buf.tail, tail_tag, type}.validate();
         }
-    } catch (const std::invalid_argument &) {
-        model.tag_buf.discard_tail();
-        model.target_buf.discard_tail();
-        model.arg_buf.discard_tail();
-        throw;
-    }
 
     model.tag_buf.commit_tail();
     model.instructions.push_back(

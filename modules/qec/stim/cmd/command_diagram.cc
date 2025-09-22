@@ -71,10 +71,7 @@ stim::DetectorErrorModel _read_dem(RaiiFile &in, int argc, const char **argv) {
     }
     in.done();
 
-    try {
         return DetectorErrorModel(content);
-    } catch (const std::exception &_) {
-    }
 
     Circuit circuit(content);
     auto dem = ErrorAnalyzer::circuit_to_detector_error_model(circuit, true, true, false, 1, true, false);
@@ -124,10 +121,7 @@ DiagramTypes _read_diagram_type(int argc, const char **argv) {
         {"match-graph-3d-html", DiagramTypes::MATCH_GRAPH_3D_HTML},
     };
     DiagramTypes type = DiagramTypes::NOT_A_DIAGRAM;
-    try {
         type = find_enum_argument("--type", nullptr, quietly_allowed_diagram_types, argc, argv);
-    } catch (const std::invalid_argument &_) {
-    }
     if (type == DiagramTypes::NOT_A_DIAGRAM) {
         type = find_enum_argument("--type", nullptr, diagram_types, argc, argv);
         assert(type != DiagramTypes::NOT_A_DIAGRAM);

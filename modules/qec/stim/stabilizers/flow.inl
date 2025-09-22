@@ -66,7 +66,6 @@ PauliString<W> parse_non_empty_pauli_string_allowing_i(std::string_view text, bo
 
 template <size_t W>
 Flow<W> Flow<W>::from_str(std::string_view text) {
-    try {
         auto parts = split_view('>', text);
         if (parts.size() != 2 || parts[0].empty() || parts[0].back() != '-') {
             abort();  // Caught and given a message below.
@@ -143,12 +142,6 @@ Flow<W> Flow<W>::from_str(std::string_view text) {
         measurements.resize(measurements_kept);
         observables.resize(obs_kept);
         return Flow{inp, out, measurements, observables};
-    } catch (const std::invalid_argument &ex) {
-        if (*ex.what() != '\0') {
-            throw;
-        }
-        abort();
-    }
 }
 
 template <size_t W>

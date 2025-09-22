@@ -276,7 +276,6 @@ void stim_draw_internal::write_html_viewer_for_gltf_data(std::string_view gltf_d
     import {OrbitControls} from "three-orbitcontrols";
     import {GLTFLoader} from "three-gltf-loader";
 
-    try {
       container.textContent = "Loading model...";
       let modelDataUri = downloadLink.href;
       let gltf = await new GLTFLoader().loadAsync(modelDataUri);
@@ -373,10 +372,6 @@ void stim_draw_internal::write_html_viewer_for_gltf_data(std::string_view gltf_d
       controls.addEventListener("change", () => {
           renderer.render(scene, camera);
       })
-    } catch (ex) {
-      container.textContent = "Failed to show model. " + ex;
-      console.error(ex);
-    }
   </script>
 </body>
 )HTML";
