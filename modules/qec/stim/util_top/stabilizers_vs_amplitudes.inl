@@ -33,7 +33,7 @@ Tableau<W> unitary_to_tableau(const std::vector<std::vector<std::complex<float>>
             ss << "Matrix must be square, but row " << r;
             ss << " had width " << matrix[r].size();
             ss << " while matrix had height " << num_amplitudes;
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 
@@ -121,7 +121,7 @@ Tableau<W> unitary_to_tableau(const std::vector<std::vector<std::complex<float>>
     for (size_t r = 0; r < num_amplitudes; r++) {
         for (size_t c = 0; c < num_amplitudes; c++) {
             if (sim.state[r * num_amplitudes + c] != std::complex<float>{r == c ? 1.0f : 0.0f}) {
-                throw std::invalid_argument("The given unitary matrix wasn't a Clifford operation.");
+                abort();
             }
         }
     }

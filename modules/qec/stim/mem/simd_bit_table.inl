@@ -260,7 +260,7 @@ simd_bit_table<W> simd_bit_table<W>::concat_major(
     const simd_bit_table<W> &second, size_t n_first, size_t n_second) const {
     if (num_major_bits_padded() < n_first || second.num_major_bits_padded() < n_second ||
         num_minor_bits_padded() != second.num_minor_bits_padded()) {
-        throw std::invalid_argument("Size mismatch");
+        abort();
     }
     simd_bit_table<W> result(n_first + n_second, num_minor_bits_padded());
     auto n1 = n_first * num_minor_u8_padded();

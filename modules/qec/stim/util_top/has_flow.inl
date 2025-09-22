@@ -32,7 +32,7 @@ static GateTarget measurement_index_to_target(int32_t m, uint64_t num_measuremen
         ss << "The flow mentions a measurement index '" << m;
         ss << "', but this index out of range because the circuit only has ";
         ss << num_measurements << " measurements.";
-        throw std::invalid_argument(ss.str());
+        abort();
     }
     if (m >= 0) {
         m -= num_measurements;
@@ -158,7 +158,7 @@ std::vector<bool> check_if_circuit_has_unsigned_stabilizer_flows(
                 if (t.is_measurement_record_target()) {
                     int64_t index = t.rec_offset() + (int64_t)rev.num_measurements_in_past;
                     if (index < 0) {
-                        throw std::invalid_argument("Referred to a measurement result before the beginning of time.");
+                        abort();
                     }
                     rev.rec_bits[index] ^= effects->second;
                 } else if (t.is_pauli_target()) {
@@ -169,7 +169,7 @@ std::vector<bool> check_if_circuit_has_unsigned_stabilizer_flows(
                         rev.zs[t.qubit_value()] ^= effects->second;
                     }
                 } else {
-                    throw std::invalid_argument("Unexpected target for OBSERVABLE_INCLUDE: " + t.str());
+                    abort();
                 }
             }
         } else {

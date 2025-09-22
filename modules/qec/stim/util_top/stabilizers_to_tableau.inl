@@ -34,7 +34,7 @@ Tableau<W> stabilizers_to_tableau(
                     ss << "\n    stabilizers[" << k1 << "] = " << stabilizers[k1];
                     ss << "\nanticommutes with";
                     ss << "\n    stabilizers[" << k2 << "] = " << stabilizers[k2];
-                    throw std::invalid_argument(ss.str());
+                    abort();
                 }
             }
         }
@@ -92,7 +92,7 @@ Tableau<W> stabilizers_to_tableau(
                 ss << "\nis the negation of the product of the following stabilizers: {";
                 print_redundant_z_product_parts(k, ss);
                 ss << "\n}";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
             if (!allow_redundant) {
                 std::stringstream ss;
@@ -104,7 +104,7 @@ Tableau<W> stabilizers_to_tableau(
                 ss << "\nis the product of the following stabilizers: {";
                 print_redundant_z_product_parts(k, ss);
                 ss << "\n}";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
             continue;
         }
@@ -133,7 +133,7 @@ Tableau<W> stabilizers_to_tableau(
                     });
                     break;
                 default:
-                    throw std::invalid_argument("Unrecognized gate type.");
+                    abort();
             }
         }
 
@@ -177,7 +177,7 @@ Tableau<W> stabilizers_to_tableau(
                         });
                         break;
                     default:
-                        throw std::invalid_argument("Unrecognized gate type.");
+                        abort();
                 }
             }
         }

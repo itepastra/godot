@@ -13,7 +13,7 @@ CircuitFlowGeneratorSolver<W>::CircuitFlowGeneratorSolver(CircuitStats stats)
       buf_for_rows_with(),
       buf_for_xor_merge() {
     if (num_measurements_in_past > INT32_MAX) {
-        throw std::invalid_argument("Circuit is too large. Max flow measurement index is " + std::to_string(INT32_MAX));
+        abort();
     }
 }
 
@@ -35,7 +35,7 @@ void CircuitFlowGeneratorSolver<W>::add_1q_measure_terms(CircuitInstruction inst
 
         auto t = inst.targets[k];
         if (!t.is_qubit_target()) {
-            throw std::invalid_argument("Bad target in " + inst.str());
+            abort();
         }
         uint32_t q = t.qubit_value();
         auto &row = add_row();
@@ -56,7 +56,7 @@ void CircuitFlowGeneratorSolver<W>::add_2q_measure_terms(CircuitInstruction inst
         auto t1 = inst.targets[k];
         auto t2 = inst.targets[k + 1];
         if (!t1.is_qubit_target() || !t2.is_qubit_target()) {
-            throw std::invalid_argument("Bad target in " + inst.str());
+            abort();
         }
         uint32_t q1 = t1.qubit_value();
         uint32_t q2 = t2.qubit_value();
@@ -75,7 +75,7 @@ template <size_t W>
 void CircuitFlowGeneratorSolver<W>::remove_single_qubit_reset_terms(CircuitInstruction inst) {
     for (auto t : inst.targets) {
         if (!t.is_qubit_target()) {
-            throw std::invalid_argument("Bad target in " + inst.str());
+            abort();
         }
         uint32_t q = t.qubit_value();
         for (auto &row : table) {
@@ -107,7 +107,7 @@ void CircuitFlowGeneratorSolver<W>::check_for_2q_anticommutations(CircuitInstruc
         auto t1 = inst.targets[k];
         auto t2 = inst.targets[k + 1];
         if (!t1.is_qubit_target() || !t2.is_qubit_target()) {
-            throw std::invalid_argument("Bad target in " + inst.str());
+            abort();
         }
         uint32_t q1 = t1.qubit_value();
         uint32_t q2 = t2.qubit_value();
@@ -129,7 +129,7 @@ template <size_t W>
 void CircuitFlowGeneratorSolver<W>::check_for_1q_anticommutations(CircuitInstruction inst, bool x, bool z) {
     for (auto t : inst.targets) {
         if (!t.is_qubit_target()) {
-            throw std::invalid_argument("Bad target in " + inst.str());
+            abort();
         }
         uint32_t q = t.qubit_value();
 
@@ -202,7 +202,7 @@ void CircuitFlowGeneratorSolver<W>::undo_feedback_capable_instruction(CircuitIns
             uint32_t q = f1 ? t1.qubit_value() : t2.qubit_value();
             int32_t t = (m1 ? t1.value() : t2.value()) + num_measurements_in_past;
             if (t < 0) {
-                throw std::invalid_argument("Referred to measurement before start of time in " + inst.str());
+                abort();
             }
             for (auto r : rows_anticommuting_with(q, x, z)) {
                 xor_item_into_sorted_vec(t, table[r].measurements);
@@ -270,7 +270,7 @@ void CircuitFlowGeneratorSolver<W>::undo_instruction(CircuitInstruction inst) {
             for (auto t : inst.targets) {
                 num_measurements_in_past--;
                 if (!t.is_qubit_target()) {
-                    throw std::invalid_argument("Bad target in " + inst.str());
+                    abort();
                 }
                 auto &row = add_row();
                 row.measurements.push_back(num_measurements_in_past);
@@ -282,7 +282,7 @@ void CircuitFlowGeneratorSolver<W>::undo_instruction(CircuitInstruction inst) {
             for (auto t : inst.targets) {
                 num_measurements_in_past--;
                 if (!t.is_qubit_target()) {
-                    throw std::invalid_argument("Bad target in " + inst.str());
+                    abort();
                 }
                 auto &row = add_row();
                 row.measurements.push_back(num_measurements_in_past);
@@ -374,7 +374,7 @@ void CircuitFlowGeneratorSolver<W>::undo_instruction(CircuitInstruction inst) {
             break;
 
         default:
-            throw std::invalid_argument("Not handled by circuit flow generators method: " + inst.str());
+            abort();
     }
 }
 
@@ -553,7 +553,7 @@ template <size_t W>
 std::vector<Flow<W>> circuit_flow_generators(const Circuit &circuit) {
     CircuitFlowGeneratorSolver<W> solver = CircuitFlowGeneratorSolver<W>::solver_with_circuit_generators(circuit, 0);
     if (solver.imag_bits.not_zero()) {
-        throw std::invalid_argument("Unexpected anticommutation while solving for flow generators.");
+        abort();
     }
     solver.final_canonicalize_into_table();
     return solver.table;

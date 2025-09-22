@@ -109,7 +109,7 @@ int stim::main(int argc, const char **argv) {
             return command_convert(argc, argv);
         }
 
-        throw std::out_of_range("Mode not handled.");
+        abort();
     } catch (const std::invalid_argument &ex) {
         std::string_view s = ex.what();
         std::cerr << "\033[31m";

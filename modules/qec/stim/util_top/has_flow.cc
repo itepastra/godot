@@ -53,7 +53,7 @@ Circuit stim::flow_test_block_for_circuit(
                             inst.tag,
                         });
                 } else {
-                    throw std::invalid_argument("Not handled: " + inst.str());
+                    abort();
                 }
             }
         } else {

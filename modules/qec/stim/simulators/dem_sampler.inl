@@ -89,7 +89,7 @@ void DemSampler<W>::sample_write(
             size_t errors_read = read_file_data_into_shot_table(
                 err_in, shots_left, (size_t)num_errors, err_in_format, 'M', err_buffer, false);
             if (errors_read != shots_left) {
-                throw std::invalid_argument("Expected more error data for the requested number of shots.");
+                abort();
             }
         }
         resample(err_in != nullptr);

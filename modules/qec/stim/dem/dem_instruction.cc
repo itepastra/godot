@@ -13,13 +13,13 @@ constexpr uint64_t SEPARATOR_SYGIL = UINT64_MAX;
 
 DemTarget DemTarget::observable_id(uint64_t id) {
     if (id > MAX_OBS) {
-        throw std::invalid_argument("id > 0xFFFFFFFF");
+        abort();
     }
     return {OBSERVABLE_BIT | id};
 }
 DemTarget DemTarget::relative_detector_id(uint64_t id) {
     if (id > MAX_DET) {
-        throw std::invalid_argument("Relative detector id too large.");
+        abort();
     }
     return {id};
 }
@@ -38,7 +38,7 @@ uint64_t DemTarget::raw_id() const {
 
 uint64_t DemTarget::val() const {
     if (data == SEPARATOR_SYGIL) {
-        throw std::invalid_argument("Separator doesn't have an integer value.");
+        abort();
     }
     return raw_id();
 }
@@ -95,7 +95,7 @@ DemTarget DemTarget::from_text(std::string_view text) {
             }
         }
     }
-    throw std::invalid_argument("Failed to parse as a stim.DemTarget: '" + std::string(text) + "'");
+    abort();
 }
 
 bool DemInstruction::operator<(const DemInstruction &other) const {
@@ -210,7 +210,7 @@ void DemInstruction::validate() const {
             }
             for (size_t k = 1; k < target_data.size(); k++) {
                 if (target_data[k - 1] == DemTarget::separator() && target_data[k] == DemTarget::separator()) {
-                    throw std::invalid_argument("'error' instruction has adjacent separators (^ ^).");
+                    abort();
                 }
             }
             break;
@@ -254,7 +254,7 @@ void DemInstruction::validate() const {
             // Handled elsewhere.
             break;
         default:
-            throw std::invalid_argument("Unknown instruction type.");
+            abort();
     }
 }
 

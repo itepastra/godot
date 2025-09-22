@@ -18,7 +18,7 @@ using namespace stim;
 
 GateTarget GateTarget::pauli_xz(uint32_t qubit, bool x, bool z, bool inverted) {
     if (qubit != (qubit & TARGET_VALUE_MASK)) {
-        throw std::invalid_argument("qubit target larger than " + std::to_string(TARGET_VALUE_MASK));
+        abort();
     }
     return {qubit | (TARGET_INVERTED_BIT * inverted) | (TARGET_PAULI_X_BIT * x) | (TARGET_PAULI_Z_BIT * z)};
 }
@@ -30,38 +30,38 @@ GateTarget GateTarget::from_target_str(std::string_view text) {
         return k < text.size() ? text[k++] : EOF;
     });
     if (c != EOF) {
-        throw std::invalid_argument("Unparsed text at end of " + std::string(text));
+        abort();
     }
     return t;
 }
 
 GateTarget GateTarget::x(uint32_t qubit, bool inverted) {
     if (qubit != (qubit & TARGET_VALUE_MASK)) {
-        throw std::invalid_argument("qubit target larger than " + std::to_string(TARGET_VALUE_MASK));
+        abort();
     }
     return {qubit | (TARGET_INVERTED_BIT * inverted) | TARGET_PAULI_X_BIT};
 }
 GateTarget GateTarget::y(uint32_t qubit, bool inverted) {
     if (qubit != (qubit & TARGET_VALUE_MASK)) {
-        throw std::invalid_argument("qubit target larger than " + std::to_string(TARGET_VALUE_MASK));
+        abort();
     }
     return {qubit | (TARGET_INVERTED_BIT * inverted) | TARGET_PAULI_X_BIT | TARGET_PAULI_Z_BIT};
 }
 GateTarget GateTarget::z(uint32_t qubit, bool inverted) {
     if (qubit != (qubit & TARGET_VALUE_MASK)) {
-        throw std::invalid_argument("qubit target larger than " + std::to_string(TARGET_VALUE_MASK));
+        abort();
     }
     return {qubit | (TARGET_INVERTED_BIT * inverted) | TARGET_PAULI_Z_BIT};
 }
 GateTarget GateTarget::qubit(uint32_t qubit, bool inverted) {
     if (qubit != (qubit & TARGET_VALUE_MASK)) {
-        throw std::invalid_argument("qubit target larger than " + std::to_string(TARGET_VALUE_MASK));
+        abort();
     }
     return {qubit | (TARGET_INVERTED_BIT * inverted)};
 }
 GateTarget GateTarget::rec(int32_t lookback) {
     if (lookback >= 0 || lookback <= -(1 << 24)) {
-        throw std::out_of_range("Need -16777215 <= lookback <= -1");
+        abort();
     }
     return {((uint32_t)-lookback) | TARGET_RECORD_BIT};
 }
@@ -167,7 +167,7 @@ std::ostream &stim::operator<<(std::ostream &out, const GateTarget &t) {
         }
         return out << ")";
     }
-    throw std::invalid_argument("Malformed target.");
+    abort();
 }
 
 std::string GateTarget::str() const {
@@ -239,7 +239,7 @@ std::string GateTarget::target_str() const {
 
 GateTarget GateTarget::operator!() const {
     if (data & (TARGET_COMBINER | TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument("Target '" + str() + "' doesn't have a defined inverse.");
+        abort();
     }
     return GateTarget{data ^ TARGET_INVERTED_BIT};
 }

@@ -228,20 +228,20 @@ inline DemInstructionType read_instruction_name(int &c, SOURCE read_char) {
     if (!strcmp(name_buf, "repeat")) {
         return DemInstructionType::DEM_REPEAT_BLOCK;
     }
-    throw std::out_of_range("Unrecognized instruction name: " + std::string(name_buf));
+    abort();
 }
 
 template <typename SOURCE>
 uint64_t read_uint60_t(int &c, SOURCE read_char) {
     if (!(c >= '0' && c <= '9')) {
-        throw std::invalid_argument("Expected a digit but got '" + std::string(1, c) + "'");
+        abort();
     }
     uint64_t result = 0;
     do {
         result *= 10;
         result += c - '0';
         if (result >= uint64_t{1} << 60) {
-            throw std::out_of_range("Number too large.");
+            abort();
         }
         c = read_char();
     } while (c >= '0' && c <= '9');
@@ -267,7 +267,7 @@ inline void read_arbitrary_dem_targets_into(int &c, SOURCE read_char, DetectorEr
                 model.target_buf.append_tail(DemTarget::separator());
                 break;
             default:
-                throw std::invalid_argument("Unrecognized target prefix '" + std::string(1, c) + "'.");
+                abort();
         }
     }
 }
@@ -284,14 +284,14 @@ void dem_read_instruction(DetectorErrorModel &model, char lead_char, SOURCE read
         }
         if (type == DemInstructionType::DEM_REPEAT_BLOCK) {
             if (!read_until_next_line_arg(c, read_char)) {
-                throw std::invalid_argument("Missing repeat count of repeat block.");
+                abort();
             }
             model.target_buf.append_tail(DemTarget{read_uint60_t(c, read_char)});
             if (read_until_next_line_arg(c, read_char)) {
-                throw std::invalid_argument("Too many numeric values given to repeat block.");
+                abort();
             }
             if (c != '{') {
-                throw std::invalid_argument("Missing '{' at start of repeat block.");
+                abort();
             }
         } else {
             read_parens_arguments(c, "detector error model instruction", read_char, model.arg_buf);
@@ -302,7 +302,7 @@ void dem_read_instruction(DetectorErrorModel &model, char lead_char, SOURCE read
             }
             read_arbitrary_dem_targets_into(c, read_char, model);
             if (c == '{') {
-                throw std::invalid_argument("Unexpected '{'.");
+                abort();
             }
             DemInstruction{model.arg_buf.tail, model.target_buf.tail, tail_tag, type}.validate();
         }
@@ -331,13 +331,13 @@ void model_read_operations(DetectorErrorModel &model, SOURCE read_char, DEM_READ
         read_past_dead_space_between_commands(c, read_char);
         if (c == EOF) {
             if (read_condition == DEM_READ_CONDITION::DEM_READ_UNTIL_END_OF_BLOCK) {
-                throw std::out_of_range("Unterminated block. Got a '{' without an eventual '}'.");
+                abort();
             }
             return;
         }
         if (c == '}') {
             if (read_condition != DEM_READ_CONDITION::DEM_READ_UNTIL_END_OF_BLOCK) {
-                throw std::out_of_range("Uninitiated block. Got a '}' without a '{'.");
+                abort();
             }
             return;
         }
@@ -484,7 +484,7 @@ void flattened_helper(
             out.append_dem_instruction(
                 DemInstruction{op.arg_data, shifted_detectors, op.tag, DemInstructionType::DEM_ERROR});
         } else {
-            throw std::invalid_argument("Unrecognized instruction type: " + op.str());
+            abort();
         }
     }
 }
@@ -526,7 +526,7 @@ uint64_t DetectorErrorModel::count_detectors() const {
                 }
                 break;
             default:
-                throw std::invalid_argument("Instruction type not implemented in count_detectors: " + e.str());
+                abort();
         }
     }
     return max_num;
@@ -553,7 +553,7 @@ uint64_t DetectorErrorModel::count_errors() const {
                 total++;
                 break;
             default:
-                throw std::invalid_argument("Instruction type not implemented in count_errors: " + e.str());
+                abort();
         }
     }
     return total;
@@ -579,7 +579,7 @@ uint64_t DetectorErrorModel::count_observables() const {
                 }
                 break;
             default:
-                throw std::invalid_argument("Instruction type not implemented in count_observables: " + e.str());
+                abort();
         }
     }
     return max_num;
@@ -775,7 +775,7 @@ std::map<uint64_t, std::vector<double>> DetectorErrorModel::get_detector_coordin
         std::stringstream msg;
         msg << "Detector index " << *iter << " is too big. The detector error model has ";
         msg << count_detectors() << " detectors)";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
 
     return out;

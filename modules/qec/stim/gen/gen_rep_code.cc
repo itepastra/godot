@@ -10,10 +10,10 @@ GeneratedCircuit stim::generate_rep_code_circuit(const CircuitGenParameters &par
             "    'memory': Initialize |0>, protect with parity measurements, measure.\n");
     }
     if (params.rounds < 1) {
-        throw std::invalid_argument("Need rounds >= 1.");
+        abort();
     }
     if (params.distance < 2) {
-        throw std::invalid_argument("Need a distance >= 2.");
+        abort();
     }
 
     uint32_t m = params.distance - 1;

@@ -56,7 +56,7 @@ struct MaxSATInstance {
     void add_clause(Clause& clause) {
         if (clause.weight != HARD_CLAUSE_WEIGHT) {
             if (clause.weight <= 0) {
-                throw std::invalid_argument("Clauses must have positive weight or HARD_CLAUSE_WEIGHT.");
+                abort();
             }
             max_weight = std::max(max_weight, clause.weight);
         }
@@ -171,10 +171,10 @@ std::string sat_problem_as_wcnf_string(const DetectorErrorModel& model, bool wei
     MaxSATInstance inst;
 
     if (weighted and quantization < 1) {
-        throw std::invalid_argument("for weighted problems, quantization must be >= 1");
+        abort();
     }
     if (!weighted and quantization != 0) {
-        throw std::invalid_argument("for unweighted problems, quantization must be == 0");
+        abort();
     }
 
     size_t num_observables = model.count_observables();
@@ -262,7 +262,7 @@ std::string sat_problem_as_wcnf_string(const DetectorErrorModel& model, bool wei
 // Should ignore weights entirely and minimize the cardinality.
 std::string stim::shortest_error_sat_problem(const DetectorErrorModel& model, std::string_view format) {
     if (format != "WDIMACS") {
-        throw std::invalid_argument("Unsupported format.");
+        abort();
     }
     return sat_problem_as_wcnf_string(model, /*weighted=*/false, /*quantization=*/0);
 }
@@ -270,10 +270,10 @@ std::string stim::shortest_error_sat_problem(const DetectorErrorModel& model, st
 std::string stim::likeliest_error_sat_problem(
     const DetectorErrorModel& model, int quantization, std::string_view format) {
     if (format != "WDIMACS") {
-        throw std::invalid_argument("Unsupported format.");
+        abort();
     }
     if (quantization < 1) {
-        throw std::invalid_argument("Must have quantization >= 1");
+        abort();
     }
     return sat_problem_as_wcnf_string(model, /*weighted=*/true, quantization);
 }

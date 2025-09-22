@@ -125,7 +125,7 @@ struct QasmExporter {
                     }
                     break;
                 default:
-                    throw std::invalid_argument("Unhandled: " + inst.str());
+                    abort();
             }
         }
     }
@@ -313,7 +313,7 @@ struct QasmExporter {
             }
             out << ")";
             if (num_measurements > 1) {
-                throw std::invalid_argument("Multiple measurement gates not supported.");
+                abort();
             } else if (num_measurements == 1) {
                 out << " -> bit { bit b; ";
             } else {
@@ -370,7 +370,7 @@ struct QasmExporter {
         } else if (open_qasm_version == 3) {
             out << "include \"stdgates.inc\";\n";
         } else {
-            throw std::invalid_argument("Unrecognized open_qasm_version.");
+            abort();
         }
         qasm_names[(int)GateType::I] = "id";
         qasm_names[(int)GateType::X] = "x";
@@ -517,7 +517,7 @@ struct QasmExporter {
                     } else if (t.is_pauli_target()) {
                         had_paulis = true;
                     } else {
-                        throw std::invalid_argument("Unexpected target for OBSERVABLE_INCLUDE: " + t.str());
+                        abort();
                     }
                 }
                 out << ref_value << ";\n";
@@ -574,13 +574,13 @@ struct QasmExporter {
             }
         }
 
-        throw std::invalid_argument("Not implemented in QasmExporter::output_instruction: " + instruction.str());
+        abort();
     }
 };
 
 void stim::export_open_qasm(const Circuit &circuit, std::ostream &out, int open_qasm_version, bool skip_dets_and_obs) {
     if (open_qasm_version != 2 && open_qasm_version != 3) {
-        throw std::invalid_argument("Only open_qasm_version=2 and open_qasm_version=3 are supported.");
+        abort();
     }
 
     QasmExporter exporter(out, circuit, open_qasm_version, skip_dets_and_obs);

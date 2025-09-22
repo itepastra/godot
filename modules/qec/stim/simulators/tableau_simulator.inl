@@ -119,7 +119,7 @@ void TableauSimulator<W>::postselect_helper(
             }
             msg << "[failed here])\n";
         }
-        throw std::invalid_argument(msg.str());
+        abort();
     }
 }
 
@@ -194,7 +194,7 @@ void TableauSimulator<W>::postselect_observable(PauliStringRef<W> observable, bo
         msg << " because the system is deterministically in the ";
         msg << (desired_result ? "+1" : "-1");
         msg << " eigenstate.";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
 }
 
@@ -359,7 +359,7 @@ void TableauSimulator<W>::do_MZ(const CircuitInstruction &target_data) {
 template <size_t W>
 bool TableauSimulator<W>::measure_pauli_string(const PauliStringRef<W> pauli_string, double flip_probability) {
     if (!(0 <= flip_probability && flip_probability <= 1)) {
-        throw std::invalid_argument("Need 0 <= flip_probability <= 1");
+        abort();
     }
     ensure_large_enough_for_qubits(pauli_string.num_qubits);
 
@@ -737,7 +737,7 @@ void TableauSimulator<W>::single_cx(uint32_t c, uint32_t t) {
     if (!((c | t) & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT))) {
         inv_state.prepend_ZCX(c, t);
     } else if (t & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument("Measurement record editing is not supported.");
+        abort();
     } else {
         if (read_measurement_record(c)) {
             inv_state.prepend_X(t);
@@ -752,7 +752,7 @@ void TableauSimulator<W>::single_cy(uint32_t c, uint32_t t) {
     if (!((c | t) & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT))) {
         inv_state.prepend_ZCY(c, t);
     } else if (t & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument("Measurement record editing is not supported.");
+        abort();
     } else {
         if (read_measurement_record(c)) {
             inv_state.prepend_Y(t);

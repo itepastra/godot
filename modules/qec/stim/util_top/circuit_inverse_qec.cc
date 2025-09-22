@@ -61,7 +61,7 @@ void CircuitFlowReverser::do_rp_mrp_instruction(const CircuitInstruction &inst) 
             } else if (inst.gate_type == GateType::MR) {
                 ejected_noise = GateType::X_ERROR;
             } else {
-                throw std::invalid_argument("Don't know how to invert " + inst.str());
+                abort();
             }
             inverted_circuit.safe_append_reversed_targets(
                 CircuitInstruction(ejected_noise, segment.args, segment.targets, inst.tag), false);
@@ -79,7 +79,7 @@ void CircuitFlowReverser::do_m2r_instruction(const CircuitInstruction &inst) {
     } else if (inst.gate_type == GateType::M) {
         reset = GateType::R;
     } else {
-        throw std::invalid_argument("Don't know how to invert " + inst.str());
+        abort();
     }
 
     Gate g = GATE_DATA[inst.gate_type];
@@ -320,7 +320,7 @@ void CircuitFlowReverser::do_instruction(const CircuitInstruction &inst) {
             break;
         case GateType::ELSE_CORRELATED_ERROR:
         default:
-            throw std::invalid_argument("Don't know how to invert " + inst.str());
+            abort();
     }
 }
 

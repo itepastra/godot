@@ -41,7 +41,7 @@ void CircuitFlowReverser::xor_flow_measurements_into_tracker(std::span<const Flo
             if (m < 0 || (uint64_t)m >= stats.num_measurements) {
                 std::stringstream ss;
                 ss << "Out of range measurement in one of the flows: " << flow;
-                throw std::invalid_argument(ss.str());
+                abort();
             }
             rev.rec_bits[m].sorted_items.push_back(flow_target);
         }
@@ -85,7 +85,7 @@ void CircuitFlowReverser::verify_flow_observables_disappeared(std::span<const Fl
             ss << "- If " + example.str() + " isn't needed, delete it from the circuit.\n";
             ss << "- If the given circuit is a partial circuit, and " << example
                << " is reaching outside of it, refactor " << example << "into a flow argument.";
-            throw std::invalid_argument(ss.str());
+            abort();
         } else {
             std::stringstream ss;
             const auto &flow = flows[example.raw_id() - stats.num_observables];
@@ -97,7 +97,7 @@ void CircuitFlowReverser::verify_flow_observables_disappeared(std::span<const Fl
             ss << "\nChanging the flow to '"
                << Flow<W>{.input = v, .output = flow.output, .measurements = flow.measurements}
                << "' would make it a valid flow.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 }
@@ -133,7 +133,7 @@ std::pair<Circuit, std::vector<Flow<W>>> circuit_inverse_qec(
         max_flow_qubit = std::max(max_flow_qubit, flow.output.num_qubits);
     }
     if (max_flow_qubit >= UINT32_MAX) {
-        throw std::invalid_argument("Flow qubit is too large. Not supported.");
+        abort();
     }
 
     CircuitStats stats = circuit.compute_stats();

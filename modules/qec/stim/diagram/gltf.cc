@@ -42,7 +42,7 @@ JsonObj GltfScene::to_json() {
             item_id.index = c;
             c++;
         } else if (item_id.index > c) {
-            throw std::invalid_argument("out of order");
+            abort();
         }
     });
 

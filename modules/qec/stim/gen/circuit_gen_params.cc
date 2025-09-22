@@ -16,16 +16,16 @@ void append_anti_basis_error(Circuit &circuit, const std::vector<uint32_t> &targ
 
 void CircuitGenParameters::validate_params() const {
     if (before_measure_flip_probability < 0 || before_measure_flip_probability > 1) {
-        throw std::invalid_argument("not 0 <= before_measure_flip_probability <= 1");
+        abort();
     }
     if (before_round_data_depolarization < 0 || before_round_data_depolarization > 1) {
-        throw std::invalid_argument("not 0 <= before_round_data_depolarization <= 1");
+        abort();
     }
     if (after_clifford_depolarization < 0 || after_clifford_depolarization > 1) {
-        throw std::invalid_argument("not 0 <= after_clifford_depolarization <= 1");
+        abort();
     }
     if (after_reset_flip_probability < 0 || after_reset_flip_probability > 1) {
-        throw std::invalid_argument("not 0 <= after_reset_flip_probability <= 1");
+        abort();
     }
 }
 

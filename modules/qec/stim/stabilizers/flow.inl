@@ -8,7 +8,7 @@ namespace stim {
 
 inline bool parse_obs_index(std::string_view obs, uint32_t *out) {
     if (obs.size() < 6 || obs[0] != 'o' || obs[1] != 'b' || obs[2] != 's' || obs[3] != '[' || obs.back() != ']') {
-        throw std::invalid_argument("");  // Caught and given a message by caller.
+        abort();  // Caught and given a message by caller.
     }
     int64_t i = 0;
     if (!parse_int64(obs.substr(4, obs.size() - 5), &i)) {
@@ -24,7 +24,7 @@ inline bool parse_obs_index(std::string_view obs, uint32_t *out) {
 
 inline bool parse_rec_allowing_non_negative(std::string_view rec, int32_t *out) {
     if (rec.size() < 6 || rec[0] != 'r' || rec[1] != 'e' || rec[2] != 'c' || rec[3] != '[' || rec.back() != ']') {
-        throw std::invalid_argument("");  // Caught and given a message by caller.
+        abort();  // Caught and given a message by caller.
     }
     int64_t i = 0;
     if (!parse_int64(rec.substr(4, rec.size() - 5), &i)) {
@@ -50,7 +50,7 @@ PauliString<W> parse_non_empty_pauli_string_allowing_i(std::string_view text, bo
         return r;
     }
     if (text.empty()) {
-        throw std::invalid_argument("Got an ambiguously blank pauli string. Use '1' for the empty Pauli string.");
+        abort();
     }
 
     auto flex = FlexPauliString::from_text(text);
@@ -69,7 +69,7 @@ Flow<W> Flow<W>::from_str(std::string_view text) {
     try {
         auto parts = split_view('>', text);
         if (parts.size() != 2 || parts[0].empty() || parts[0].back() != '-') {
-            throw std::invalid_argument("");  // Caught and given a message below.
+            abort();  // Caught and given a message below.
         }
         parts[0] = parts[0].substr(0, parts[0].size() - 1);
         while (!parts[0].empty() && parts[0].back() == ' ') {
@@ -85,7 +85,7 @@ Flow<W> Flow<W>::from_str(std::string_view text) {
             k += 1;
         }
         if (k >= parts.size()) {
-            throw std::invalid_argument("");  // Caught and given a message below.
+            abort();  // Caught and given a message below.
         }
         PauliString<W> out(0);
         std::vector<int32_t> measurements;
@@ -100,13 +100,13 @@ Flow<W> Flow<W>::from_str(std::string_view text) {
         } else if (parts[k][0] == 'r') {
             int32_t rec;
             if (!parse_rec_allowing_non_negative(parts[k], &rec)) {
-                throw std::invalid_argument("");  // Caught and given a message below.
+                abort();  // Caught and given a message below.
             }
             measurements.push_back(rec);
         } else if (parts[k][0] == 'o') {
             uint32_t rec;
             if (!parse_obs_index(parts[k], &rec)) {
-                throw std::invalid_argument("");  // Caught and given a message below.
+                abort();  // Caught and given a message below.
             }
             observables.push_back(rec);
         } else {
@@ -117,27 +117,27 @@ Flow<W> Flow<W>::from_str(std::string_view text) {
         k++;
         while (k < parts.size()) {
             if (parts[k] != "xor" || k + 1 == parts.size()) {
-                throw std::invalid_argument("");  // Caught and given a message below.
+                abort();  // Caught and given a message below.
             }
             if (parts[k + 1].starts_with("r")) {
                 int32_t rec;
                 if (!parse_rec_allowing_non_negative(parts[k + 1], &rec)) {
-                    throw std::invalid_argument("");  // Caught and given a message below.
+                    abort();  // Caught and given a message below.
                 }
                 measurements.push_back(rec);
             } else if (parts[k + 1].starts_with("o")) {
                 uint32_t obs;
                 if (!parse_obs_index(parts[k + 1], &obs)) {
-                    throw std::invalid_argument("");  // Caught and given a message below.
+                    abort();  // Caught and given a message below.
                 }
                 observables.push_back(obs);
             } else {
-                throw std::invalid_argument("");  // Caught and given a message below.
+                abort();  // Caught and given a message below.
             }
             k += 2;
         }
         if (imag_inp != imag_out) {
-            throw std::invalid_argument("Anti-Hermitian flows aren't allowed.");
+            abort();
         }
         size_t measurements_kept = inplace_xor_sort(SpanRef<int32_t>(measurements)).size();
         size_t obs_kept = inplace_xor_sort(SpanRef<uint32_t>(observables)).size();
@@ -148,7 +148,7 @@ Flow<W> Flow<W>::from_str(std::string_view text) {
         if (*ex.what() != '\0') {
             throw;
         }
-        throw std::invalid_argument("Invalid stabilizer flow text: '" + std::string(text) + "'.");
+        abort();
     }
 }
 
@@ -276,7 +276,7 @@ Flow<W> Flow<W>::operator*(const Flow<W> &rhs) const {
     log_i -= result.input.ref().inplace_right_mul_returning_log_i_scalar(rhs.input.ref());
     log_i += result.output.ref().inplace_right_mul_returning_log_i_scalar(rhs.output.ref());
     if (log_i & 1) {
-        throw std::invalid_argument(str() + " anticommutes with " + rhs.str());
+        abort();
     }
     if (log_i & 2) {
         result.output.sign ^= true;

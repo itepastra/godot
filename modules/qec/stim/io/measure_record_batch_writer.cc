@@ -23,10 +23,10 @@ using namespace stim;
 MeasureRecordBatchWriter::MeasureRecordBatchWriter(FILE *out, size_t num_shots, SampleFormat output_format)
     : output_format(output_format), out(out) {
     if (num_shots > 768) {
-        throw std::out_of_range("num_shots > 768 (safety check to ensure staying away from linux file handle limit)");
+        abort();
     }
     if (output_format == SampleFormat::SAMPLE_FORMAT_PTB64 && num_shots % 64 != 0) {
-        throw std::out_of_range("Number of shots must be a multiple of 64 to use output format ptb64.");
+        abort();
     }
     auto f = output_format;
     auto s = num_shots;
@@ -41,7 +41,7 @@ MeasureRecordBatchWriter::MeasureRecordBatchWriter(FILE *out, size_t num_shots, 
     for (size_t k = 1; k < s; k++) {
         FILE *file = tmpfile();
         if (file == nullptr) {
-            throw std::out_of_range("Failed to open a temp file.");
+            abort();
         }
         writers.push_back(MeasureRecordWriter::make(file, f));
         temporary_files.push_back(file);

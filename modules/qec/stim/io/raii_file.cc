@@ -61,7 +61,7 @@ void RaiiFile::open(std::string_view optional_path, const char *mode) {
         } else {
             ss << "writing.";
         }
-        throw std::invalid_argument(ss.str());
+        abort();
     }
 }
 

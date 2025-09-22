@@ -106,7 +106,7 @@ struct DetectorErrorModel {
                 case DemInstructionType::DEM_LOGICAL_OBSERVABLE:
                     break;
                 default:
-                    throw std::invalid_argument("Unrecognized DEM instruction type: " + op.str());
+                    abort();
             }
         }
     }

@@ -37,10 +37,10 @@ GeneratedCircuit stim::generate_color_code_circuit(const CircuitGenParameters &p
             "measure logical Z.\n");
     }
     if (params.rounds < 2) {
-        throw std::invalid_argument("Need rounds >= 2.");
+        abort();
     }
     if (params.distance < 2 || params.distance % 2 == 0) {
-        throw std::invalid_argument("Need an odd distance >= 3.");
+        abort();
     }
 
     uint32_t d = params.distance;

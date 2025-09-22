@@ -74,14 +74,14 @@ struct GateTarget {
 template <typename SOURCE>
 uint32_t read_uint24_t(int &c, SOURCE read_char) {
     if (!(c >= '0' && c <= '9')) {
-        throw std::invalid_argument("Expected a digit but got '" + std::string(1, c) + "'");
+        abort();
     }
     uint32_t result = 0;
     do {
         result *= 10;
         result += c - '0';
         if (result >= uint32_t{1} << 24) {
-            throw std::invalid_argument("Number too large.");
+            abort();
         }
         c = read_char();
     } while (c >= '0' && c <= '9');
@@ -96,12 +96,12 @@ inline GateTarget read_raw_qubit_target(int &c, SOURCE read_char) {
 template <typename SOURCE>
 inline GateTarget read_measurement_record_target(int &c, SOURCE read_char) {
     if (c != 'r' || read_char() != 'e' || read_char() != 'c' || read_char() != '[' || read_char() != '-') {
-        throw std::invalid_argument("Target started with 'r' but wasn't a record argument like 'rec[-1]'.");
+        abort();
     }
     c = read_char();
     uint32_t lookback = read_uint24_t(c, read_char);
     if (c != ']') {
-        throw std::invalid_argument("Target started with 'r' but wasn't a record argument like 'rec[-1]'.");
+        abort();
     }
     c = read_char();
     return GateTarget{lookback | TARGET_RECORD_BIT};
@@ -111,12 +111,12 @@ template <typename SOURCE>
 inline GateTarget read_sweep_bit_target(int &c, SOURCE read_char) {
     if (c != 's' || read_char() != 'w' || read_char() != 'e' || read_char() != 'e' || read_char() != 'p' ||
         read_char() != '[') {
-        throw std::invalid_argument("Target started with 's' but wasn't a sweep bit argument like 'sweep[5]'.");
+        abort();
     }
     c = read_char();
     uint32_t lookback = read_uint24_t(c, read_char);
     if (c != ']') {
-        throw std::invalid_argument("Target started with 's' but wasn't a sweep bit argument like 'sweep[5]'.");
+        abort();
     }
     c = read_char();
     return GateTarget{lookback | TARGET_SWEEP_BIT};
@@ -153,7 +153,7 @@ inline GateTarget read_single_gate_target(int &c, SOURCE read_char) {
         case 's':
             return read_sweep_bit_target(c, read_char);
         default:
-            throw std::invalid_argument("Unrecognized target prefix '" + std::string(1, c) + "'.");
+            abort();
     }
 }
 

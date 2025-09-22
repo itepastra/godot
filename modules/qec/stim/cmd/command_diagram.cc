@@ -151,7 +151,7 @@ bool _read_tick(int argc, const char **argv, uint64_t *tick, uint64_t *tick_star
         *tick_start = parse_exact_uint64_t_from_string(tick_str.substr(0, t));
         uint64_t tick_end = parse_exact_uint64_t_from_string(tick_str.substr(t + 1));
         if (tick_end <= *tick_start) {
-            throw std::invalid_argument("tick_end <= tick_start");
+            abort();
         }
         *tick_num = tick_end - *tick_start;
         *tick = *tick_start;
@@ -235,7 +235,7 @@ int stim::command_diagram(int argc, const char **argv) {
         dem_match_graph_to_svg_diagram_write_to(dem, out);
     } else if (type == DiagramTypes::DETECTOR_SLICE_TEXT) {
         if (!has_tick_arg) {
-            throw std::invalid_argument("Must specify --tick=# with --type=detector-slice-text");
+            abort();
         }
         auto coord_filter = _read_coord_filter(argc, argv);
         auto circuit = _read_circuit(in, argc, argv);
@@ -245,7 +245,7 @@ int stim::command_diagram(int argc, const char **argv) {
         auto circuit = _read_circuit(in, argc, argv);
         DetectorSliceSet::from_circuit_ticks(circuit, tick_start, tick_num, coord_filter).write_svg_diagram_to(out);
     } else {
-        throw std::invalid_argument("Unknown type");
+        abort();
     }
     out << '\n';
 

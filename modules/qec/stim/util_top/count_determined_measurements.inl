@@ -104,7 +104,7 @@ uint64_t count_determined_measurements(const Circuit &circuit, bool unknown_inpu
                 break;
             }
             default:
-                throw std::invalid_argument("count_determined_measurements unhandled measurement type " + inst.str());
+                abort();
         }
     });
     return result;

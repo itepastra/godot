@@ -65,7 +65,7 @@ Circuit tableau_to_circuit(const Tableau<W> &tableau, std::string_view method) {
         ss << "    - 'graph_state'\n";
         ss << "    - 'mpp_state'\n";
         ss << "    - 'mpp_state_unsigned'\n";
-        throw std::invalid_argument(ss.str());
+        abort();
     }
 }
 

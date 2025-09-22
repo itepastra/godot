@@ -44,7 +44,7 @@ CircuitStats CircuitInstruction::compute_stats(const Circuit *host) const {
 void CircuitInstruction::add_stats_to(CircuitStats &out, const Circuit *host) const {
     if (gate_type == GateType::REPEAT) {
         if (host == nullptr) {
-            throw std::invalid_argument("gate_type == REPEAT && host == nullptr");
+            abort();
         }
         // Recurse into blocks.
         auto sub = repeat_block_body(*host).compute_stats();
@@ -114,7 +114,7 @@ void CircuitInstruction::validate() const {
     const Gate &gate = GATE_DATA[gate_type];
 
     if (gate.flags == GateFlags::NO_GATE_FLAG) {
-        throw std::invalid_argument("Unrecognized gate_type. Associated flag is NO_GATE_FLAG.");
+        abort();
     }
 
     if (gate.flags & GATE_TARGETS_PAIRS) {
@@ -269,7 +269,7 @@ void CircuitInstruction::validate() const {
                 ss << "Target ";
                 q.write_succinct(ss);
                 ss << " has invalid modifiers for gate type '" << gate.name << "'.";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
         }
     }
@@ -280,7 +280,7 @@ void CircuitInstruction::validate() const {
                 ss << "Target ";
                 t.write_succinct(ss);
                 ss << " is not valid for gate type '" << gate.name << "'.";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
         }
     }

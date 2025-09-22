@@ -866,6 +866,6 @@ CY rec[-27] 1 rec[-25] 1 rec[-6] 1 rec[-4] 1 rec[-18] 2 rec[-13] 2
 CZ rec[-28] 0 rec[-28] 1 rec[-26] 0 rec[-24] 0 rec[-24] 1 rec[-23] 0 rec[-23] 1 rec[-22] 0 rec[-22] 1 rec[-9] 0 rec[-9] 1 rec[-8] 0 rec[-8] 1 rec[-5] 0 rec[-30] 1 rec[-29] 1 rec[-7] 1 rec[-3] 1 rec[-2] 1 rec[-1] 1 rec[-19] 2 rec[-12] 2
             )CIRCUIT";
         default:
-            throw std::invalid_argument("Unhandled gate type " + std::string(GATE_DATA[gate].name));
+            abort();
     }
 }

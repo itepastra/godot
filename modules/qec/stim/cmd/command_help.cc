@@ -74,7 +74,7 @@ std::string stim::clean_doc_string(const char *c, bool allow_too_long) {
         if (strstr(start_of_line, "\"\"\"") != nullptr) {
             std::stringstream ss;
             ss << "Docstring line contains \"\"\" (please use ''' instead):\n" << start_of_line << "\n";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
         if (!allow_too_long && line_length > 80) {
             if (memcmp(start_of_line, "@signature", strlen("@signature")) != 0 &&
@@ -83,7 +83,7 @@ std::string stim::clean_doc_string(const char *c, bool allow_too_long) {
                 std::stringstream ss;
                 ss << "Docstring line has length " << line_length << " > 80:\n"
                    << start_of_line << std::string(80, '^') << "\n";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
         }
     }
@@ -144,7 +144,7 @@ struct Acc {
     void change_indent(int t) {
         flush();
         if (indent + t < 0) {
-            throw std::out_of_range("negative indent");
+            abort();
         }
         indent += t;
         working << '\n';

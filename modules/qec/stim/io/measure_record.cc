@@ -38,13 +38,13 @@ void MeasureRecord::write_unwritten_results_to(MeasureRecordWriter &writer) {
 
 bool MeasureRecord::lookback(size_t lookback) const {
     if (lookback > storage.size()) {
-        throw std::out_of_range("Referred to a measurement record before the beginning of time.");
+        abort();
     }
     if (lookback == 0) {
-        throw std::out_of_range("Lookback must be non-zero.");
+        abort();
     }
     if (lookback > max_lookback) {
-        throw std::out_of_range("Referred to a measurement record past the lookback limit.");
+        abort();
     }
     return *(storage.end() - lookback);
 }

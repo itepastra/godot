@@ -107,7 +107,7 @@ void VectorSimulator::smooth_stabilizer_state(std::complex<float> base_value) {
             }
         }
         if (!solved) {
-            throw std::invalid_argument("The state vector wasn't a stabilizer state.");
+            abort();
         }
     }
 }
@@ -180,7 +180,7 @@ void VectorSimulator::canonicalize_assuming_stabilizer_state(double norm2) {
         } else if (abs(v - std::complex<float>{0, -1}) < 0.1) {
             v = std::complex<float>{0, -1};
         } else {
-            throw std::invalid_argument("State vector extraction failed. This shouldn't occur.");
+            abort();
         }
     }
 
@@ -199,14 +199,14 @@ void VectorSimulator::do_unitary_circuit(const Circuit &circuit) {
         if (!(gate_data.flags & GATE_IS_UNITARY)) {
             std::stringstream ss;
             ss << "Not a unitary gate: " << gate_data.name;
-            throw std::invalid_argument(ss.str());
+            abort();
         }
         auto unitary = gate_data.unitary();
         for (auto t : op.targets) {
             if (!t.is_qubit_target() || (size_t{1} << t.data) >= state.size()) {
                 std::stringstream ss;
                 ss << "Targets out of range: " << op;
-                throw std::invalid_argument(ss.str());
+                abort();
             }
         }
         if (gate_data.flags & stim::GATE_TARGETS_PAIRS) {

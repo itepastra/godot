@@ -97,7 +97,7 @@ struct bitword<128> {
     inline operator uint64_t() const {  // NOLINT(hicpp-explicit-conversions)
         auto words = to_u64_array();
         if (words[1]) {
-            throw std::invalid_argument("Too large for uint64_t");
+            abort();
         }
         return words[0];
     }
@@ -106,7 +106,7 @@ struct bitword<128> {
         int64_t result = (int64_t)words[0];
         uint64_t expected = result < 0 ? (uint64_t)-1 : (uint64_t)0;
         if (words[1] != expected) {
-            throw std::invalid_argument("Out of bounds of int64_t");
+            abort();
         }
         return result;
     }

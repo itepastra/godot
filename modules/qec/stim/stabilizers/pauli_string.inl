@@ -132,7 +132,7 @@ PauliString<W> PauliString<W>::from_func(bool sign, size_t num_qubits, const std
             x = false;
             z = false;
         } else {
-            throw std::invalid_argument("Unrecognized pauli character. " + std::to_string(c));
+            abort();
         }
         result.xs.u64[i / 64] ^= (uint64_t)x << (i & 63);
         result.zs.u64[i / 64] ^= (uint64_t)z << (i & 63);
@@ -219,7 +219,7 @@ void PauliString<W>::mul_pauli_term(GateTarget t, bool *imag, bool right_mul) {
     bool x2 = (bool)(t.data & TARGET_PAULI_X_BIT);
     bool z2 = (bool)(t.data & TARGET_PAULI_Z_BIT);
     if (!(x2 | z2)) {
-        throw std::invalid_argument("Not a pauli target: " + t.str());
+        abort();
     }
 
     bit_ref x1 = xs[q];
@@ -254,7 +254,7 @@ uint8_t PauliString<W>::py_get_item(int64_t index) const {
         index += num_qubits;
     }
     if (index < 0 || (size_t)index >= num_qubits) {
-        throw std::out_of_range("index");
+        abort();
     }
     size_t u = (size_t)index;
     int x = xs[u];

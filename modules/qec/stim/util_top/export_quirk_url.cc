@@ -371,7 +371,7 @@ struct QuirkExporter {
                         break;
 
                     default:
-                        throw std::invalid_argument("Not supported in export_quirk_url: " + full_instruction.str());
+                        abort();
                 }
             });
         });

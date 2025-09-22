@@ -41,10 +41,10 @@ GeneratedCircuit _finish_surface_code_circuit(
     const std::vector<surface_coord> z_observable,
     bool is_memory_x) {
     if (params.rounds < 1) {
-        throw std::invalid_argument("Need rounds >= 1.");
+        abort();
     }
     if (params.distance < 2) {
-        throw std::invalid_argument("Need a distance >= 2.");
+        abort();
     }
 
     const auto &chosen_basis_observable = is_memory_x ? x_observable : z_observable;

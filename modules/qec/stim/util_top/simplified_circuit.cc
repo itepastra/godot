@@ -271,7 +271,7 @@ struct Simplifier {
                 break;
 
             default:
-                throw std::invalid_argument("Unhandled in Simplifier::simplify_disjoint_1q_instruction: " + inst.str());
+                abort();
         }
     }
 
@@ -468,7 +468,7 @@ struct Simplifier {
                 break;
 
             default:
-                throw std::invalid_argument("Unhandled in Simplifier::simplify_instruction: " + inst.str());
+                abort();
         }
     }
 

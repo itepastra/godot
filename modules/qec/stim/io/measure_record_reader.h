@@ -43,7 +43,7 @@ inline bool read_uint64(FILE *in, uint64_t &value, int &next, bool include_next 
         value *= 10;
         value += next - '0';
         if (value < prev_value) {
-            throw std::runtime_error("Integer value read from file was too big");
+            abort();
         }
         next = getc(in);
     }

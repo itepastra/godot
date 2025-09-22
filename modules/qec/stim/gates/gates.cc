@@ -41,7 +41,7 @@ GateDataMap::GateDataMap() {
         }
     }
     if (failed) {
-        throw std::out_of_range("Failed to initialize gate data.");
+        abort();
     }
 }
 
@@ -217,7 +217,7 @@ bool Gate::is_symmetric() const {
 
 std::array<float, 3> Gate::to_euler_angles() const {
     if (unitary_data.size() != 2) {
-        throw std::out_of_range(std::string(name) + " doesn't have 1q unitary data.");
+        abort();
     }
     auto a = unitary_data[0][0];
     auto b = unitary_data[0][1];
@@ -242,7 +242,7 @@ std::array<float, 3> Gate::to_euler_angles() const {
 
 std::array<float, 4> Gate::to_axis_angle() const {
     if (unitary_data.size() != 2) {
-        throw std::out_of_range(std::string(name) + " doesn't have 1q unitary data.");
+        abort();
     }
     auto a = unitary_data[0][0];
     auto b = unitary_data[0][1];
@@ -308,7 +308,7 @@ bool Gate::has_known_unitary_matrix() const {
 
 std::vector<std::vector<std::complex<float>>> Gate::unitary() const {
     if (unitary_data.size() != 2 && unitary_data.size() != 4) {
-        throw std::out_of_range(std::string(name) + " doesn't have 1q or 2q unitary data.");
+        abort();
     }
     std::vector<std::vector<std::complex<float>>> result;
     for (size_t k = 0; k < unitary_data.size(); k++) {
@@ -325,7 +325,7 @@ const Gate &Gate::inverse() const {
     if ((flags & GATE_IS_UNITARY) || id == GateType::TICK) {
         return GATE_DATA[best_candidate_inverse_id];
     }
-    throw std::out_of_range(std::string(name) + " has no inverse.");
+    abort();
 }
 
 void GateDataMap::add_gate(bool &failed, const Gate &gate) {

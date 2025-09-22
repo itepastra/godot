@@ -7,7 +7,7 @@ Circuit stim::circuit_inverse_unitary(const Circuit &unitary_circuit) {
     unitary_circuit.for_each_operation_reverse([&](const CircuitInstruction &op) {
         const auto &gate_data = GATE_DATA[op.gate_type];
         if (!(gate_data.flags & GATE_IS_UNITARY)) {
-            throw std::invalid_argument("Not unitary: " + op.str());
+            abort();
         }
         size_t step = (gate_data.flags & GATE_TARGETS_PAIRS) ? 2 : 1;
         auto s = op.targets.ptr_start;

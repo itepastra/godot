@@ -75,7 +75,7 @@ struct WithoutFeedbackHelper {
                 } else if (op.gate_type == GateType::CZ) {
                     do_single_feedback(t1, t2.qubit_value(), false, true);
                 } else {
-                    throw std::invalid_argument("Unknown feedback gate.");
+                    abort();
                 }
             } else if (b2 > b1) {
                 if (op.gate_type == GateType::CX) {
@@ -85,7 +85,7 @@ struct WithoutFeedbackHelper {
                 } else if (op.gate_type == GateType::CZ) {
                     do_single_feedback(t2, t1.qubit_value(), false, true);
                 } else {
-                    throw std::invalid_argument("Unknown feedback gate.");
+                    abort();
                 }
             } else if (!b1 && !b2) {
                 reversed_semi_flattened_output.operations.push_back(

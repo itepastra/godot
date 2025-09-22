@@ -98,7 +98,7 @@ FlexPauliString &FlexPauliString::operator/=(const std::complex<float> &rhs) {
     } else if (rhs == std::complex<float>{0, -1}) {
         return *this *= std::complex<float>{0, +1};
     }
-    throw std::invalid_argument("divisor not in (1, -1, 1j, -1j)");
+    abort();
 }
 
 FlexPauliString &FlexPauliString::operator*=(std::complex<float> scale) {
@@ -111,7 +111,7 @@ FlexPauliString &FlexPauliString::operator*=(std::complex<float> scale) {
         imag ^= true;
         value.sign ^= imag;
     } else if (scale != std::complex<float>(1)) {
-        throw std::invalid_argument("phase factor not in [1, -1, 1, 1j]");
+        abort();
     }
     return *this;
 }
@@ -186,7 +186,7 @@ static size_t parse_size_of_pauli_string_shorthand_if_sparse(std::string_view te
         if (has_cur_index) {
             num_qubits = std::max(num_qubits, (size_t)cur_index + 1);
             if (cur_index == UINT64_MAX || num_qubits <= cur_index) {
-                throw std::invalid_argument("");
+                abort();
             }
             cur_index = 0;
             has_cur_index = false;
@@ -225,7 +225,7 @@ static void parse_sparse_pauli_string(std::string_view text, FlexPauliString *ou
 
     auto flush = [&]() {
         if (cur_pauli == '\0' || !has_cur_index || cur_index > out->value.num_qubits) {
-            throw std::invalid_argument("");
+            abort();
         }
         if (cur_pauli != 'I') {
             out->value.right_mul_pauli(
@@ -251,7 +251,7 @@ static void parse_sparse_pauli_string(std::string_view text, FlexPauliString *ou
             case 'z':
             case 'Z':
                 if (cur_pauli != '\0') {
-                    throw std::invalid_argument("");
+                    abort();
                 }
                 cur_pauli = toupper(c);
                 break;
@@ -266,14 +266,14 @@ static void parse_sparse_pauli_string(std::string_view text, FlexPauliString *ou
             case '8':
             case '9':
                 if (cur_pauli == '\0') {
-                    throw std::invalid_argument("");
+                    abort();
                 }
                 has_cur_index = true;
                 cur_index = mul_saturate(cur_index, 10);
                 cur_index = add_saturate(cur_index, c - '0');
                 break;
             default:
-                throw std::invalid_argument("");
+                abort();
         }
     }
     flush();
@@ -302,7 +302,7 @@ FlexPauliString FlexPauliString::from_text(std::string_view text) {
         try {
             parse_sparse_pauli_string(text, &result);
         } catch (const std::invalid_argument &) {
-            throw std::invalid_argument("Not a valid Pauli string shorthand: '" + std::string(text) + "'");
+            abort();
         }
     } else {
         for (size_t k = 0; k < text.size(); k++) {
@@ -324,7 +324,7 @@ FlexPauliString FlexPauliString::from_text(std::string_view text) {
                     result.value.zs[k] = true;
                     break;
                 default:
-                    throw std::invalid_argument("Not a valid Pauli string shorthand: '" + std::string(text) + "'");
+                    abort();
             }
         }
     }

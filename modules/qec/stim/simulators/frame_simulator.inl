@@ -245,7 +245,7 @@ void FrameSimulator<W>::do_OBSERVABLE_INCLUDE(const CircuitInstruction &inst) {
                     r ^= x_table[t.qubit_value()];
                 }
             } else {
-                throw std::invalid_argument("Unexpected target for OBSERVABLE_INCLUDE: " + t.str());
+                abort();
             }
         }
     }
@@ -1108,7 +1108,7 @@ void FrameSimulator<W>::do_gate(const CircuitInstruction &inst) {
             break;
 
         default:
-            throw std::invalid_argument("Not implemented in FrameSimulator<W>::do_gate: " + inst.str());
+            abort();
     }
 }
 

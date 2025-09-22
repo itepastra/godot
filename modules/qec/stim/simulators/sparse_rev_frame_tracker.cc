@@ -218,7 +218,7 @@ void SparseUnsignedRevFrameTracker::fail_due_to_anticommutation(const CircuitIns
         ss << "    " << d << " vs " << g << "\n";
     }
     ss << "Therefore invalid detectors/observables are present in the circuit.\n";
-    throw std::invalid_argument(ss.str());
+    abort();
 }
 
 void SparseUnsignedRevFrameTracker::handle_xor_gauge(
@@ -285,7 +285,7 @@ void SparseUnsignedRevFrameTracker::undo_ZCX_single(GateTarget c, GateTarget t) 
         zs[cd] ^= zs[td];
         xs[td] ^= xs[cd];
     } else if (!t.is_qubit_target()) {
-        throw std::invalid_argument("CX gate had '" + t.str() + "' as its target, but its target must be a qubit.");
+        abort();
     } else {
         undo_classical_pauli(c, GateTarget::x(td));
     }
@@ -303,7 +303,7 @@ void SparseUnsignedRevFrameTracker::undo_ZCY_single(GateTarget c, GateTarget t) 
         xs[td] ^= xs[cd];
         zs[td] ^= xs[cd];
     } else if (!t.is_qubit_target()) {
-        throw std::invalid_argument("CY gate had '" + t.str() + "' as its target, but its target must be a qubit.");
+        abort();
     } else {
         undo_classical_pauli(c, GateTarget::y(td));
     }
@@ -420,7 +420,7 @@ void SparseUnsignedRevFrameTracker::undo_implicit_RZs_at_start_of_circuit() {
             ss << "    " << d << " vs " << g << "\n";
         }
         ss << "Therefore invalid detectors/observables are present in the circuit.\n";
-        throw std::invalid_argument(ss.str());
+        abort();
     }
 }
 
@@ -832,7 +832,7 @@ void SparseUnsignedRevFrameTracker::undo_DETECTOR(const CircuitInstruction &dat)
     for (auto t : dat.targets) {
         int64_t index = t.rec_offset() + (int64_t)num_measurements_in_past;
         if (index < 0) {
-            throw std::invalid_argument("Referred to a measurement result before the beginning of time.");
+            abort();
         }
         rec_bits[(size_t)index].xor_item(det);
     }
@@ -845,7 +845,7 @@ void SparseUnsignedRevFrameTracker::undo_OBSERVABLE_INCLUDE(const CircuitInstruc
         if (t.is_measurement_record_target()) {
             int64_t index = t.rec_offset() + (int64_t)num_measurements_in_past;
             if (index < 0) {
-                throw std::invalid_argument("Referred to a measurement result before the beginning of time.");
+                abort();
             }
             rec_bits[index].xor_item(obs);
         } else if (t.is_pauli_target()) {
@@ -856,7 +856,7 @@ void SparseUnsignedRevFrameTracker::undo_OBSERVABLE_INCLUDE(const CircuitInstruc
                 zs[t.qubit_value()].xor_item(obs);
             }
         } else {
-            throw std::invalid_argument("Unexpected target for OBSERVABLE_INCLUDE: " + t.str());
+            abort();
         }
     }
 }

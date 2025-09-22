@@ -121,7 +121,7 @@ void write_table_data(
     size_t dets_prefix_transition) {
     if (format == SampleFormat::SAMPLE_FORMAT_PTB64) {
         if (num_shots % 64 != 0) {
-            throw std::invalid_argument("shots must be a multiple of 64 to use ptb64 format.");
+            abort();
         }
         auto f64 = num_shots >> 6;
         for (size_t s = 0; s < f64; s++) {
