@@ -1,4 +1,6 @@
 #include "qec.h"
+#include "core/error/error_macros.h"
+#include "stim/simulators/tableau_simulator.h"
 
 Qec::Qec() {
 	count = 0;
@@ -26,70 +28,59 @@ void Qec::add_x_gate(int qubit) {
 	if (qubit < 0 || qubit >= num_qubits) {
         ERR_FAIL_MSG("Qubit index out of range");
     }
-    circuit.safe_append_u("X", {qubit});
+    circuit.safe_append_u("X", {(uint32_t)qubit});
 }
 
 void Qec::add_cx_gate(int control, int target) {
     if (control < 0 || control >= num_qubits || target < 0 || target >= num_qubits) {
         ERR_FAIL_MSG("Qubit index out of range");
     }
-    circuit.safe_append_u("CX", {control, target});
+    circuit.safe_append_u("CX", {(uint32_t)control, (uint32_t)target});
 }
 
 void Qec::add_measurement(int qubit) {
     if (qubit < 0 || qubit >= num_qubits) {
         ERR_FAIL_MSG("Qubit index out of range");
     }
-    circuit.safe_append_u("M", {qubit});
+    circuit.safe_append_u("M", {(uint32_t)qubit});
 }
 
 Array Qec::simulate_measurements(int shot_count) {
-	Array results;
-    
-    try {
-        // sample measurements from the circuit
-        auto samples = circuit.compile_sampler().sample(shot_count);
-        
-        // convert to godot array
-        for (size_t shot = 0; shot < samples.size(); shot++) {
-            Array shot_results;
-            for (size_t qubit = 0; qubit < samples[shot].size(); qubit++) {
-                shot_results.push_back((int)samples[shot][qubit]);
-            }
-            results.push_back(shot_results);
-        }
-    } catch (const std::exception& e) {
-        ERR_FAIL_V_MSG(Array(), String("Stim simulation error: ") + e.what());
+    if (shot_count <= 0) {
+        ERR_FAIL_V_MSG(Array(), "Shot count must be positive");
     }
     
-    return results;
+    if (num_qubits == 0) {
+        ERR_FAIL_V_MSG(Array(), "Circuit not initialized. Call init_circuit first.");
+    }
+    
+    Array results_array;
+    results_array.resize(shot_count);
+    
+    std::random_device rd;
+    std::mt19937_64 rng(rd());
+    
+    for (int i = 0; i < shot_count; i++) {
+        auto measurement_results = stim::TableauSimulator<stim::MAX_BITWORD_WIDTH>::sample_circuit(circuit, rng);
+        
+        // convert to Godot arr
+        Array shot_results;
+        size_t num_measurements = circuit.count_measurements();
+        shot_results.resize(num_measurements);
+        
+        for (size_t j = 0; j < num_measurements; j++) {
+            shot_results[j] = (bool)measurement_results[j];
+        }
+        
+        results_array[i] = shot_results;
+    }
+    
+    return results_array;
 }
 
 
-Array Qec::simulate_detector_samples(int shot_count) {
-    Array results;
-    
-    try {
-        // detector samples detecting errors
-        auto detector_samples = circuit.compile_detector_sampler().sample(shot_count);
-        
-        // to godot arr
-        for (size_t shot = 0; shot < detector_samples.size(); shot++) {
-            Array shot_results;
-            for (size_t detector = 0; detector < detector_samples[shot].size(); detector++) {
-                shot_results.push_back((int)detector_samples[shot][detector]);
-            }
-            results.push_back(shot_results);
-        }
-    } catch (const std::exception& e) {
-        ERR_FAIL_V_MSG(Array(), String("Stim detector sampling error: ") + e.what());
-    }
-    
-    return results;
-}
-
-int get_qubit_count() const {
-	    return num_qubits;
+int Qec::get_qubit_count() const {
+    return (int)num_qubits;
 }
 
 
@@ -103,7 +94,6 @@ void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("add_cx_gate", "control", "target"), &Qec::add_cx_gate);
 	ClassDB::bind_method(D_METHOD("add_measurement", "qubit"), &Qec::add_measurement);
 	ClassDB::bind_method(D_METHOD("simulate_measurements", "shot_count"), &Qec::simulate_measurements);
-	ClassDB::bind_method(D_METHOD("simulate_detector_samples", "shot_count"), &Qec::simulate_detector_samples);
 	ClassDB::bind_method(D_METHOD("get_qubit_count"), &Qec::get_qubit_count);
 
 }

@@ -1,7 +1,10 @@
 Import('env')
 
+env.Append(CPPPATH=["stim"])
+
 qec_env = env.Clone()
 qec_env.add_source_files(env.modules_sources, "*.cc")
+
 # Append CCFLAGS flags for both C and C++ code.
 if env["platform"] == "windows":
     qec_env.Append(CXXFLAGS=['-fexceptions', '/std:c++20'])

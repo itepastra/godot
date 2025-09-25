@@ -17,6 +17,8 @@ protected:
 	static void _bind_methods();
 
 public:
+	Qec();
+
 	void add(int p_value);
 	void reset();
 	int get_total() const;
@@ -25,11 +27,6 @@ public:
     void add_x_gate(int qubit);
     void add_cx_gate(int control, int target);
     void add_measurement(int qubit);
-    
     Array simulate_measurements(int shot_count);
-    Array simulate_detector_samples(int shot_count);
-
     int get_qubit_count() const;
-
-	Qec();
 };
