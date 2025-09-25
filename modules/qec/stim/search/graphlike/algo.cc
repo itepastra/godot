@@ -116,5 +116,5 @@ DetectorErrorModel stim::shortest_graphlike_undetectable_logical_error(
                        "vacuously impossible to find a graphlike logical error.";
         }
     }
-    throw std::invalid_argument(err_msg.str());
+    abort();
 }

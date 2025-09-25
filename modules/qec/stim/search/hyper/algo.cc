@@ -127,5 +127,5 @@ DetectorErrorModel stim::find_undetectable_logical_error(
         err_msg << "\n    WARNING: NO ERRORS. The circuit or detector error model didn't include any errors, making it "
                    "vacuously impossible to find a logical error.";
     }
-    throw std::invalid_argument(err_msg.str());
+    abort();
 }

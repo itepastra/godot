@@ -54,11 +54,7 @@ void Graph::add_edges_from_targets_with_no_separators(
                 if (ignore_ungraphlike_errors) {
                     return;
                 }
-                throw std::invalid_argument(
-                    "The detector error model contained a non-graphlike error mechanism.\n"
-                    "You can ignore such errors using `ignore_ungraphlike_errors`.\n"
-                    "You can use `decompose_errors` when converting a circuit into a model "
-                    "to ensure no such errors are present.\n");
+                abort();
             }
             detectors.push_back(t.raw_id());
         } else if (t.is_observable_id()) {

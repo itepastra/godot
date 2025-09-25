@@ -305,7 +305,7 @@ bool read_until_next_line_arg(int &c, SOURCE read_char, bool space_required = tr
     }
     if (space_required) {
         if (c != ' ' && c != '#' && c != '\t' && c != '\n' && c != '\r' && c != '{' && c != EOF) {
-            throw std::invalid_argument("Targets must be separated by spacing.");
+            abort();
         }
     }
     while (c == ' ' || c == '\t' || c == '\r') {
@@ -355,7 +355,7 @@ double read_normal_double(int &c, SOURCE read_char) {
     char *end;
     double result = strtod(buf, &end);
     if (end != buf + n || std::isinf(result) || std::isnan(result)) {
-        throw std::invalid_argument("Not a real number: " + std::string(buf));
+        abort();
     }
     return result;
 }
@@ -384,7 +384,7 @@ void read_tag(int &c, std::string_view name, SOURCE read_char, MonotonicBuffer<c
                 ss << "a '" << name << "' instruction.\n";
             }
             ss << "In tags, use the escape sequence '\\r' for carriage returns and '\\n' for line feeds.";
-            throw std::invalid_argument(ss.str());
+            abort();
         } else if (c == '\\') {
             c = read_char();
             switch (c) {
@@ -408,7 +408,7 @@ void read_tag(int &c, std::string_view name, SOURCE read_char, MonotonicBuffer<c
                     ss << "\n    \\r: 0x0D (carriage return)";
                     ss << "\n    \\B: 0x5C (backslash '\\')";
                     ss << "\n    \\C: 0x5D (closing square bracket ']')";
-                    throw std::invalid_argument(ss.str());
+                    abort();
             }
         } else {
             out.append_tail(c);
@@ -439,7 +439,7 @@ void read_parens_arguments(int &c, std::string_view name, SOURCE read_char, Mono
 
     read_past_within_line_whitespace(c, read_char);
     if (c != ')') {
-        throw std::invalid_argument("Parens arguments for '" + std::string(name) + "' didn't end with a ')'.");
+        abort();
     }
     c = read_char();
 }

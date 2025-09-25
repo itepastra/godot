@@ -207,7 +207,7 @@ void GraphSimulator::inside_do_pauli_interaction(bool x1, bool z1, bool x2, bool
             inside_do_ycy(q1, q2);
             break;
         default:
-            throw std::invalid_argument("Unknown pauli interaction.");
+            abort();
     }
 }
 
@@ -283,7 +283,7 @@ void GraphSimulator::do_gate_by_decomposition(const CircuitInstruction &inst) {
         is_all_qubits &= t.is_qubit_target();
     }
     if (!is_all_qubits || d.h_s_cx_m_r_decomposition == nullptr || !(d.flags & GATE_TARGETS_PAIRS)) {
-        throw std::invalid_argument("Not supported: " + inst.str());
+        abort();
     }
 
     Circuit circuit(d.h_s_cx_m_r_decomposition);
@@ -374,7 +374,7 @@ void GraphSimulator::do_2q_unitary_instruction(const CircuitInstruction &inst) {
         auto t1 = inst.targets[k];
         auto t2 = inst.targets[k + 1];
         if (!t1.is_qubit_target() || !t2.is_qubit_target()) {
-            throw std::invalid_argument("Unsupported operation: " + inst.str());
+            abort();
         }
         do_pauli_interaction(x1, z1, x2, z2, t1.qubit_value(), t2.qubit_value());
     }
@@ -503,7 +503,7 @@ void GraphSimulator::do_instruction(const CircuitInstruction &instruction) {
         case GateType::SHIFT_COORDS:
             return;  // No effect.
         default:
-            throw std::invalid_argument("Unsupported operation: " + instruction.str());
+            abort();
     }
 }
 

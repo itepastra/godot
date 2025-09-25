@@ -34,13 +34,11 @@ Tableau<W> stabilizers_to_tableau(
                     ss << "\n    stabilizers[" << k1 << "] = " << stabilizers[k1];
                     ss << "\nanticommutes with";
                     ss << "\n    stabilizers[" << k2 << "] = " << stabilizers[k2];
-                    throw std::invalid_argument(ss.str());
+                    abort();
                 }
             }
         }
-        throw std::invalid_argument(
-            "The given stabilizers commute but the solver failed in a way that suggests they anticommute. Please "
-            "report this as a bug.");
+        abort();
     };
 
     auto print_redundant_z_product_parts = [&](size_t stabilizer_index, std::ostream &out) {
@@ -92,7 +90,7 @@ Tableau<W> stabilizers_to_tableau(
                 ss << "\nis the negation of the product of the following stabilizers: {";
                 print_redundant_z_product_parts(k, ss);
                 ss << "\n}";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
             if (!allow_redundant) {
                 std::stringstream ss;
@@ -104,7 +102,7 @@ Tableau<W> stabilizers_to_tableau(
                 ss << "\nis the product of the following stabilizers: {";
                 print_redundant_z_product_parts(k, ss);
                 ss << "\n}";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
             continue;
         }
@@ -133,7 +131,7 @@ Tableau<W> stabilizers_to_tableau(
                     });
                     break;
                 default:
-                    throw std::invalid_argument("Unrecognized gate type.");
+                    abort();
             }
         }
 
@@ -177,7 +175,7 @@ Tableau<W> stabilizers_to_tableau(
                         });
                         break;
                     default:
-                        throw std::invalid_argument("Unrecognized gate type.");
+                        abort();
                 }
             }
         }
@@ -204,9 +202,7 @@ Tableau<W> stabilizers_to_tableau(
 
     if (used < num_qubits) {
         if (!allow_underconstrained) {
-            throw std::invalid_argument(
-                "There weren't enough stabilizers to uniquely specify the state. "
-                "To allow underspecifying the state, pass the argument allow_underconstrained=True.");
+            abort();
         }
     }
 

@@ -158,7 +158,7 @@ void JsonObj::write(std::ostream &out, int64_t indent) const {
             break;
         }
         default:
-            throw std::invalid_argument("unknown type");
+            abort();
     }
 }
 

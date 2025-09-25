@@ -218,8 +218,7 @@ void ErrorAnalyzer::undo_gate(const CircuitInstruction &inst) {
             undo_SWAPCX(inst);
             break;
         default:
-            throw std::invalid_argument(
-                "Not implemented by ErrorAnalyzer::undo_gate: " + std::string(GATE_DATA[inst.gate_type].name));
+            abort();
     }
 }
 
@@ -511,7 +510,7 @@ void ErrorAnalyzer::check_for_gauge(
         });
     }
 
-    throw std::invalid_argument(error_msg.str());
+    abort();
 }
 
 PauliString<MAX_BITWORD_WIDTH> ErrorAnalyzer::current_error_sensitivity_for(DemTarget t) const {
@@ -673,7 +672,6 @@ void ErrorAnalyzer::undo_circuit(const Circuit &circuit) {
     std::vector<CircuitInstruction> stacked_else_correlated_errors;
     for (size_t k = circuit.operations.size(); k--;) {
         const auto &op = circuit.operations[k];
-        try {
             if (op.gate_type == GateType::ELSE_CORRELATED_ERROR) {
                 stacked_else_correlated_errors.push_back(op);
             } else if (op.gate_type == GateType::E) {
@@ -681,8 +679,7 @@ void ErrorAnalyzer::undo_circuit(const Circuit &circuit) {
                 correlated_error_block(stacked_else_correlated_errors);
                 stacked_else_correlated_errors.clear();
             } else if (!stacked_else_correlated_errors.empty()) {
-                throw std::invalid_argument(
-                    "ELSE_CORRELATED_ERROR wasn't preceded by ELSE_CORRELATED_ERROR or CORRELATED_ERROR (E)");
+                abort();
             } else if (op.gate_type == GateType::REPEAT) {
                 const auto &loop_body = op.repeat_block_body(circuit);
                 uint64_t repeats = op.repeat_block_rep_count();
@@ -690,35 +687,10 @@ void ErrorAnalyzer::undo_circuit(const Circuit &circuit) {
             } else {
                 undo_gate(op);
             }
-        } catch (std::invalid_argument &ex) {
-            std::stringstream error_msg;
-            std::string body = ex.what();
-            const char *marker = "\n\nCircuit stack trace:\n    at instruction";
-            size_t p = body.find(marker);
-            if (p == std::string::npos) {
-                error_msg << body;
-            } else {
-                error_msg << body.substr(0, p);
-            }
-            error_msg << "\n\nCircuit stack trace:";
-            if (&circuit == current_circuit_being_analyzed) {
-                auto total_ticks = circuit.count_ticks();
-                if (total_ticks) {
-                    uint64_t current_tick = num_ticks_in_past;
-                    error_msg << "\n    during TICK layer #" << (current_tick + 1) << " of " << (total_ticks + 1);
-                }
-            }
-            error_msg << '\n' << circuit.describe_instruction_location(k);
-            if (p != std::string::npos) {
-                error_msg << "\n    at block's instruction" << body.substr(p + strlen(marker));
-            }
-            throw std::invalid_argument(error_msg.str());
-        }
     }
 
     if (!stacked_else_correlated_errors.empty()) {
-        throw std::invalid_argument(
-            "ELSE_CORRELATED_ERROR wasn't preceded by ELSE_CORRELATED_ERROR or CORRELATED_ERROR (E)");
+        abort();
     }
 }
 
@@ -796,13 +768,7 @@ void ErrorAnalyzer::correlated_error_block(const std::vector<CircuitInstruction>
         double actual_p = dat.args[0] * remaining_p;
         remaining_p *= 1 - dat.args[0];
         if (actual_p > approximate_disjoint_errors_threshold) {
-            throw std::invalid_argument(
-                "CORRELATED_ERROR/ELSE_CORRELATED_ERROR block has a component probability '" +
-                std::to_string(actual_p) +
-                "' larger than the "
-                "`approximate_disjoint_errors` threshold of "
-                "'" +
-                std::to_string(approximate_disjoint_errors_threshold) + "'.");
+            abort();
         }
         add_composite_error(actual_p, dat.targets, dat.tag);
     }
@@ -817,7 +783,7 @@ void ErrorAnalyzer::undo_DEPOLARIZE1(const CircuitInstruction &inst) {
         return;
     }
     if (inst.args[0] > 0.75) {
-        throw std::invalid_argument("Can't analyze over-mixing DEPOLARIZE1 errors (probability > 3/4).");
+        abort();
     }
     double p = depolarize1_probability_to_independent_per_channel_probability(inst.args[0]);
     for (auto q : inst.targets) {
@@ -837,7 +803,7 @@ void ErrorAnalyzer::undo_DEPOLARIZE2(const CircuitInstruction &inst) {
         return;
     }
     if (inst.args[0] > 15.0 / 16.0) {
-        throw std::invalid_argument("Can't analyze over-mixing DEPOLARIZE2 errors (probability > 15/16).");
+        abort();
     }
     double p = depolarize2_probability_to_independent_per_channel_probability(inst.args[0]);
     for (size_t i = 0; i < inst.targets.size(); i += 2) {
@@ -858,7 +824,7 @@ void ErrorAnalyzer::undo_DEPOLARIZE2(const CircuitInstruction &inst) {
 
 void ErrorAnalyzer::undo_ELSE_CORRELATED_ERROR(const CircuitInstruction &dat) {
     if (accumulate_errors) {
-        throw std::invalid_argument("Failed to analyze ELSE_CORRELATED_ERROR: " + dat.str());
+        abort();
     }
 }
 
@@ -882,7 +848,7 @@ void ErrorAnalyzer::check_can_approximate_disjoint(
         msg << "\nIf you're calling from python, using stim.Circuit.detector_error_model, you need to add the "
                "argument approximate_disjoint_errors=True.\n";
         msg << "\nIf you're calling from the command line, you need to specify --approximate_disjoint_errors.";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     for (double p : probabilities) {
         if (p > approximate_disjoint_errors_threshold) {
@@ -893,7 +859,7 @@ void ErrorAnalyzer::check_can_approximate_disjoint(
             msg << ") larger than the `approximate_disjoint_errors` threshold (";
             msg << approximate_disjoint_errors_threshold;
             msg << +").";
-            throw std::invalid_argument(msg.str());
+            abort();
         }
     }
 }
@@ -1005,7 +971,7 @@ DetectorErrorModel unreversed(const DetectorErrorModel &rev, uint64_t &base_dete
                 }
             } break;
             default:
-                throw std::invalid_argument("Unknown instruction type in 'unreversed'.");
+                abort();
         }
     }
     return out;
@@ -1123,13 +1089,7 @@ void ErrorAnalyzer::run_loop(const Circuit &loop, uint64_t iterations, std::stri
 
     // Perform tortoise-and-hare cycle finding.
     while (hare_iter < iterations) {
-        try {
             hare.undo_circuit(loop);
-        } catch (const std::invalid_argument &) {
-            // Encountered an error. Abort loop folding so it can be re-triggered in a normal way.
-            hare_iter = iterations;
-            break;
-        }
         hare_iter++;
         if (hare.tracker.is_shifted_copy(tracker)) {
             break;
@@ -1405,7 +1365,7 @@ std::pair<uint64_t, uint64_t> obs_mask_of_targets(SpanRef<const DemTarget> targe
         const auto &t = targets[k];
         if (t.is_observable_id()) {
             if (t.val() >= 64) {
-                throw std::invalid_argument("Not implemented: decomposing errors observable ids larger than 63.");
+                abort();
             }
             obs_mask |= uint64_t{1} << t.val();
             used_mask |= uint64_t{1} << k;
@@ -1465,7 +1425,7 @@ bool stim::brute_force_decomposition_into_known_graphlike_errors(
     const std::map<FixedCapVector<DemTarget, 2>, SpanRef<const DemTarget>> &known_graphlike_errors,
     MonotonicBuffer<DemTarget> &output) {
     if (problem.size() >= 64) {
-        throw std::invalid_argument("Not implemented: decomposing errors with more than 64 terms.");
+        abort();
     }
 
     std::vector<SpanRef<const DemTarget>> out;
@@ -1557,7 +1517,7 @@ void ErrorAnalyzer::do_global_error_decomposition_pass() {
                         ss << "\n\nNote: `block_decomposition_from_introducing_remnant_edges` is ON.\n";
                         ss << "Turning it off may prevent this error.";
                     }
-                    throw std::invalid_argument(ss.str());
+                    abort();
                 }
                 start = k + 1;
             }
@@ -1596,25 +1556,7 @@ void ErrorAnalyzer::add_error_combinations(
                 if (id.is_relative_detector_id()) {
                     auto r = involved_detectors.find(id);
                     if (r == involved_detectors.end()) {
-                        try {
                             involved_detectors.push_back(id);
-                        } catch (const std::out_of_range &) {
-                            std::stringstream message;
-                            message
-                                << "An error case in a composite error exceeded the max supported number of symptoms "
-                                   "(<=15).";
-                            message << "\nThe " << std::to_string(s)
-                                    << " basis error cases (e.g. X, Z) used to form the combined ";
-                            message << "error cases (e.g. Y = X*Z) are:\n";
-                            for (size_t k2 = 0; k2 < s; k2++) {
-                                message << std::to_string(k2) << ":";
-                                if (!basis_errors[k2].empty()) {
-                                    message << ' ';
-                                }
-                                message << comma_sep_workaround(basis_errors[k2]) << "\n";
-                            }
-                            throw std::invalid_argument(message.str());
-                        }
                     }
                     detector_masks[1 << k] ^= 1 << (r - involved_detectors.begin());
                 }

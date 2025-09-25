@@ -107,7 +107,7 @@ const char *stim::require_find_argument(const char *name_c_str, int argc, const 
     if (result == 0) {
         std::stringstream msg;
         msg << "\033[31mMissing command line argument: '" << name_c_str << "'";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     return result;
 }
@@ -199,7 +199,7 @@ void stim::check_for_unknown_arguments(
             for (const auto &v : known_sorted) {
                 msg << "    " << v << "\n";
             }
-            throw std::invalid_argument(msg.str());
+            abort();
         }
     }
 }
@@ -214,7 +214,7 @@ bool stim::find_bool_argument(const char *name_c_str, int argc, const char **arg
     }
     std::stringstream msg;
     msg << "Got non-empty value '" << text << "' for boolean flag '" << name_c_str << "'.";
-    throw std::invalid_argument(msg.str());
+    abort();
 }
 
 bool stim::parse_int64(std::string_view data, int64_t *out) {
@@ -264,7 +264,7 @@ int64_t stim::find_int64_argument(
         if (default_value < min_value || default_value > max_value) {
             std::stringstream msg;
             msg << "Must specify a value for int flag '" << name_c_str << "'.";
-            throw std::invalid_argument(msg.str());
+            abort();
         }
         return default_value;
     }
@@ -274,7 +274,7 @@ int64_t stim::find_int64_argument(
     if (!parse_int64(text, &i)) {
         std::stringstream msg;
         msg << "Got non-int64 value '" << text << "' for int64 flag '" << name_c_str << "'.";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
 
     // In range?
@@ -282,7 +282,7 @@ int64_t stim::find_int64_argument(
         std::stringstream msg;
         msg << "Integer value '" << text << "' for flag '" << name_c_str << "' doesn't satisfy " << min_value
             << " <= " << i << " <= " << max_value << ".";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
 
     return i;
@@ -295,7 +295,7 @@ float stim::find_float_argument(
         if (default_value < min_value || default_value > max_value) {
             std::stringstream msg;
             msg << "Must specify a value for float flag '" << name_c_str << "'.";
-            throw std::invalid_argument(msg.str());
+            abort();
         }
         return default_value;
     }
@@ -306,7 +306,7 @@ float stim::find_float_argument(
     if (*processed != '\0') {
         std::stringstream msg;
         msg << "Got non-float value '" << text << "' for float flag '" << name_c_str << "'.";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
 
     // In range?
@@ -314,7 +314,7 @@ float stim::find_float_argument(
         std::stringstream msg;
         msg << "Float value '" << text << "' for flag '" << name_c_str << "' doesn't satisfy " << min_value
             << " <= " << f << " <= " << max_value << ".";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
 
     return f;
@@ -327,20 +327,20 @@ FILE *stim::find_open_file_argument(
         if (default_file == nullptr) {
             std::stringstream msg;
             msg << "Missing command line argument: '" << name_c_str << "'";
-            throw std::invalid_argument(msg.str());
+            abort();
         }
         return default_file;
     }
     if (*path_c_str == '\0') {
         std::stringstream msg;
         msg << "Command line argument '" << name_c_str << "' can't be empty. It's supposed to be a file path.";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     FILE *file = fopen(path_c_str, mode);
     if (file == nullptr) {
         std::stringstream msg;
         msg << "Failed to open '" << path_c_str << "'";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     return file;
 }
@@ -363,20 +363,20 @@ ostream_else_cout stim::find_output_stream_argument(
         if (!default_std_out) {
             std::stringstream msg;
             msg << "Missing command line argument: '" << name_c_str << "'";
-            throw std::invalid_argument(msg.str());
+            abort();
         }
         return {nullptr};
     }
     if (*path_c_str == '\0') {
         std::stringstream msg;
         msg << "Command line argument '" << name_c_str << "' can't be empty. It's supposed to be a file path.";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     std::unique_ptr<std::ostream> f(new std::ofstream(path_c_str));
     if (f->fail()) {
         std::stringstream msg;
         msg << "Failed to open '" << path_c_str << "'";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     return {std::move(f)};
 }
@@ -404,7 +404,7 @@ static double parse_exact_double_from_null_terminated(const char *c, size_t size
     }
     std::stringstream ss;
     ss << "Not an exact finite double: '" << c << "'";
-    throw std::invalid_argument(ss.str());
+    abort();
 }
 
 double stim::parse_exact_double_from_string(std::string_view text) {
@@ -458,5 +458,5 @@ uint64_t stim::parse_exact_uint64_t_from_string(std::string_view text) {
     }
     std::stringstream ss;
     ss << "Not an exact integer that can be stored in a uint64_t: '" << text << "'";
-    throw std::invalid_argument(ss.str());
+    abort();
 }

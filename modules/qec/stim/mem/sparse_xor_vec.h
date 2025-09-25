@@ -253,7 +253,7 @@ struct SparseXorVec {
     void check_invariants() const {
         for (size_t k = 1; k < sorted_items.size(); k++) {
             if (!(sorted_items[k - 1] < sorted_items[k])) {
-                throw std::invalid_argument(str() + " is not unique and sorted.");
+                abort();
             }
         }
     }

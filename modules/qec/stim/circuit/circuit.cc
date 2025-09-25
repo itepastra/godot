@@ -156,24 +156,20 @@ inline const Gate &read_gate_name(int &c, SOURCE read_char) {
         n++;
     }
     // Note: in the name-too-long case, the full buffer name won't match any gate and an exception will fire.
-    try {
         return GATE_DATA.at(std::string_view{&name_buf[0], n});
-    } catch (const std::out_of_range &ex) {
-        throw std::invalid_argument(ex.what());
-    }
 }
 
 template <typename SOURCE>
 uint64_t read_uint63_t(int &c, SOURCE read_char) {
     if (!(c >= '0' && c <= '9')) {
-        throw std::invalid_argument("Expected a digit but got '" + std::string(1, c) + "'");
+        abort();
     }
     uint64_t result = 0;
     do {
         result *= 10;
         result += c - '0';
         if (result >= uint64_t{1} << 63) {
-            throw std::invalid_argument("Number too large.");
+            abort();
         }
         c = read_char();
     } while (c >= '0' && c <= '9');
@@ -204,7 +200,6 @@ void circuit_read_single_operation(Circuit &circuit, char lead_char, SOURCE read
     int c = (int)lead_char;
     const auto &gate = read_gate_name(c, read_char);
     std::string_view tail_tag;
-    try {
         read_tag(c, gate.name, read_char, circuit.tag_buf);
         if (!circuit.tag_buf.tail.empty()) {
             tail_tag = std::string_view(circuit.tag_buf.tail.ptr_start, circuit.tag_buf.tail.size());
@@ -214,20 +209,15 @@ void circuit_read_single_operation(Circuit &circuit, char lead_char, SOURCE read
         if (gate.flags & GATE_IS_BLOCK) {
             read_result_targets64_into(c, read_char, circuit);
             if (c != '{') {
-                throw std::invalid_argument("Missing '{' at start of " + std::string(gate.name) + " block.");
+                abort();
             }
         } else {
             read_arbitrary_targets_into(c, read_char, circuit);
             if (c == '{') {
-                throw std::invalid_argument("Unexpected '{'.");
+                abort();
             }
             CircuitInstruction(gate.id, circuit.arg_buf.tail, circuit.target_buf.tail, tail_tag).validate();
         }
-    } catch (const std::invalid_argument &ex) {
-        circuit.target_buf.discard_tail();
-        circuit.arg_buf.discard_tail();
-        throw ex;
-    }
 
     circuit.tag_buf.commit_tail();
     circuit.operations.push_back(
@@ -258,13 +248,13 @@ void circuit_read_operations(Circuit &circuit, SOURCE read_char, READ_CONDITION 
         read_past_dead_space_between_commands(c, read_char);
         if (c == EOF) {
             if (read_condition == READ_CONDITION::READ_UNTIL_END_OF_BLOCK) {
-                throw std::invalid_argument("Unterminated block. Got a '{' without an eventual '}'.");
+                abort();
             }
             return;
         }
         if (c == '}') {
             if (read_condition != READ_CONDITION::READ_UNTIL_END_OF_BLOCK) {
-                throw std::invalid_argument("Uninitiated block. Got a '}' without a '{'.");
+                abort();
             }
             return;
         }
@@ -273,13 +263,13 @@ void circuit_read_operations(Circuit &circuit, SOURCE read_char, READ_CONDITION 
 
         if (new_op.gate_type == GateType::REPEAT) {
             if (new_op.targets.size() != 2) {
-                throw std::invalid_argument("Invalid instruction. Expected one repetition arg like `REPEAT 100 {`.");
+                abort();
             }
             uint32_t rep_count_low = new_op.targets[0].data;
             uint32_t rep_count_high = new_op.targets[1].data;
             uint32_t block_id = (uint32_t)circuit.blocks.size();
             if (rep_count_low == 0 && rep_count_high == 0) {
-                throw std::invalid_argument("Repeating 0 times is not supported.");
+                abort();
             }
 
             // Read block.
@@ -312,7 +302,7 @@ void Circuit::append_from_text(std::string_view text) {
 void Circuit::safe_append(CircuitInstruction operation, bool block_fusion) {
     auto flags = GATE_DATA[operation.gate_type].flags;
     if (flags & GATE_IS_BLOCK) {
-        throw std::invalid_argument("Can't append a block like a normal operation.");
+        abort();
     }
 
     operation.validate();
@@ -362,11 +352,11 @@ void Circuit::safe_append_u(
 
 void Circuit::safe_insert(size_t index, const CircuitInstruction &instruction) {
     if (index > operations.size()) {
-        throw std::invalid_argument("index > operations.size()");
+        abort();
     }
     auto flags = GATE_DATA[instruction.gate_type].flags;
     if (flags & GATE_IS_BLOCK) {
-        throw std::invalid_argument("Can't insert a block like a normal operation.");
+        abort();
     }
     instruction.validate();
 
@@ -386,7 +376,7 @@ void Circuit::safe_insert(size_t index, const CircuitInstruction &instruction) {
 
 void Circuit::safe_insert(size_t index, const Circuit &circuit) {
     if (index > operations.size()) {
-        throw std::invalid_argument("index > operations.size()");
+        abort();
     }
 
     operations.insert(operations.begin() + index, circuit.operations.begin(), circuit.operations.end());
@@ -419,10 +409,10 @@ void Circuit::safe_insert(size_t index, const Circuit &circuit) {
 void Circuit::safe_insert_repeat_block(
     size_t index, uint64_t repeat_count, const Circuit &block, std::string_view tag) {
     if (repeat_count == 0) {
-        throw std::invalid_argument("Can't repeat 0 times.");
+        abort();
     }
     if (index > operations.size()) {
-        throw std::invalid_argument("index > operations.size()");
+        abort();
     }
     target_buf.append_tail(GateTarget{(uint32_t)blocks.size()});
     target_buf.append_tail(GateTarget{(uint32_t)(repeat_count & 0xFFFFFFFFULL)});
@@ -435,7 +425,7 @@ void Circuit::safe_insert_repeat_block(
 void Circuit::safe_append_reversed_targets(CircuitInstruction instruction, bool reverse_in_pairs) {
     if (reverse_in_pairs) {
         if (instruction.targets.size() % 2 != 0) {
-            throw std::invalid_argument("targets.size() % 2 != 0");
+            abort();
         }
         for (size_t k = instruction.targets.size(); k;) {
             k -= 2;
@@ -449,12 +439,7 @@ void Circuit::safe_append_reversed_targets(CircuitInstruction instruction, bool 
     }
 
     CircuitInstruction to_add = instruction;
-    try {
         to_add.validate();
-    } catch (const std::invalid_argument &ex) {
-        target_buf.discard_tail();
-        throw;
-    }
 
     // Commit reversed tail data.
     to_add.targets = target_buf.commit_tail();
@@ -549,7 +534,7 @@ Circuit Circuit::operator*(uint64_t repetitions) const {
         uint64_t old_reps = operations[0].repeat_block_rep_count();
         uint64_t new_reps = old_reps * repetitions;
         if (old_reps != new_reps / repetitions) {
-            throw std::invalid_argument("Fused repetition count is too large.");
+            abort();
         }
         Circuit copy;
         copy.append_repeat_block(new_reps, operations[0].repeat_block_body(*this), "");
@@ -750,7 +735,7 @@ Circuit Circuit::py_get_slice(int64_t start, int64_t step, int64_t slice_length)
 
 void Circuit::append_repeat_block(uint64_t repeat_count, Circuit &&body, std::string_view tag) {
     if (repeat_count == 0) {
-        throw std::invalid_argument("Can't repeat 0 times.");
+        abort();
     }
     target_buf.append_tail(GateTarget{(uint32_t)blocks.size()});
     target_buf.append_tail(GateTarget{(uint32_t)(repeat_count & 0xFFFFFFFFULL)});
@@ -762,7 +747,7 @@ void Circuit::append_repeat_block(uint64_t repeat_count, Circuit &&body, std::st
 
 void Circuit::append_repeat_block(uint64_t repeat_count, const Circuit &body, std::string_view tag) {
     if (repeat_count == 0) {
-        throw std::invalid_argument("Can't repeat 0 times.");
+        abort();
     }
     target_buf.append_tail(GateTarget{(uint32_t)blocks.size()});
     target_buf.append_tail(GateTarget{(uint32_t)(repeat_count & 0xFFFFFFFFULL)});
@@ -929,24 +914,17 @@ Circuit Circuit::inverse(bool allow_weak_inverse) const {
             // Noise isn't invertible, but it is weakly invertible.
             // ELSE_CORRELATED_ERROR isn't implemented due to complex order dependencies.
             if (!allow_weak_inverse || op.gate_type == GateType::ELSE_CORRELATED_ERROR) {
-                throw std::invalid_argument(
-                    "The circuit has no well-defined inverse because it contains noise.\n"
-                    "For example it contains a '" +
-                    op.str() + "' instruction.");
+                abort();
             }
         } else if (flags & (GATE_IS_RESET | GATE_PRODUCES_RESULTS)) {
             // Dissipative operations aren't invertible, but they are weakly invertible.
             if (!allow_weak_inverse) {
-                throw std::invalid_argument(
-                    "The circuit has no well-defined inverse because it contains resets or measurements.\n"
-                    "For example it contains a '" +
-                    op.str() + "' instruction.");
+                abort();
             }
         } else if (op.gate_type == GateType::QUBIT_COORDS) {
             // Qubit coordinate headers are kept at the beginning.
             if (k > skip_reversing) {
-                throw std::invalid_argument(
-                    "Inverting QUBIT_COORDS is not implemented except at the start of the circuit.");
+                abort();
             }
             skip_reversing++;
         } else if (op.gate_type == GateType::SHIFT_COORDS) {
@@ -962,9 +940,9 @@ Circuit Circuit::inverse(bool allow_weak_inverse) const {
                 // But for now it's sufficient to just drop them for the weak inverse.
                 continue;
             }
-            throw std::invalid_argument("Inverse not implemented: " + op.str());
+            abort();
         } else {
-            throw std::invalid_argument("Inverse not implemented: " + op.str());
+            abort();
         }
 
         // Add inverse operation to inverse circuit.
@@ -1143,7 +1121,7 @@ std::map<uint64_t, std::vector<double>> Circuit::get_detector_coordinates(
         std::stringstream msg;
         msg << "Detector index " << *iter << " is too big. The circuit has ";
         msg << count_detectors() << " detectors)";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
 
     return out;

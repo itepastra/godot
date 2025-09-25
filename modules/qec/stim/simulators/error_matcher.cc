@@ -380,9 +380,7 @@ void ErrorMatcher::rev_process_instruction(const CircuitInstruction &op) {
             err_m(op, TARGET_PAULI_Z_BIT);
             break;
         default:
-            throw std::invalid_argument(
-                "Not implemented in ErrorMatcher::rev_process_instruction: " +
-                std::string(GATE_DATA[op.gate_type].name));
+            abort();
     }
 }
 

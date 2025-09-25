@@ -27,10 +27,10 @@ CommutingPauliStringIterator<W>::CommutingPauliStringIterator(size_t num_qubits)
       filled_output(0),
       output_buf() {
     if (num_qubits < 1) {
-        throw std::invalid_argument("Too few qubits (num_qubits < 1).");
+        abort();
     }
     if (num_qubits >= 64) {
-        throw std::invalid_argument("Too many qubits to iterate tableaus (num_qubits > 64).");
+        abort();
     }
     while (output_buf.size() < 64) {
         output_buf.push_back(PauliString<W>(num_qubits));

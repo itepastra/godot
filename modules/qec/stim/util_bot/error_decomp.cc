@@ -10,7 +10,7 @@ using namespace stim;
 void stim::independent_to_disjoint_xyz_errors(
     double x, double y, double z, double *out_x, double *out_y, double *out_z) {
     if (x < 0 || y < 0 || z < 0 || x > 1 || y > 1 || z > 1) {
-        throw std::invalid_argument("x < 0 || y < 0 || z < 0 || x > 1 || y > 1 || z > 1");
+        abort();
     }
     double ab = x * y;
     double ac = x * z;
@@ -29,7 +29,7 @@ void stim::independent_to_disjoint_xyz_errors(
 bool stim::try_disjoint_to_independent_xyz_errors_approx(
     double x, double y, double z, double *out_x, double *out_y, double *out_z, size_t max_steps) {
     if (x < 0 || y < 0 || z < 0 || x + y + z > 1) {
-        throw std::invalid_argument("x < 0 || y < 0 || z < 0 || x + y + z > 1");
+        abort();
     }
 
     // Re-arrange the problem so identity is the most likely case.
@@ -115,16 +115,14 @@ bool stim::try_disjoint_to_independent_xyz_errors_approx(
 
 double stim::depolarize1_probability_to_independent_per_channel_probability(double p) {
     if (p > 0.75) {
-        throw std::invalid_argument(
-            "depolarize1_probability_to_independent_per_channel_probability with p>0.75; p=" + std::to_string(p));
+        abort(); p=" + std::to_string(p));
     }
     return 0.5 - 0.5 * sqrt(1 - (4 * p) / 3);
 }
 
 double stim::depolarize2_probability_to_independent_per_channel_probability(double p) {
     if (p > 0.9375) {
-        throw std::invalid_argument(
-            "depolarize2_probability_to_independent_per_channel_probability with p>15.0/16.0; p=" + std::to_string(p));
+        abort(); p=" + std::to_string(p));
     }
     return 0.5 - 0.5 * pow(1 - (16 * p) / 15, 0.125);
 }

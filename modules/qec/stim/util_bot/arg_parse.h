@@ -193,7 +193,7 @@ const T &find_enum_argument(
         if (default_key == nullptr) {
             std::stringstream msg;
             msg << "\033[31mMust specify a value for enum flag '" << name << "'.\n";
-            throw std::invalid_argument(msg.str());
+            abort();
         }
         return values.at(default_key);
     }
@@ -209,7 +209,7 @@ const T &find_enum_argument(
             msg << "\n";
         }
         msg << "\033[0m";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     return values.at(text);
 }

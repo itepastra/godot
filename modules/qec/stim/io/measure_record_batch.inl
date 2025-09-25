@@ -82,13 +82,13 @@ simd_bits_range_ref<W> MeasureRecordBatch<W>::record_zero_result_to_edit() {
 template <size_t W>
 simd_bits_range_ref<W> MeasureRecordBatch<W>::lookback(size_t lookback) const {
     if (lookback > stored) {
-        throw std::out_of_range("Referred to a measurement record before the beginning of time.");
+        abort();
     }
     if (lookback == 0) {
-        throw std::out_of_range("Lookback must be non-zero.");
+        abort();
     }
     if (lookback > max_lookback) {
-        throw std::out_of_range("Referred to a measurement record past the lookback limit.");
+        abort();
     }
     return storage[stored - lookback];
 }

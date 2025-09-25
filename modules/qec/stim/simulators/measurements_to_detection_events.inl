@@ -38,20 +38,18 @@ void measurements_to_detection_events_helper(
     // Tables should agree on the batch size.
     size_t batch_size = out_detection_results__minor_shot_index.num_minor_bits_padded();
     if (measurements__minor_shot_index.num_minor_bits_padded() != batch_size) {
-        throw std::invalid_argument("measurements__minor_shot_index.num_minor_bits_padded() != batch_size");
+        abort();
     }
     if (sweep_bits__minor_shot_index.num_minor_bits_padded() != batch_size) {
-        throw std::invalid_argument("sweep_bits__minor_shot_index.num_minor_bits_padded() != batch_size");
+        abort();
     }
     // Tables should have the right number of bits per shot.
     if (out_detection_results__minor_shot_index.num_major_bits_padded() <
         circuit_stats.num_detectors + circuit_stats.num_observables * append_observables) {
-        throw std::invalid_argument(
-            "out_detection_results__minor_shot_index.num_major_bits_padded() < num_detectors + num_observables * "
-            "append_observables");
+        abort();
     }
     if (measurements__minor_shot_index.num_major_bits_padded() < circuit_stats.num_measurements) {
-        throw std::invalid_argument("measurements__minor_shot_index.num_major_bits_padded() < num_measurements");
+        abort();
     }
 
     // The frame simulator is used to account for flips in the measurement results that originate from the sweep data.
@@ -103,7 +101,7 @@ void measurements_to_detection_events_helper(
                     } else if (t.is_pauli_target()) {
                         // Ignored.
                     } else {
-                        throw std::invalid_argument("Unexpected target for OBSERVABLE_INCLUDE: " + t.str());
+                        abort();
                     }
                 }
                 if (expectation) {
@@ -126,7 +124,7 @@ void measurements_to_detection_events_helper(
     // Safety check verifying no randomness was used by the frame simulator.
     std::mt19937_64 fresh_rng(0);
     if (frame_sim.rng() != fresh_rng() || frame_sim.rng() != fresh_rng() || frame_sim.rng() != fresh_rng()) {
-        throw std::invalid_argument("Something is wrong. Converting measurements consumed entropy, but it shouldn't.");
+        abort();
     }
 }
 
@@ -231,9 +229,7 @@ void stream_measurements_to_detection_events_helper(
     simd_bit_table<W> out__major_shot_index(num_buffered_shots, num_out_bits_including_any_obs);
     simd_bit_table<W> sweep_bits__minor_shot_index(num_sweep_bits_available, num_buffered_shots);
     if (reader->expects_empty_serialized_data_for_each_shot()) {
-        throw std::invalid_argument(
-            "Can't tell how many shots are in the measurement data.\n"
-            "The circuit has no measurements and the measurement format encodes empty shots into no bytes.");
+        abort();
     }
 
     // Data streaming loop.
@@ -252,7 +248,7 @@ void stream_measurements_to_detection_events_helper(
                 } else {
                     ss << "But there was at least " << (record_count + sweep_data_count) << " sweep records.";
                 }
-                throw std::invalid_argument(ss.str());
+                abort();
             }
         }
         if (record_count == 0) {

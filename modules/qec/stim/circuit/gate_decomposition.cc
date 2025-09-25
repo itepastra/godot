@@ -72,13 +72,12 @@ bool stim::accumulate_next_obs_terms_to_pauli_string_helper(
         } else if (t.is_classical_bit_target() && bits != nullptr) {
             bits->push_back(t);
         } else {
-            throw std::invalid_argument("Found an unsupported target `" + t.str() + "` in " + instruction.str());
+            abort();
         }
     }
 
     if (imag && !allow_imaginary) {
-        throw std::invalid_argument(
-            "Acted on an anti-Hermitian operator (e.g. X0*Z0 instead of Y0) in " + instruction.str());
+        abort();
     }
 
     *start = end;
@@ -232,7 +231,7 @@ void stim::decompose_spp_or_spp_dag_operation(
     } else if (spp_op.gate_type == GateType::SPP_DAG) {
         invert_sign ^= true;
     } else {
-        throw std::invalid_argument("Not an SPP or SPP_DAG instruction: " + spp_op.str());
+        abort();
     }
 
     size_t start = 0;

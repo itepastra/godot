@@ -66,7 +66,7 @@ std::unique_ptr<MeasureRecordReader<W>> MeasureRecordReader<W>::make(
             return std::make_unique<MeasureRecordReaderFormatR8<W>>(
                 in, num_measurements, num_detectors, num_observables);
         default:
-            throw std::invalid_argument("Sample format not recognized by MeasurementRecordReader");
+            abort();
     }
 }
 
@@ -78,7 +78,7 @@ size_t MeasureRecordReader<W>::bits_per_record() const {
 template <size_t W>
 void MeasureRecordReader<W>::move_obs_in_shots_to_mask_assuming_sorted(SparseShot &shot) {
     if (num_observables > 32) {
-        throw std::invalid_argument("More than 32 observables. Can't read into SparseShot struct.");
+        abort();
     }
 
     size_t nd = num_measurements + num_detectors;
@@ -90,7 +90,7 @@ void MeasureRecordReader<W>::move_obs_in_shots_to_mask_assuming_sorted(SparseSho
             break;
         }
         if (top >= n) {
-            throw std::invalid_argument("Hit index from data is too large.");
+            abort();
         }
         shot.hits.pop_back();
         shot.obs_mask[top - nd] ^= true;
@@ -186,11 +186,9 @@ bool MeasureRecordReaderFormat01<W>::start_and_read_entire_record_helper(SAW0 sa
             case '\r':
                 [[fallthrough]];
             case '\n':
-                throw std::invalid_argument(
-                    "01 data ended in middle of record at byte position " + std::to_string(k) +
-                    ".\nExpected bits per record was " + std::to_string(n) + ".");
+                abort();
             default:
-                throw std::invalid_argument("Unexpected character in 01 format data: '" + std::to_string(b) + "'.");
+                abort();
         }
     }
     int last = getc(in);
@@ -201,8 +199,7 @@ bool MeasureRecordReaderFormat01<W>::start_and_read_entire_record_helper(SAW0 sa
         last = getc(in);
     }
     if (last != '\n') {
-        throw std::invalid_argument(
-            "01 data didn't end with a newline after the expected data length of '" + std::to_string(n) + "'.");
+        abort();
     }
     return true;
 }
@@ -224,11 +221,7 @@ bool MeasureRecordReaderFormatB8<W>::start_and_read_entire_record(simd_bits_rang
         return false;
     }
     if (nr != nb) {
-        throw std::invalid_argument(
-            "b8 data ended in middle of record at byte position " + std::to_string(nr) +
-            ".\n"
-            "Expected bytes per record was " +
-            std::to_string(nb) + " (" + std::to_string(n) + " bits padded).");
+        abort();
     }
     return true;
 }
@@ -247,7 +240,7 @@ size_t MeasureRecordReaderFormatB8<W>::read_into_table_with_minor_shot_index(
                 if (bit == 0) {
                     return read_shots;
                 }
-                throw std::invalid_argument("b8 data ended in middle of record.");
+                abort();
             }
             for (size_t b = 0; b < 8 && bit + b < n; b++) {
                 out_table[bit + b][read_shots] = ((c >> b) & 1) != 0;
@@ -273,11 +266,7 @@ bool MeasureRecordReaderFormatB8<W>::start_and_read_entire_record(SparseShot &cl
             if (k == 0) {
                 return false;
             }
-            throw std::invalid_argument(
-                "b8 data ended in middle of record at byte position " + std::to_string(k) +
-                ".\n"
-                "Expected bytes per record was " +
-                std::to_string(nb) + " (" + std::to_string(n) + " bits padded).");
+            abort();
         }
 
         size_t bit_offset = k << 3;
@@ -310,7 +299,7 @@ bool MeasureRecordReaderFormatHits<W>::start_and_read_entire_record(simd_bits_ra
     dirty_out_buffer.prefix_ref(m).clear();
     return start_and_read_entire_record_helper([&](size_t bit_index) {
         if (bit_index >= m) {
-            throw std::invalid_argument("hit index is too large.");
+            abort();
         }
         dirty_out_buffer[bit_index] ^= true;
     });
@@ -325,7 +314,7 @@ bool MeasureRecordReaderFormatHits<W>::start_and_read_entire_record(SparseShot &
     size_t nmd = this->num_measurements + this->num_detectors;
     return start_and_read_entire_record_helper([&](size_t bit_index) {
         if (bit_index >= m) {
-            throw std::invalid_argument("hit index is too large.");
+            abort();
         }
         if (bit_index < nmd) {
             cleared_out.hits.push_back(bit_index);
@@ -374,7 +363,7 @@ bool MeasureRecordReaderFormatHits<W>::start_and_read_entire_record_helper(HANDL
             if (first && next_char == '\n') {
                 return true;
             }
-            throw std::invalid_argument("HITS data wasn't comma-separated integers terminated by a newline.");
+            abort();
         }
         handle_hit((size_t)value);
         first = false;
@@ -387,7 +376,7 @@ bool MeasureRecordReaderFormatHits<W>::start_and_read_entire_record_helper(HANDL
             return true;
         }
         if (next_char != ',') {
-            throw std::invalid_argument("HITS data wasn't comma-separated integers terminated by a newline.");
+            abort();
         }
     }
 }
@@ -461,16 +450,12 @@ bool MeasureRecordReaderFormatR8<W>::start_and_read_entire_record_helper(HANDLE_
             } else if (pos == n) {
                 return true;
             } else {
-                throw std::invalid_argument(
-                    "r8 data jumped past expected end of encoded data. Expected to decode " +
-                    std::to_string(this->bits_per_record()) + " bits.");
+                abort();
             }
         }
         next_char = getc(in);
         if (next_char == EOF) {
-            throw std::invalid_argument(
-                "End of file before end of r8 data. Expected to decode " + std::to_string(this->bits_per_record()) +
-                " bits.");
+            abort();
         }
     }
 }
@@ -541,7 +526,7 @@ bool MeasureRecordReaderFormatDets<W>::start_and_read_entire_record_helper(HANDL
             return false;
         }
         if (next_char != 's' || getc(in) != 'h' || getc(in) != 'o' || getc(in) != 't') {
-            throw std::invalid_argument("DETS data didn't start with 'shot'");
+            abort();
         }
         break;
     }
@@ -556,7 +541,7 @@ bool MeasureRecordReaderFormatDets<W>::start_and_read_entire_record_helper(HANDL
             return true;
         }
         if (next_char != ' ') {
-            throw std::invalid_argument("DETS data wasn't single-space-separated with no trailing spaces.");
+            abort();
         }
         next_char = getc(in);
         uint64_t offset;
@@ -571,21 +556,20 @@ bool MeasureRecordReaderFormatDets<W>::start_and_read_entire_record_helper(HANDL
             offset = this->num_measurements + this->num_detectors;
             length = this->num_observables;
         } else {
-            throw std::invalid_argument(
-                "Unrecognized DETS prefix. Expected M or D or L not '" + std::to_string(next_char) + "'");
+            abort();
         }
         char prefix = next_char;
 
         uint64_t value;
         if (!read_uint64(in, value, next_char, false)) {
-            throw std::invalid_argument("DETS data had a value prefix (M or D or L) not followed by an integer.");
+            abort();
         }
         if (value >= length) {
             std::stringstream msg;
             msg << "DETS data had a value larger than expected. ";
             msg << "Got " << prefix << value << " but expected length of " << prefix << " space to be " << length
                 << ".";
-            throw std::invalid_argument(msg.str());
+            abort();
         }
         handle_hit((size_t)(offset + value));
     }
@@ -617,11 +601,7 @@ bool MeasureRecordReaderFormatPTB64<W>::load_cache() {
         return false;
     }
     if (nr != nb) {
-        throw std::invalid_argument(
-            "ptb64 data ended in middle of 64 record group at byte position " + std::to_string(nr) +
-            ".\n"
-            "Expected bytes per 64 records was " +
-            std::to_string(nb) + " (" + std::to_string(n) + " bits padded).");
+        abort();
     }
 
     // Convert from bit interleaving to uint64_t interleaving.
@@ -703,7 +683,7 @@ size_t MeasureRecordReaderFormatPTB64<W>::read_into_table_with_minor_shot_index(
         return 0;  // Ambiguous when the data ends. Stop as early as possible.
     }
     if (max_shots % 64 != 0) {
-        throw std::invalid_argument("max_shots must be a multiple of 64 when using PTB64 format");
+        abort();
     }
     for (size_t shots_read = 0; shots_read < max_shots; shots_read += 64) {
         for (size_t bit = 0; bit < n; bit++) {
@@ -714,7 +694,7 @@ size_t MeasureRecordReaderFormatPTB64<W>::read_into_table_with_minor_shot_index(
                     return shots_read;
                 } else {
                     // Fragmented file.
-                    throw std::invalid_argument("File ended in the middle of a ptb64 record.");
+                    abort();
                 }
             }
         }
@@ -744,7 +724,7 @@ size_t MeasureRecordReaderFormatPTB64<W>::read_into_table_with_major_shot_index(
                             return shot;
                         } else {
                             // Fragmented file.
-                            throw std::invalid_argument("File ended in the middle of a ptb64 record.");
+                            abort();
                         }
                     }
                 }

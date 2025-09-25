@@ -265,7 +265,7 @@ uint64_t simd_bits_range_ref<W>::as_u64() const {
     size_t n64 = num_u64_padded();
     for (size_t k = 1; k < n64; k++) {
         if (u64[k]) {
-            throw std::invalid_argument("Too large to fit into a uint64_t.");
+            abort();
         }
     }
     size_t n1 = std::min(num_bits_padded(), (size_t)64);

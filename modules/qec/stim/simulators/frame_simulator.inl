@@ -245,7 +245,7 @@ void FrameSimulator<W>::do_OBSERVABLE_INCLUDE(const CircuitInstruction &inst) {
                     r ^= x_table[t.qubit_value()];
                 }
             } else {
-                throw std::invalid_argument("Unexpected target for OBSERVABLE_INCLUDE: " + t.str());
+                abort();
             }
         }
     }
@@ -397,8 +397,7 @@ void FrameSimulator<W>::single_cx(uint32_t c, uint32_t t) {
                 x2 ^= x1;
             });
     } else if (t & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument(
-            "Controlled X had a bit (" + GateTarget{t}.str() + ") as its target, instead of its control.");
+        abort();
     } else {
         xor_control_bit_into(c, x_table[t]);
     }
@@ -419,8 +418,7 @@ void FrameSimulator<W>::single_cy(uint32_t c, uint32_t t) {
                 x2 ^= x1;
             });
     } else if (t & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument(
-            "Controlled Y had a bit (" + GateTarget{t}.str() + ") as its target, instead of its control.");
+        abort();
     } else {
         xor_control_bit_into(c, x_table[t]);
         xor_control_bit_into(c, z_table[t]);
@@ -1108,7 +1106,7 @@ void FrameSimulator<W>::do_gate(const CircuitInstruction &inst) {
             break;
 
         default:
-            throw std::invalid_argument("Not implemented in FrameSimulator<W>::do_gate: " + inst.str());
+            abort();
     }
 }
 

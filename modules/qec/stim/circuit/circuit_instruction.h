@@ -141,7 +141,7 @@ struct CircuitInstruction {
             } else if (gate_type == GateType::MPAD || gate_type == GateType::QUBIT_COORDS) {
                 end = start + 1;
             } else {
-                throw std::invalid_argument("Not implemented: splitting " + str());
+                abort();
             }
             std::span<const GateTarget> group = targets.sub(start, end);
             callback(group);

@@ -47,9 +47,7 @@ void rerun_frame_sim_while_streaming_dets_to_disk(
     FILE *obs_out,
     SampleFormat obs_out_format) {
     if (prepend_observables) {
-        throw std::invalid_argument(
-            "--prepend_observables isn't supported when sampling circuits so large that they require streaming the "
-            "results");
+        abort();
     }
 
     MeasureRecordBatchWriter writer(out, num_shots, format);
@@ -125,7 +123,7 @@ void rerun_frame_sim_in_memory_and_write_dets_to_disk(
     FILE *obs_out,
     SampleFormat obs_out_format) {
     if (prepend_observables + append_observables + (obs_out != nullptr) > 1) {
-        throw std::out_of_range("Can't combine --prepend_observables, --append_observables, or --obs_out");
+        abort();
     }
 
     frame_sim.reset_all();

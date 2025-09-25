@@ -36,7 +36,7 @@ Circuit stim::stabilizer_state_vector_to_circuit(
         std::stringstream ss;
         ss << "Expected number of amplitudes to be a power of 2.";
         ss << " The given state vector had " << state_vector.size() << " amplitudes.";
-        throw std::invalid_argument(ss.str());
+        abort();
     }
 
     uint8_t num_qubits = floor_lg2(state_vector.size());
@@ -76,7 +76,7 @@ Circuit stim::stabilizer_state_vector_to_circuit(
     sim.smooth_stabilizer_state(sim.state[0]);
     size_t occupation = compute_occupation(sim.state);
     if (!is_power_of_2(occupation)) {
-        throw std::invalid_argument("State vector isn't a stabilizer state.");
+        abort();
     }
 
     // Repeatedly cancel amplitudes
@@ -115,7 +115,7 @@ Circuit stim::stabilizer_state_vector_to_circuit(
 
         sim.smooth_stabilizer_state(sim.state[0]);
         if (compute_occupation(sim.state) * 2 != occupation) {
-            throw std::invalid_argument("State vector isn't a stabilizer state.");
+            abort();
         }
         occupation >>= 1;
     }
@@ -137,10 +137,7 @@ std::vector<std::complex<float>> stim::circuit_to_output_state_vector(const Circ
         if (flags & GATE_IS_UNITARY) {
             sim.do_gate(op);
         } else if (flags & (GATE_IS_NOISY | GATE_IS_RESET | GATE_PRODUCES_RESULTS)) {
-            throw std::invalid_argument(
-                "The circuit has no well-defined tableau because it contains noisy or dissipative operations.\n"
-                "The first such operation is: " +
-                op.str());
+            abort();
         } else {
             // Operation should be an annotation like TICK or DETECTOR.
         }

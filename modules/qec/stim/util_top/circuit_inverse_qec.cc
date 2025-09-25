@@ -61,7 +61,7 @@ void CircuitFlowReverser::do_rp_mrp_instruction(const CircuitInstruction &inst) 
             } else if (inst.gate_type == GateType::MR) {
                 ejected_noise = GateType::X_ERROR;
             } else {
-                throw std::invalid_argument("Don't know how to invert " + inst.str());
+                abort();
             }
             inverted_circuit.safe_append_reversed_targets(
                 CircuitInstruction(ejected_noise, segment.args, segment.targets, inst.tag), false);
@@ -79,7 +79,7 @@ void CircuitFlowReverser::do_m2r_instruction(const CircuitInstruction &inst) {
     } else if (inst.gate_type == GateType::M) {
         reset = GateType::R;
     } else {
-        throw std::invalid_argument("Don't know how to invert " + inst.str());
+        abort();
     }
 
     Gate g = GATE_DATA[inst.gate_type];
@@ -130,8 +130,7 @@ void CircuitFlowReverser::do_measuring_instruction(const CircuitInstruction &ins
 void CircuitFlowReverser::do_feedback_capable_instruction(const CircuitInstruction &inst) {
     for (GateTarget t : inst.targets) {
         if (t.is_measurement_record_target()) {
-            throw std::invalid_argument(
-                "Time-reversing feedback isn't supported yet. Found feedback in: " + inst.str());
+            abort();
         }
     }
     do_simple_instruction(inst);
@@ -320,7 +319,7 @@ void CircuitFlowReverser::do_instruction(const CircuitInstruction &inst) {
             break;
         case GateType::ELSE_CORRELATED_ERROR:
         default:
-            throw std::invalid_argument("Don't know how to invert " + inst.str());
+            abort();
     }
 }
 

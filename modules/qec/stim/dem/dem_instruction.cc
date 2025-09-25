@@ -13,13 +13,13 @@ constexpr uint64_t SEPARATOR_SYGIL = UINT64_MAX;
 
 DemTarget DemTarget::observable_id(uint64_t id) {
     if (id > MAX_OBS) {
-        throw std::invalid_argument("id > 0xFFFFFFFF");
+        abort();
     }
     return {OBSERVABLE_BIT | id};
 }
 DemTarget DemTarget::relative_detector_id(uint64_t id) {
     if (id > MAX_DET) {
-        throw std::invalid_argument("Relative detector id too large.");
+        abort();
     }
     return {id};
 }
@@ -38,7 +38,7 @@ uint64_t DemTarget::raw_id() const {
 
 uint64_t DemTarget::val() const {
     if (data == SEPARATOR_SYGIL) {
-        throw std::invalid_argument("Separator doesn't have an integer value.");
+        abort();
     }
     return raw_id();
 }
@@ -95,7 +95,7 @@ DemTarget DemTarget::from_text(std::string_view text) {
             }
         }
     }
-    throw std::invalid_argument("Failed to parse as a stim.DemTarget: '" + std::string(text) + "'");
+    abort();
 }
 
 bool DemInstruction::operator<(const DemInstruction &other) const {
@@ -193,68 +193,51 @@ void DemInstruction::validate() const {
     switch (type) {
         case DemInstructionType::DEM_ERROR:
             if (arg_data.size() != 1) {
-                throw std::invalid_argument(
-                    "'error' instruction takes 1 argument (a probability), but got " + std::to_string(arg_data.size()) +
-                    " arguments.");
+                abort();
             }
             if (arg_data[0] < 0 || arg_data[0] > 1) {
-                throw std::invalid_argument(
-                    "'error' instruction argument must be a probability (0 to 1) but got " +
-                    std::to_string(arg_data[0]));
+                abort();
             }
             if (!target_data.empty()) {
                 if (target_data.front() == DemTarget::separator() || target_data.back() == DemTarget::separator()) {
-                    throw std::invalid_argument(
-                        "First/last targets of 'error' instruction shouldn't be separators (^).");
+                    abort();
                 }
             }
             for (size_t k = 1; k < target_data.size(); k++) {
                 if (target_data[k - 1] == DemTarget::separator() && target_data[k] == DemTarget::separator()) {
-                    throw std::invalid_argument("'error' instruction has adjacent separators (^ ^).");
+                    abort();
                 }
             }
             break;
         case DemInstructionType::DEM_SHIFT_DETECTORS:
             if (target_data.size() != 1) {
-                throw std::invalid_argument(
-                    "'shift_detectors' instruction takes 1 target, but got " + std::to_string(target_data.size()) +
-                    " targets.");
+                abort();
             }
             break;
         case DemInstructionType::DEM_DETECTOR:
             if (target_data.size() != 1) {
-                throw std::invalid_argument(
-                    "'detector' instruction takes 1 target but got " + std::to_string(target_data.size()) +
-                    " arguments.");
+                abort();
             }
             if (!target_data[0].is_relative_detector_id()) {
-                throw std::invalid_argument(
-                    "'detector' instruction takes a relative detector target (D#) but got " + target_data[0].str() +
-                    " arguments.");
+                abort();
             }
             break;
         case DemInstructionType::DEM_LOGICAL_OBSERVABLE:
             if (arg_data.size() != 0) {
-                throw std::invalid_argument(
-                    "'logical_observable' instruction takes 0 arguments but got " + std::to_string(arg_data.size()) +
-                    " arguments.");
+                abort();
             }
             if (target_data.size() != 1) {
-                throw std::invalid_argument(
-                    "'logical_observable' instruction takes 1 target but got " + std::to_string(target_data.size()) +
-                    " arguments.");
+                abort();
             }
             if (!target_data[0].is_observable_id()) {
-                throw std::invalid_argument(
-                    "'logical_observable' instruction takes a logical observable target (L#) but got " +
-                    target_data[0].str() + " arguments.");
+                abort();
             }
             break;
         case DemInstructionType::DEM_REPEAT_BLOCK:
             // Handled elsewhere.
             break;
         default:
-            throw std::invalid_argument("Unknown instruction type.");
+            abort();
     }
 }
 

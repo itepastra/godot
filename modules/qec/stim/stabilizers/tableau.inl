@@ -274,7 +274,7 @@ PauliString<W> Tableau<W>::scatter_eval(
 template <size_t W>
 PauliString<W> Tableau<W>::operator()(const PauliStringRef<W> &p) const {
     if (p.num_qubits != num_qubits) {
-        throw std::out_of_range("pauli_string.num_qubits != tableau.num_qubits");
+        abort();
     }
     std::vector<size_t> indices;
     for (size_t k = 0; k < p.num_qubits; k++) {
@@ -459,7 +459,7 @@ bool Tableau<W>::is_pauli_product() const {
 template <size_t W>
 PauliString<W> Tableau<W>::to_pauli_string() const {
     if (!is_pauli_product()) {
-        throw std::invalid_argument("The Tableau isn't equivalent to a Pauli product.");
+        abort();
     }
 
     PauliString<W> pauli_string(num_qubits);
@@ -572,10 +572,10 @@ Tableau<W> &Tableau<W>::operator+=(const Tableau<W> &second) {
 template <size_t W>
 uint8_t Tableau<W>::x_output_pauli_xyz(size_t input_index, size_t output_index) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     if (output_index >= num_qubits) {
-        throw std::invalid_argument("output_index >= len(tableau)");
+        abort();
     }
     PauliStringRef<W> x = xs[input_index];
     return pauli_xz_to_xyz(x.xs[output_index], x.zs[output_index]);
@@ -584,10 +584,10 @@ uint8_t Tableau<W>::x_output_pauli_xyz(size_t input_index, size_t output_index) 
 template <size_t W>
 uint8_t Tableau<W>::y_output_pauli_xyz(size_t input_index, size_t output_index) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     if (output_index >= num_qubits) {
-        throw std::invalid_argument("output_index >= len(tableau)");
+        abort();
     }
     PauliStringRef<W> x = xs[input_index];
     PauliStringRef<W> z = zs[input_index];
@@ -597,10 +597,10 @@ uint8_t Tableau<W>::y_output_pauli_xyz(size_t input_index, size_t output_index) 
 template <size_t W>
 uint8_t Tableau<W>::z_output_pauli_xyz(size_t input_index, size_t output_index) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     if (output_index >= num_qubits) {
-        throw std::invalid_argument("output_index >= len(tableau)");
+        abort();
     }
     PauliStringRef<W> z = zs[input_index];
     return pauli_xz_to_xyz(z.xs[output_index], z.zs[output_index]);
@@ -609,10 +609,10 @@ uint8_t Tableau<W>::z_output_pauli_xyz(size_t input_index, size_t output_index) 
 template <size_t W>
 uint8_t Tableau<W>::inverse_x_output_pauli_xyz(size_t input_index, size_t output_index) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     if (output_index >= num_qubits) {
-        throw std::invalid_argument("output_index >= len(tableau)");
+        abort();
     }
     return pauli_xz_to_xyz(zs[output_index].zs[input_index], xs[output_index].zs[input_index]);
 }
@@ -620,10 +620,10 @@ uint8_t Tableau<W>::inverse_x_output_pauli_xyz(size_t input_index, size_t output
 template <size_t W>
 uint8_t Tableau<W>::inverse_y_output_pauli_xyz(size_t input_index, size_t output_index) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     if (output_index >= num_qubits) {
-        throw std::invalid_argument("output_index >= len(tableau)");
+        abort();
     }
     PauliStringRef<W> x = xs[output_index];
     PauliStringRef<W> z = zs[output_index];
@@ -633,10 +633,10 @@ uint8_t Tableau<W>::inverse_y_output_pauli_xyz(size_t input_index, size_t output
 template <size_t W>
 uint8_t Tableau<W>::inverse_z_output_pauli_xyz(size_t input_index, size_t output_index) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     if (output_index >= num_qubits) {
-        throw std::invalid_argument("output_index >= len(tableau)");
+        abort();
     }
     return pauli_xz_to_xyz(zs[output_index].xs[input_index], xs[output_index].xs[input_index]);
 }
@@ -644,7 +644,7 @@ uint8_t Tableau<W>::inverse_z_output_pauli_xyz(size_t input_index, size_t output
 template <size_t W>
 PauliString<W> Tableau<W>::inverse_x_output(size_t input_index, bool skip_sign) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     PauliString<W> result(num_qubits);
     for (size_t k = 0; k < num_qubits; k++) {
@@ -660,7 +660,7 @@ PauliString<W> Tableau<W>::inverse_x_output(size_t input_index, bool skip_sign) 
 template <size_t W>
 PauliString<W> Tableau<W>::inverse_y_output(size_t input_index, bool skip_sign) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     PauliString<W> result(num_qubits);
     for (size_t k = 0; k < num_qubits; k++) {
@@ -676,7 +676,7 @@ PauliString<W> Tableau<W>::inverse_y_output(size_t input_index, bool skip_sign) 
 template <size_t W>
 PauliString<W> Tableau<W>::inverse_z_output(size_t input_index, bool skip_sign) const {
     if (input_index >= num_qubits) {
-        throw std::invalid_argument("input_index >= len(tableau)");
+        abort();
     }
     PauliString<W> result(num_qubits);
     for (size_t k = 0; k < num_qubits; k++) {

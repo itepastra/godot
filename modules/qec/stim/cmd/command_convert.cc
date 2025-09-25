@@ -55,7 +55,7 @@ static void process_dem(const char *dem_path_c_str, DataDetails *details_out) {
     if (dem_file == nullptr) {
         std::stringstream msg;
         msg << "Failed to open '" << dem_path_c_str << "'";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     auto dem = DetectorErrorModel::from_file(dem_file);
     fclose(dem_file);
@@ -70,13 +70,13 @@ static void process_circuit(const char *circuit_path_c_str, const char *types, D
         return;
     }
     if (types == nullptr) {
-        throw std::invalid_argument("--types required when passing circuit");
+        abort();
     }
     FILE *circuit_file = fopen(circuit_path_c_str, "rb");
     if (circuit_file == nullptr) {
         std::stringstream msg;
         msg << "Failed to open '" << circuit_path_c_str << "'";
-        throw std::invalid_argument(msg.str());
+        abort();
     }
     auto circuit = Circuit::from_file(circuit_file);
     fclose(circuit_file);
@@ -98,11 +98,11 @@ static void process_circuit(const char *circuit_path_c_str, const char *types, D
             found_duplicate = details_out->include_observables;
             details_out->include_observables = true;
         } else {
-            throw std::invalid_argument("Unknown type passed to --types");
+            abort();
         }
 
         if (found_duplicate) {
-            throw std::invalid_argument("Each type in types should only be specified once");
+            abort();
         }
         ++types;
     }
@@ -153,12 +153,7 @@ int stim::command_convert(int argc, const char **argv) {
     // list of value types.
     const char *circuit_path_c_str = find_argument("--circuit", argc, argv);
     const char *types = find_argument("--types", argc, argv);
-    try {
         process_circuit(circuit_path_c_str, types, &details);
-    } catch (std::exception &e) {
-        std::cerr << "\033[31m" << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
 
     // Not enough information to infer types, at this point we can only
     // convert arbitrary bits.

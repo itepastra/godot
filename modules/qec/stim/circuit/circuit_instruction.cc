@@ -44,7 +44,7 @@ CircuitStats CircuitInstruction::compute_stats(const Circuit *host) const {
 void CircuitInstruction::add_stats_to(CircuitStats &out, const Circuit *host) const {
     if (gate_type == GateType::REPEAT) {
         if (host == nullptr) {
-            throw std::invalid_argument("gate_type == REPEAT && host == nullptr");
+            abort();
         }
         // Recurse into blocks.
         auto sub = repeat_block_body(*host).compute_stats();
@@ -114,7 +114,7 @@ void CircuitInstruction::validate() const {
     const Gate &gate = GATE_DATA[gate_type];
 
     if (gate.flags == GateFlags::NO_GATE_FLAG) {
-        throw std::invalid_argument("Unrecognized gate_type. Associated flag is NO_GATE_FLAG.");
+        abort();
     }
 
     if (gate.flags & GATE_TARGETS_PAIRS) {
@@ -126,26 +126,15 @@ void CircuitInstruction::validate() const {
                 }
             }
             if (term_count & 1) {
-                throw std::invalid_argument(
-                    "The gate " + std::string(gate.name) +
-                    " requires an even number of products to target, but was given "
-                    "(" +
-                    comma_sep(args).str() + ").");
+                abort();
             }
         } else {
             if (targets.size() & 1) {
-                throw std::invalid_argument(
-                    "Two qubit gate " + std::string(gate.name) +
-                    " requires an even number of targets but was given "
-                    "(" +
-                    comma_sep(targets).str() + ").");
+                abort();
             }
             for (size_t k = 0; k < targets.size(); k += 2) {
                 if (targets[k] == targets[k + 1]) {
-                    throw std::invalid_argument(
-                        "The two qubit gate " + std::string(gate.name) +
-                        " was applied to a target pair with the same target (" + targets[k].target_str() +
-                        ") twice. Gates can't interact targets with themselves.");
+                    abort();
                 }
             }
         }
@@ -153,43 +142,31 @@ void CircuitInstruction::validate() const {
 
     if (gate.arg_count == ARG_COUNT_SYGIL_ZERO_OR_ONE) {
         if (args.size() > 1) {
-            throw std::invalid_argument(
-                "Gate " + std::string(gate.name) + " was given " + std::to_string(args.size()) + " parens arguments (" +
-                comma_sep(args).str() + ") but takes 0 or 1 parens arguments.");
+            abort();
         }
     } else if (args.size() != gate.arg_count && gate.arg_count != ARG_COUNT_SYGIL_ANY) {
-        throw std::invalid_argument(
-            "Gate " + std::string(gate.name) + " was given " + std::to_string(args.size()) + " parens arguments (" +
-            comma_sep(args).str() + ") but takes " + std::to_string(gate.arg_count) + " parens arguments.");
+        abort();
     }
 
     if ((gate.flags & GATE_TAKES_NO_TARGETS) && !targets.empty()) {
-        throw std::invalid_argument(
-            "Gate " + std::string(gate.name) + " takes no targets but was given targets" + targets_str(targets) + ".");
+        abort();
     }
 
     if (gate.flags & GATE_ARGS_ARE_DISJOINT_PROBABILITIES) {
         double total = 0;
         for (const auto p : args) {
             if (!(p >= 0 && p <= 1)) {
-                throw std::invalid_argument(
-                    "Gate " + std::string(gate.name) + " only takes probability arguments, but one of its arguments (" +
-                    comma_sep(args).str() + ") wasn't a probability.");
+                abort();
             }
             total += p;
         }
         if (total > 1.0000001) {
-            throw std::invalid_argument(
-                "The disjoint probability arguments (" + comma_sep(args).str() + ") given to gate " +
-                std::string(gate.name) + " sum to more than 1.");
+            abort();
         }
     } else if (gate.flags & GATE_ARGS_ARE_UNSIGNED_INTEGERS) {
         for (const auto p : args) {
             if (p < 0 || p != round(p)) {
-                throw std::invalid_argument(
-                    "Gate " + std::string(gate.name) +
-                    " only takes non-negative integer arguments, but one of its arguments (" + comma_sep(args).str() +
-                    ") wasn't a non-negative integer.");
+                abort();
             }
         }
     }
@@ -213,9 +190,7 @@ void CircuitInstruction::validate() const {
         }
         failed |= just_saw_combiner;
         if (failed) {
-            throw std::invalid_argument(
-                "Gate " + std::string(gate.name) +
-                " given combiners ('*') that aren't between other targets: " + targets_str(targets) + ".");
+            abort();
         }
         valid_target_mask |= TARGET_COMBINER;
     }
@@ -231,16 +206,13 @@ void CircuitInstruction::validate() const {
         if (gate.flags & GATE_TARGETS_PAULI_STRING) {
             for (GateTarget q : targets) {
                 if (!q.is_measurement_record_target() && !q.is_pauli_target()) {
-                    throw std::invalid_argument(
-                        "Gate " + std::string(gate.name) +
-                        " only takes measurement record targets and Pauli targets (rec[-k], Xk, Yk, Zk).");
+                    abort();
                 }
             }
         } else {
             for (GateTarget q : targets) {
                 if (!q.is_measurement_record_target()) {
-                    throw std::invalid_argument(
-                        "Gate " + std::string(gate.name) + " only takes measurement record targets (rec[-k]).");
+                    abort();
                 }
             }
         }
@@ -249,16 +221,13 @@ void CircuitInstruction::validate() const {
             for (GateTarget q : targets) {
                 if (!(q.data & (TARGET_PAULI_X_BIT | TARGET_PAULI_Z_BIT | TARGET_COMBINER | TARGET_SWEEP_BIT |
                                 TARGET_RECORD_BIT))) {
-                    throw std::invalid_argument(
-                        "Gate " + std::string(gate.name) +
-                        " only takes Pauli targets or bit targets ('X2', 'Y3', 'Z5', 'rec[-1]', 'sweep[0]', etc).");
+                    abort();
                 }
             }
         } else {
             for (GateTarget q : targets) {
                 if (!(q.data & (TARGET_PAULI_X_BIT | TARGET_PAULI_Z_BIT | TARGET_COMBINER))) {
-                    throw std::invalid_argument(
-                        "Gate " + std::string(gate.name) + " only takes Pauli targets ('X2', 'Y3', 'Z5', etc).");
+                    abort();
                 }
             }
         }
@@ -269,7 +238,7 @@ void CircuitInstruction::validate() const {
                 ss << "Target ";
                 q.write_succinct(ss);
                 ss << " has invalid modifiers for gate type '" << gate.name << "'.";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
         }
     }
@@ -280,7 +249,7 @@ void CircuitInstruction::validate() const {
                 ss << "Target ";
                 t.write_succinct(ss);
                 ss << " is not valid for gate type '" << gate.name << "'.";
-                throw std::invalid_argument(ss.str());
+                abort();
             }
         }
     }

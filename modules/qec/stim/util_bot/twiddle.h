@@ -37,7 +37,7 @@ inline uint8_t floor_lg2(size_t value) {
 inline size_t first_set_bit(size_t value, size_t min_result) {
     value >>= min_result;
     if (!value) {
-        throw std::invalid_argument("No matching set bit.");
+        abort();
     }
     return std::countr_zero(value) + min_result;
 }

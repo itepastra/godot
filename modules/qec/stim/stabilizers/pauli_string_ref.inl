@@ -158,11 +158,11 @@ bool PauliStringRef<W>::commutes(const PauliStringRef<W> &other) const noexcept 
 template <size_t W>
 void PauliStringRef<W>::do_tableau(const Tableau<W> &tableau, SpanRef<const size_t> indices, bool inverse) {
     if (tableau.num_qubits == 0 || indices.size() % tableau.num_qubits != 0) {
-        throw std::invalid_argument("len(tableau) == 0 or len(indices) % len(tableau) != 0");
+        abort();
     }
     for (auto e : indices) {
         if (e >= num_qubits) {
-            throw std::invalid_argument("Attempted to apply a tableau past the end of the pauli string.");
+            abort();
         }
     }
     if (inverse) {
@@ -205,7 +205,7 @@ void PauliStringRef<W>::undo_reset_xyz(const CircuitInstruction &inst) {
         x_dep = true;
         z_dep = true;
     } else {
-        throw std::invalid_argument("Unrecognized measurement type: " + inst.str());
+        abort();
     }
     for (const auto &t : inst.targets) {
         assert(t.is_qubit_target());
@@ -215,7 +215,7 @@ void PauliStringRef<W>::undo_reset_xyz(const CircuitInstruction &inst) {
             ss << "The pauli observable '" << *this;
             ss << "' doesn't have a well specified value before '" << inst;
             ss << "' because it anticommutes with the reset.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
     for (const auto &t : inst.targets) {
@@ -238,7 +238,7 @@ void PauliStringRef<W>::check_avoids_measurement(const CircuitInstruction &inst)
         x_dep = true;
         z_dep = true;
     } else {
-        throw std::invalid_argument("Unrecognized measurement type: " + inst.str());
+        abort();
     }
     for (const auto &t : inst.targets) {
         assert(t.is_qubit_target());
@@ -248,7 +248,7 @@ void PauliStringRef<W>::check_avoids_measurement(const CircuitInstruction &inst)
             ss << "The pauli observable '" << *this;
             ss << "' doesn't have a well specified value across '" << inst;
             ss << "' because it anticommutes with the measurement.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 }
@@ -264,7 +264,7 @@ void PauliStringRef<W>::check_avoids_reset(const CircuitInstruction &inst) {
             ss << "The pauli observable '" << *this;
             ss << "' doesn't have a well specified value after '" << inst;
             ss << "' because the reset discards information.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 }
@@ -293,7 +293,7 @@ void PauliStringRef<W>::check_avoids_MPP(const CircuitInstruction &inst) {
             ss << "The pauli observable '" << *this;
             ss << "' doesn't have a well specified value across '" << inst;
             ss << "' because it anticommutes with the measurement.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
         start = end;
     }
@@ -308,7 +308,7 @@ void PauliStringRef<W>::do_instruction(const CircuitInstruction &inst) {
             ss << "The instruction '" << inst;
             ss << "' targets qubits outside the pauli string '" << *this;
             ss << "'.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 
@@ -497,11 +497,11 @@ void PauliStringRef<W>::do_instruction(const CircuitInstruction &inst) {
             ss << "The pauli string '" << *this;
             ss << "' doesn't have a well defined deterministic value after '" << inst;
             ss << "'.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
 
         default:
-            throw std::invalid_argument("Not implemented in PauliStringRef<W>::do_instruction: " + inst.str());
+            abort();
     }
 }
 
@@ -514,7 +514,7 @@ void PauliStringRef<W>::undo_instruction(const CircuitInstruction &inst) {
             ss << "The instruction '" << inst;
             ss << "' targets qubits outside the pauli string '" << *this;
             ss << "'.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 
@@ -711,11 +711,11 @@ void PauliStringRef<W>::undo_instruction(const CircuitInstruction &inst) {
             ss << "The pauli string '" << *this;
             ss << "' doesn't have a well defined deterministic value before '" << inst;
             ss << "'.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
 
         default:
-            throw std::invalid_argument("Not implemented in PauliStringRef<W>::undo_instruction: " + inst.str());
+            abort();
     }
 }
 
@@ -1045,15 +1045,14 @@ void PauliStringRef<W>::do_single_cx(const CircuitInstruction &inst, uint32_t c,
         x2 ^= x1;
         sign ^= x1 && z2 && (z1 == x2);
     } else if (t & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument(
-            "CX had a bit (" + GateTarget{t}.str() + ") as its target, instead of its control.");
+        abort();
     } else {
         if (zs[t]) {
             std::stringstream ss;
             ss << "The pauli observable '" << *this;
             ss << "' is affected by a controlled operation in '" << inst;
             ss << "' but the controlling measurement result isn't known.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 }
@@ -1070,15 +1069,14 @@ void PauliStringRef<W>::do_single_cy(const CircuitInstruction &inst, uint32_t c,
         sign ^= x1 && !z1 && x2 && !z2;
         sign ^= x1 && z1 && !x2 && z2;
     } else if (t & (TARGET_RECORD_BIT | TARGET_SWEEP_BIT)) {
-        throw std::invalid_argument(
-            "CY had a bit (" + GateTarget{t}.str() + ") as its target, instead of its control.");
+        abort();
     } else {
         if (xs[t] ^ zs[t]) {
             std::stringstream ss;
             ss << "The pauli observable '" << *this;
             ss << "' is affected by a controlled operation in '" << inst;
             ss << "' but the controlling measurement result isn't known.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 }
@@ -1100,7 +1098,7 @@ void PauliStringRef<W>::do_single_cz(const CircuitInstruction &inst, uint32_t c,
             ss << "The pauli observable '" << *this;
             ss << "' is affected by a controlled operation in '" << inst;
             ss << "' but the controlling measurement result isn't known.";
-            throw std::invalid_argument(ss.str());
+            abort();
         }
     }
 }

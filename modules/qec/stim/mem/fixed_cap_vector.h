@@ -18,7 +18,7 @@ class FixedCapVector {
     FixedCapVector() : num_used(0) {};
     FixedCapVector(std::initializer_list<T> list) : num_used(0) {
         if (list.size() > max_size) {
-            throw std::out_of_range("list.size() > max_size");
+            abort();
         }
         for (auto &e : list) {
             push_back(std::move(e));
@@ -35,25 +35,25 @@ class FixedCapVector {
 
     const T &front() const {
         if (num_used == 0) {
-            throw std::out_of_range("Empty.");
+            abort();
         }
         return data[0];
     }
     const T &back() const {
         if (num_used == 0) {
-            throw std::out_of_range("Empty.");
+            abort();
         }
         return data[num_used - 1];
     }
     T &front() {
         if (num_used == 0) {
-            throw std::out_of_range("Empty.");
+            abort();
         }
         return data[0];
     }
     T &back() {
         if (num_used == 0) {
-            throw std::out_of_range("Empty.");
+            abort();
         }
         return data[num_used - 1];
     }
@@ -102,21 +102,21 @@ class FixedCapVector {
 
     void push_back(const T &item) {
         if (num_used == data.size()) {
-            throw std::out_of_range("CappedVector capacity exceeded.");
+            abort();
         }
         data[num_used] = item;
         num_used++;
     }
     void push_back(T &&item) {
         if (num_used == data.size()) {
-            throw std::out_of_range("CappedVector capacity exceeded.");
+            abort();
         }
         data[num_used] = std::move(item);
         num_used++;
     }
     void pop_back() {
         if (num_used == 0) {
-            throw std::out_of_range("Popped empty CappedVector.");
+            abort();
         }
         num_used -= 1;
     }

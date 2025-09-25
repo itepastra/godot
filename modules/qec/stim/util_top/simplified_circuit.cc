@@ -271,7 +271,7 @@ struct Simplifier {
                 break;
 
             default:
-                throw std::invalid_argument("Unhandled in Simplifier::simplify_disjoint_1q_instruction: " + inst.str());
+                abort();
         }
     }
 
@@ -468,7 +468,7 @@ struct Simplifier {
                 break;
 
             default:
-                throw std::invalid_argument("Unhandled in Simplifier::simplify_instruction: " + inst.str());
+                abort();
         }
     }
 
@@ -530,8 +530,7 @@ struct Simplifier {
                 } else if (g.flags & GATE_TARGETS_PAIRS) {
                     simplify_potentially_overlapping_2q_instruction(inst);
                 } else {
-                    throw std::invalid_argument(
-                        "Unhandled in simplify_potentially_overlapping_instruction: " + inst.str());
+                    abort();
                 }
             }
         }

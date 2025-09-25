@@ -68,7 +68,7 @@ GltfScene Basic3dDiagram::to_gltf_scene() const {
     for (const auto &g : elements) {
         auto p = gate_data.find(g.gate_piece);
         if (p == gate_data.end()) {
-            throw std::invalid_argument("Basic3dDiagram unknown gate piece: " + std::string(g.gate_piece));
+            abort();
         }
         scene.nodes.push_back(
             std::shared_ptr<GltfNode>(new GltfNode{

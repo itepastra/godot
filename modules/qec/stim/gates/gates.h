@@ -272,7 +272,7 @@ struct Gate {
     template <size_t W>
     Tableau<W> tableau() const {
         if (!(flags & GateFlags::GATE_IS_UNITARY)) {
-            throw std::invalid_argument(std::string(name) + " isn't unitary so it doesn't have a tableau.");
+            abort();
         }
         const auto &d = flow_data;
         if (flow_data.size() == 2) {
@@ -281,7 +281,7 @@ struct Gate {
         if (flow_data.size() == 4) {
             return Tableau<W>::gate2(d[0], d[1], d[2], d[3]);
         }
-        throw std::out_of_range(std::string(name) + " doesn't have 1q or 2q tableau data.");
+        abort();
     }
 
     template <size_t W>
@@ -387,7 +387,7 @@ struct GateDataMap {
         auto h = gate_name_to_hash(text);
         const auto &entry = hashed_name_to_gate_type_table[h];
         if (_case_insensitive_mismatch(text, entry.expected_name)) {
-            throw std::out_of_range("Gate not found: '" + std::string(text) + "'");
+            abort();
         }
         // Canonicalize.
         return (*this)[entry.id];

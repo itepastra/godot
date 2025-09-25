@@ -41,10 +41,10 @@ GeneratedCircuit _finish_surface_code_circuit(
     const std::vector<surface_coord> z_observable,
     bool is_memory_x) {
     if (params.rounds < 1) {
-        throw std::invalid_argument("Need rounds >= 1.");
+        abort();
     }
     if (params.distance < 2) {
-        throw std::invalid_argument("Need a distance >= 2.");
+        abort();
     }
 
     const auto &chosen_basis_observable = is_memory_x ? x_observable : z_observable;
@@ -357,17 +357,6 @@ GeneratedCircuit stim::generate_surface_code_circuit(const CircuitGenParameters 
     } else if (params.task == "unrotated_memory_z") {
         return _generate_unrotated_surface_code_circuit(params, false);
     } else {
-        throw std::invalid_argument(
-            "Unrecognized task '" + params.task +
-            "'. Known surface_code tasks:\n"
-            "    'rotated_memory_x': Initialize logical |+> in rotated code, protect with parity measurements, measure "
-            "logical X.\n"
-            "    'rotated_memory_z': Initialize logical |0> in rotated code, protect with parity measurements, measure "
-            "logical Z.\n"
-            "    'unrotated_memory_x': Initialize logical |+> in unrotated code, protect with parity measurements, "
-            "measure logical X.\n"
-            "    'unrotated_memory_z': Initialize logical |0> in unrotated code, protect with parity measurements, "
-            "measure logical Z.\n"
-            "");
+        abort();
     }
 }

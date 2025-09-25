@@ -31,11 +31,11 @@ std::unique_ptr<MeasureRecordWriter> MeasureRecordWriter::make(FILE *out, Sample
         case SampleFormat::SAMPLE_FORMAT_HITS:
             return std::make_unique<MeasureRecordWriterFormatHits>(out);
         case SampleFormat::SAMPLE_FORMAT_PTB64:
-            throw std::invalid_argument("SAMPLE_FORMAT_PTB64 incompatible with SingleMeasurementRecord");
+            abort();
         case SampleFormat::SAMPLE_FORMAT_R8:
             return std::make_unique<MeasureRecordWriterFormatR8>(out);
         default:
-            throw std::invalid_argument("Sample format not recognized by SingleMeasurementRecord");
+            abort();
     }
 }
 

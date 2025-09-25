@@ -338,10 +338,7 @@ SubCommandHelp stim::command_analyze_errors_help() {
             various cases, with little regard for how those sets were produced.
 
             If these strategies fail to decompose error into graphlike pieces,
-            Stim will throw an error saying it failed to find a satisfying
-            decomposition.
-        )PARAGRAPH"),
-        });
+            Stim will abort();
 
     result.flags.push_back(
         SubCommandHelpFlag{
