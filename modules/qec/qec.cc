@@ -22,13 +22,12 @@ String Qec::print_x() {
 	}
 
 	String oss = "X_matrix:\n";
-	return oss;
 
 	uint32_t max = this->x_stabilizers.size();
 	for (uint32_t i = 0; i < max; i++) {
 		uint32_t urmax = this->x_stabilizers[i].size();
 		for (uint32_t j = 0; j < urmax; i++) {
-			oss = oss + this->x_stabilizers[i][j] + " ";
+			oss = oss + std::to_string(this->x_stabilizers[i][j]) + " ";
 		}
 		oss = oss + '\n';
 	}
@@ -47,7 +46,7 @@ String Qec::print_z() {
 	for (uint32_t i = 0; i < max; i++) {
 		uint32_t urmax = this->z_stabilizers[i].size();
 		for (uint32_t j = 0; j < urmax; i++) {
-			oss = oss + this->z_stabilizers[i][j] + " ";
+			oss = oss + std::to_string(this->z_stabilizers[i][j]) + " ";
 		}
 		oss = oss + "\n";
 	}
