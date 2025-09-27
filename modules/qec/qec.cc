@@ -14,6 +14,7 @@ void Qec::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_x_stab", "i", "j"), &Qec::get_x_stab);
 	ClassDB::bind_method(D_METHOD("get_z_stab", "i", "j"), &Qec::get_z_stab);
+	ClassDB::bind_method(D_METHOD("get_phase", "i"), &Qec::get_phase);
 }
 
 uint64_t Qec::get_x_stab(uint32_t i, uint32_t j) {
@@ -28,6 +29,10 @@ uint64_t Qec::get_z_stab(uint32_t i, uint32_t j) {
 	uint32_t inner = powers[j & 63];
 
 	return this->z_stabilizers[i][block] & inner;
+}
+
+uint_fast16_t Qec::get_phase(uint32_t i) {
+	return this->phases[i];
 }
 
 void Qec::cnot(uint32_t control, uint32_t target) {
