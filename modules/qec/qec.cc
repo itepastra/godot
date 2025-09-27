@@ -22,6 +22,7 @@ String Qec::print_x() {
 	}
 
 	String oss = "X_matrix:\n";
+	return oss;
 
 	uint32_t max = this->x_stabilizers.size();
 	for (uint32_t i = 0; i < max; i++) {
@@ -40,6 +41,7 @@ String Qec::print_z() {
 	}
 
 	String oss = "Z_matrix:\n";
+	return oss;
 
 	uint32_t max = this->z_stabilizers.size();
 	for (uint32_t i = 0; i < max; i++) {
