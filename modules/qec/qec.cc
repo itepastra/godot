@@ -27,7 +27,7 @@ String Qec::print_x() {
 	for (uint32_t i = 0; i < max; i++) {
 		uint32_t urmax = this->x_stabilizers[i].size();
 		for (uint32_t j = 0; j < urmax; i++) {
-			oss = oss + std::to_string(this->x_stabilizers[i][j]).c_str() + " ";
+			oss = oss + String(std::to_string(this->x_stabilizers[i][j]).c_str()) + " ";
 		}
 		oss = oss + '\n';
 	}
@@ -46,7 +46,7 @@ String Qec::print_z() {
 	for (uint32_t i = 0; i < max; i++) {
 		uint32_t urmax = this->z_stabilizers[i].size();
 		for (uint32_t j = 0; j < urmax; i++) {
-			oss = oss + std::to_string(this->z_stabilizers[i][j]).c_str() + " ";
+			oss = oss + String(std::to_string(this->z_stabilizers[i][j]).c_str()) + " ";
 		}
 		oss = oss + "\n";
 	}
