@@ -11,7 +11,7 @@ class Qec : public RefCounted {
 	GDCLASS(Qec, RefCounted);
 
 	bool initialized;
-	size_t n;
+	uint32_t n;
 	std::vector<std::vector<uint64_t>> x_stabilizers; // 2n + 1 by n/4 array (the longs inside are packed bits)
 	std::vector<std::vector<uint64_t>> z_stabilizers; // same but for z stabilizers
 	std::vector<uint_fast8_t> phases;
@@ -21,24 +21,24 @@ protected:
 	static void _bind_methods();
 
 	// tableau helper functions
-	void rowcopy(size_t i, size_t k); // set row i equal to row k
-	void rowswap(size_t i, size_t k); // swap row i and row k
-	void rowset(size_t i, size_t b); // set row i to the b-th observable
+	void rowcopy(uint32_t i, uint32_t k); // set row i equal to row k
+	void rowswap(uint32_t i, uint32_t k); // swap row i and row k
+	void rowset(uint32_t i, uint32_t b); // set row i to the b-th observable
 
 public:
 	// qubit gates for godot to use
-	void cnot(size_t control, size_t target); // CNOT
-	void hadamard(size_t target); // H
-	void phase(size_t target); // S
-	void phase_dag(size_t target); // S^+ = S S S
-	void xgate(size_t target); // X = H S S H
-	void ygate(size_t target); // Y = X Y = H S S H S S
-	void zgate(size_t target); // Z = S S
-	void cphase(size_t control, size_t target); // CZ = H_target CNOT H_target
+	void cnot(uint32_t control, uint32_t target); // CNOT
+	void hadamard(uint32_t target); // H
+	void phase(uint32_t target); // S
+	void phase_dag(uint32_t target); // S^+ = S S S
+	void xgate(uint32_t target); // X = H S S H
+	void ygate(uint32_t target); // Y = X Y = H S S H S S
+	void zgate(uint32_t target); // Z = S S
+	void cphase(uint32_t control, uint32_t target); // CZ = H_target CNOT H_target
 
 	// initialisation
 	Qec();
-	void init(size_t qubit_amount);
+	void init(uint32_t qubit_amount);
 };
 
 const uint64_t powers[1 << BLOCK_BITS] = {

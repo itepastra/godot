@@ -14,16 +14,16 @@ void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("zgate", "qubit"), &Qec::zgate);
 }
 
-void Qec::cnot(size_t control, size_t target) {
+void Qec::cnot(uint32_t control, uint32_t target) {
 	if (!this->initialized) {
 		return;
 	}
-	size_t control_block = control >> BLOCK_BITS;
-	size_t target_block = target >> BLOCK_BITS;
+	uint32_t control_block = control >> BLOCK_BITS;
+	uint32_t target_block = target >> BLOCK_BITS;
 	uint64_t control_inner = powers[control & 63];
 	uint64_t target_inner = powers[target & 63];
 
-	for (size_t i = 0; i < 2 * this->n; i++) {
+	for (uint32_t i = 0; i < 2 * this->n; i++) {
 		// Flip the x stabilizer on the target, if the control contains 1
 		if (this->x_stabilizers[i][control_block] & control_inner) {
 			this->x_stabilizers[i][target_block] ^= target_inner;
@@ -49,7 +49,7 @@ void Qec::cnot(size_t control, size_t target) {
 		}
 	}
 }
-void Qec::cphase(size_t control, size_t target) {
+void Qec::cphase(uint32_t control, uint32_t target) {
 	if (!this->initialized) {
 		return;
 	}
@@ -57,15 +57,15 @@ void Qec::cphase(size_t control, size_t target) {
 	this->cnot(control, target);
 	this->hadamard(target);
 } // CZ = H_target CNOT H_target
-void Qec::hadamard(size_t target) {
+void Qec::hadamard(uint32_t target) {
 	if (!this->initialized) {
 		return;
 	}
-	size_t block = target >> BLOCK_BITS;
+	uint32_t block = target >> BLOCK_BITS;
 	uint64_t inner = powers[target & 63];
 	uint64_t tmp;
 
-	for (size_t i = 0; i < 2 * this->n; i++) {
+	for (uint32_t i = 0; i < 2 * this->n; i++) {
 		tmp = this->x_stabilizers[i][block];
 		this->x_stabilizers[i][block] ^= (this->x_stabilizers[i][block] ^ this->z_stabilizers[i][block]) & inner;
 		this->z_stabilizers[i][block] ^= (this->z_stabilizers[i][block] ^ tmp) & inner;
@@ -74,20 +74,20 @@ void Qec::hadamard(size_t target) {
 		}
 	}
 } // H
-void Qec::phase(size_t target) {
+void Qec::phase(uint32_t target) {
 	if (!this->initialized) {
 		return;
 	}
-	size_t block = target >> BLOCK_BITS;
+	uint32_t block = target >> BLOCK_BITS;
 	uint64_t inner = powers[target & 63];
-	for (size_t i = 0; i < 2 * this->n; i++) {
+	for (uint32_t i = 0; i < 2 * this->n; i++) {
 		if ((this->x_stabilizers[i][block] & inner) && (this->z_stabilizers[i][block] & inner)) {
 			this->phases[i] = (this->phases[i] + 2) % 4;
 		}
 		this->z_stabilizers[i][block] ^= this->x_stabilizers[i][block] & inner;
 	}
 } // S
-void Qec::phase_dag(size_t target) {
+void Qec::phase_dag(uint32_t target) {
 	if (!this->initialized) {
 		return;
 	}
@@ -95,7 +95,7 @@ void Qec::phase_dag(size_t target) {
 	this->phase(target);
 	this->phase(target);
 } // S^+ = S S S
-void Qec::xgate(size_t target) {
+void Qec::xgate(uint32_t target) {
 	if (!this->initialized) {
 		return;
 	}
@@ -104,7 +104,7 @@ void Qec::xgate(size_t target) {
 	this->phase(target);
 	this->hadamard(target);
 } // X = H S S H
-void Qec::ygate(size_t target) {
+void Qec::ygate(uint32_t target) {
 	if (!this->initialized) {
 		return;
 	}
@@ -115,7 +115,7 @@ void Qec::ygate(size_t target) {
 	this->phase(target);
 	this->phase(target);
 } // Y = Z X = S S H S S H
-void Qec::zgate(size_t target) {
+void Qec::zgate(uint32_t target) {
 	if (!this->initialized) {
 		return;
 	}
@@ -123,15 +123,15 @@ void Qec::zgate(size_t target) {
 	this->phase(target);
 } // Z = S S
 
-void Qec::init(size_t qubit_amount) {
+void Qec::init(uint32_t qubit_amount) {
 	if (this->initialized) {
 		return;
 	}
-	size_t whole_blocks = (qubit_amount >> BLOCK_BITS) + 1; // shrink by amount of qubits that fit in 64 bits
-	size_t rows = 2 * qubit_amount + 1;
+	uint32_t whole_blocks = (qubit_amount >> BLOCK_BITS) + 1; // shrink by amount of qubits that fit in 64 bits
+	uint32_t rows = 2 * qubit_amount + 1;
 	this->n = qubit_amount;
 
-	for (size_t i = 0; i < rows; i++) {
+	for (uint32_t i = 0; i < rows; i++) {
 		std::vector<uint64_t> line_x(whole_blocks, 0);
 		std::vector<uint64_t> line_z(whole_blocks, 0);
 		// TODO: what is this for?? gotta either figure it out or ask scott
