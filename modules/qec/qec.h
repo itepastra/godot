@@ -1,8 +1,11 @@
 #pragma once
 
 #include "core/object/ref_counted.h"
+#include "core/string/ustring.h"
 #include <cstdint>
 #include <memory>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #define BLOCK_BITS 6
@@ -35,6 +38,10 @@ public:
 	void ygate(uint32_t target); // Y = X Y = H S S H S S
 	void zgate(uint32_t target); // Z = S S
 	void cphase(uint32_t control, uint32_t target); // CZ = H_target CNOT H_target
+
+	// debug
+	String print_x();
+	String print_z();
 
 	// initialisation
 	Qec();
