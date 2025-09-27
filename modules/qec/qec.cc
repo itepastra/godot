@@ -21,18 +21,17 @@ String Qec::print_x() {
 		return String();
 	}
 
-	std::ostringstream oss;
-	oss << "X_matrix:\n";
+	String oss = "X_matrix:\n";
 
 	uint32_t max = this->x_stabilizers.size();
 	for (uint32_t i = 0; i < max; i++) {
 		uint32_t urmax = this->x_stabilizers[i].size();
 		for (uint32_t j = 0; j < urmax; i++) {
-			oss << this->x_stabilizers[i][j] << " ";
+			oss = oss + this->x_stabilizers[i][j] + " ";
 		}
-		oss << '\n';
+		oss = oss + '\n';
 	}
-	return String(oss.str().c_str());
+	return oss;
 }
 
 String Qec::print_z() {
@@ -40,18 +39,17 @@ String Qec::print_z() {
 		return String();
 	}
 
-	std::ostringstream oss;
-	oss << "Z_matrix:\n";
+	String oss = "Z_matrix:\n";
 
 	uint32_t max = this->z_stabilizers.size();
 	for (uint32_t i = 0; i < max; i++) {
 		uint32_t urmax = this->z_stabilizers[i].size();
 		for (uint32_t j = 0; j < urmax; i++) {
-			oss << std::hex << this->z_stabilizers[i][j] << " ";
+			oss = oss + this->z_stabilizers[i][j] + " ";
 		}
-		oss << "\n";
+		oss = oss + "\n";
 	}
-	return String(oss.str().c_str());
+	return oss;
 }
 
 void Qec::cnot(uint32_t control, uint32_t target) {
