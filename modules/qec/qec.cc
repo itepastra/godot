@@ -11,45 +11,6 @@ void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("xgate", "qubit"), &Qec::xgate);
 	ClassDB::bind_method(D_METHOD("ygate", "qubit"), &Qec::ygate);
 	ClassDB::bind_method(D_METHOD("zgate", "qubit"), &Qec::zgate);
-
-	ClassDB::bind_method(D_METHOD("print_x"), &Qec::print_x);
-	ClassDB::bind_method(D_METHOD("print_z"), &Qec::print_z);
-}
-
-String Qec::print_x() {
-	if (!this->initialized) {
-		return String();
-	}
-
-	String oss = "X_matrix:\n";
-
-	uint32_t max = this->x_stabilizers.size();
-	for (uint32_t i = 0; i < max; i++) {
-		uint32_t urmax = this->x_stabilizers[i].size();
-		for (uint32_t j = 0; j < urmax; i++) {
-			oss = oss + "aaa" + " ";
-		}
-		oss = oss + '\n';
-	}
-	return oss;
-}
-
-String Qec::print_z() {
-	if (!this->initialized) {
-		return String();
-	}
-
-	String oss = "Z_matrix:\n";
-
-	uint32_t max = this->z_stabilizers.size();
-	for (uint32_t i = 0; i < max; i++) {
-		uint32_t urmax = this->z_stabilizers[i].size();
-		for (uint32_t j = 0; j < urmax; i++) {
-			oss = oss + "aaaa" + " ";
-		}
-		oss = oss + "\n";
-	}
-	return oss;
 }
 
 void Qec::cnot(uint32_t control, uint32_t target) {
