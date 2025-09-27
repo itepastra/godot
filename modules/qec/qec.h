@@ -14,6 +14,9 @@ class Qec : public RefCounted {
 
 	bool initialized;
 	uint32_t n;
+	std::vector<std::vector<uint64_t>> x_stabilizers; // 2n + 1 by n/4 array (the longs inside are packed bits)
+	std::vector<std::vector<uint64_t>> z_stabilizers; // same but for z stabilizers
+	std::vector<uint_fast8_t> phases;
 
 protected:
 	// godot helper functions
@@ -25,9 +28,6 @@ protected:
 	void rowset(uint32_t i, uint32_t b); // set row i to the b-th observable
 
 public:
-	std::vector<std::vector<uint64_t>> x_stabilizers; // 2n + 1 by n/4 array (the longs inside are packed bits)
-	std::vector<std::vector<uint64_t>> z_stabilizers; // same but for z stabilizers
-	std::vector<uint_fast8_t> phases;
 	// qubit gates for godot to use
 	void cnot(uint32_t control, uint32_t target); // CNOT
 	void hadamard(uint32_t target); // H
@@ -37,6 +37,9 @@ public:
 	void ygate(uint32_t target); // Y = X Y = H S S H S S
 	void zgate(uint32_t target); // Z = S S
 	void cphase(uint32_t control, uint32_t target); // CZ = H_target CNOT H_target
+
+	uint64_t get_x_stab(uint32_t i, uint32_t j);
+	uint64_t get_z_stab(uint32_t i, uint32_t j);
 
 	// initialisation
 	Qec();

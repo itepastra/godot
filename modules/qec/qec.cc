@@ -11,6 +11,23 @@ void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("xgate", "qubit"), &Qec::xgate);
 	ClassDB::bind_method(D_METHOD("ygate", "qubit"), &Qec::ygate);
 	ClassDB::bind_method(D_METHOD("zgate", "qubit"), &Qec::zgate);
+
+	ClassDB::bind_method(D_METHOD("get_x_stab", "i", "j"), &Qec::get_x_stab);
+	ClassDB::bind_method(D_METHOD("get_z_stab", "i", "j"), &Qec::get_z_stab);
+}
+
+uint64_t Qec::get_x_stab(uint32_t i, uint32_t j) {
+	uint32_t block = j >> BLOCK_BITS;
+	uint32_t inner = powers[j & 63];
+
+	return this->x_stabilizers[i][block] & inner;
+}
+
+uint64_t Qec::get_z_stab(uint32_t i, uint32_t j) {
+	uint32_t block = j >> BLOCK_BITS;
+	uint32_t inner = powers[j & 63];
+
+	return this->z_stabilizers[i][block] & inner;
 }
 
 void Qec::cnot(uint32_t control, uint32_t target) {
