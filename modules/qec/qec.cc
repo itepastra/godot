@@ -14,6 +14,8 @@ void Qec::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("get_x_stab", "i", "j"), &Qec::get_x_stab);
 	ClassDB::bind_method(D_METHOD("get_z_stab", "i", "j"), &Qec::get_z_stab);
+	ClassDB::bind_method(D_METHOD("x_stabs"), &Qec::x_stabs);
+	ClassDB::bind_method(D_METHOD("z_stabs"), &Qec::z_stabs);
 	ClassDB::bind_method(D_METHOD("get_phase", "i"), &Qec::get_phase);
 }
 
