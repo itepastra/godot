@@ -42,6 +42,9 @@ public:
 	uint64_t get_z_stab(uint32_t i, uint32_t j);
 	uint_fast16_t get_phase(uint32_t i);
 
+	PackedInt64Array x_stabs();
+	PackedInt64Array z_stabs();
+
 	// initialisation
 	Qec();
 	void init(uint32_t qubit_amount);

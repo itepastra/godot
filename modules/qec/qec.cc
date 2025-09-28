@@ -24,11 +24,31 @@ uint64_t Qec::get_x_stab(uint32_t i, uint32_t j) {
 	return this->x_stabilizers[i][block] & inner;
 }
 
+PackedInt64Array Qec::x_stabs() {
+	PackedInt64Array array;
+	for (uint32_t i = 0; i < 2 * this->n; i++) {
+		for (uint32_t j = 0; j < (2 * this->n >> BLOCK_BITS) + 1; j++) {
+			array.append(this->x_stabilizers[i][j]);
+		}
+	}
+	return array;
+}
+
 uint64_t Qec::get_z_stab(uint32_t i, uint32_t j) {
 	uint32_t block = j >> BLOCK_BITS;
 	uint32_t inner = powers[j & 63];
 
 	return this->z_stabilizers[i][block] & inner;
+}
+
+PackedInt64Array Qec::z_stabs() {
+	PackedInt64Array array;
+	for (uint32_t i = 0; i < 2 * this->n; i++) {
+		for (uint32_t j = 0; j < (2 * this->n >> BLOCK_BITS) + 1; j++) {
+			array.append(this->z_stabilizers[i][j]);
+		}
+	}
+	return array;
 }
 
 uint_fast16_t Qec::get_phase(uint32_t i) {
