@@ -26,6 +26,8 @@ protected:
 	void rowcopy(uint32_t i, uint32_t k); // set row i equal to row k
 	void rowswap(uint32_t i, uint32_t k); // swap row i and row k
 	void rowset(uint32_t i, uint32_t b); // set row i to the b-th observable
+	void rowmult(uint32_t i, uint32_t k);
+	int_fast8_t clifford(uint32_t i, uint32_t k);
 
 public:
 	// qubit gates for godot to use
@@ -37,6 +39,9 @@ public:
 	void ygate(uint32_t target); // Y = X Y = H S S H S S
 	void zgate(uint32_t target); // Z = S S
 	void cphase(uint32_t control, uint32_t target); // CZ = H_target CNOT H_target
+
+	// measuring the state
+	int measure(uint32_t target);
 
 	uint64_t get_x_stab(uint32_t i, uint32_t j);
 	uint64_t get_z_stab(uint32_t i, uint32_t j);
