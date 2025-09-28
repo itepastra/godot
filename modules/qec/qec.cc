@@ -1,23 +1,139 @@
 #include "qec.h"
 
-void Qec::add(int p_value) {
-	count += p_value;
+#include <iostream>
+#include <random>
+#include <stdexcept>
+
+Qec::Qec(size_t num_qubits) {
+	n_qubits = num_qubits;
+    x = std::vector<std::vector<bool>>(2 * n_qubits + 1, std::vector<bool>(n_qubits, false));
+    z = std::vector<std::vector<bool>>(2 * n_qubits + 1, std::vector<bool>(n_qubits, false));
+    r = std::vector<bool>(2 * n_qubits + 1, false);
+    rng = std::mt19937(std::random_device{}());
+    
+    // Initialize to identity matrix tableau
+    // Destabilizer generators rows 0 to n-1
+    // Stabilizer generators rows n to 2n-1
+    // Row 2n is scratch space
+    
+    for (size_t i = 0; i < n_qubits; i++) {
+        // Destabilizer rows x_ij = δ_ij, z_ij = 0
+        x[i][i] = true;
+        
+        // Stabilizer rows x_ij = 0, z_ij = δ_{(i-n)j}
+        z[n_qubits + i][i] = true;
+    }
 }
 
-void Qec::reset() {
-	count = 0;
+int Qec::g(bool x1, bool z1, bool x2, bool z2) const {
+    if (!x1 && !z1) return 0;  // I case
+    if (x1 && z1) return z2 - x2;  // Y case
+    if (x1 && !z1) return z2 * (2 * x2 - 1);  // Z case
+    if (!x1 && z1) return x2 * (1 - 2 * z2);  // X case
+    return 0;
 }
 
-int Qec::get_total() const {
-	return count;
+void Qec::rowsum(size_t h, size_t i) {
+    int sum = 0;
+    
+    // phase sum
+    for (size_t j = 0; j < n_qubits; j++) {
+        sum += g(x[i][j], z[i][j], x[h][j], z[h][j]);
+    }
+    
+    // updarte phase bit r_h
+    int total = 2 * r[h] + 2 * r[i] + sum;
+    r[h] = (total % 4 == 2);
+    
+    // update Paulis
+    for (size_t j = 0; j < n_qubits; j++) {
+        x[h][j] = x[h][j] ^ x[i][j];
+        z[h][j] = z[h][j] ^ z[i][j];
+    }
+}
+
+void Qec::cnot(size_t control, size_t target) {
+    if (control >= n_qubits || target >= n_qubits) {
+        throw std::out_of_range("Qubit index out of range");
+    }
+    
+    for (size_t i = 0; i < 2 * n_qubits; i++) {
+        // Update phase using r_i = r_i tensor x_ia * z_ib * (x_ib tensor z_ia tensor 1)
+        bool x_ia = x[i][control];
+        bool z_ia = z[i][control];
+        bool x_ib = x[i][target];
+        bool z_ib = z[i][target];
+        
+        r[i] = r[i] ^ (x_ia && z_ib && (x_ib ^ z_ia ^ 1));
+        
+        // Update Pauli components
+        x[i][target] = x_ib ^ x_ia;
+        z[i][control] = z_ia ^ z_ib;
+    }
+}
+
+void Qec::hadamard(size_t qubit) {
+    if (qubit >= n_qubits) {
+        throw std::out_of_range("Qubit index out of range");
+    }
+    
+    for (size_t i = 0; i < 2 * n_qubits; i++) {
+        // Update phase r_i = r_i tensor x_ia * z_ia
+        r[i] = r[i] ^ (x[i][qubit] && z[i][qubit]);
+        
+        // Swap x_ia and z_ia
+        std::swap(x[i][qubit], z[i][qubit]);
+    }
+}
+
+void Qec::phase(size_t qubit) {
+    if (qubit >= n_qubits) {
+        throw std::out_of_range("Qubit index out of range");
+    }
+    
+    for (size_t i = 0; i < 2 * n_qubits; i++) {
+        // Update phase: r_i = r_i tensor x_ia * z_ia
+        r[i] = r[i] ^ (x[i][qubit] && z[i][qubit]);
+        
+        // Update z_ia = z_ia tensor x_ia
+        z[i][qubit] = z[i][qubit] ^ x[i][qubit];
+    }
+}
+
+bool Qec::measure(size_t qubit) {
+	// TODO
+}
+
+void Qec::print_tableau() const {
+    std::cout << "Destabilizer generators:\n";
+    for (size_t i = 0; i < n_qubits; i++) {
+        std::cout << (r[i] ? "- " : "+ ");
+        for (size_t j = 0; j < n_qubits; j++) {
+            if (x[i][j] && z[i][j]) std::cout << "Y";
+            else if (x[i][j]) std::cout << "Z";
+            else if (z[i][j]) std::cout << "X";
+            else std::cout << "I";
+        }
+        std::cout << "\n";
+    }
+    
+    std::cout << "Stabilizer generators:\n";
+    for (size_t i = n_qubits; i < 2 * n_qubits; i++) {
+        std::cout << (r[i] ? "- " : "+ ");
+        for (size_t j = 0; j < n_qubits; j++) {
+            if (x[i][j] && z[i][j]) std::cout << "Y";
+            else if (x[i][j]) std::cout << "Z";
+            else if (z[i][j]) std::cout << "X";
+            else std::cout << "I";
+        }
+        std::cout << "\n";
+    }
 }
 
 void Qec::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("add", "value"), &Qec::add);
-	ClassDB::bind_method(D_METHOD("reset"), &Qec::reset);
-	ClassDB::bind_method(D_METHOD("get_total"), &Qec::get_total);
-}
-
-Qec::Qec() {
-	count = 0;
+	ClassDB::bind_method(D_METHOD("cnot", "control", "target"), &Qec::cnot);
+	ClassDB::bind_method(D_METHOD("hadamard", "qubit"), &Qec::hadamard);
+	ClassDB::bind_method(D_METHOD("phase", "qubit"), &Qec::phase);
+	ClassDB::bind_method(D_METHOD("measure", "qubit"), &Qec::measure);
+	ClassDB::bind_method(D_METHOD("print_tableau"), &Qec::print_tableau);
 }
