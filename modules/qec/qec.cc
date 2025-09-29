@@ -134,14 +134,14 @@ void Qec::cnot(uint32_t control, uint32_t target) {
 				(this->x_stabilizers[i][target_block] & target_inner) &&
 				(this->z_stabilizers[i][control_block] & control_inner)) {
 			// TODO: check if doing `phase ^= 0b10` is equivalent and faster
-			this->phases[i] = (this->phases[i] + 2) % 4;
+			this->phases[i] ^= 0b10;
 		}
 		// do the phase kickback in another case TODO: figure out what case this represents
 		if ((this->x_stabilizers[i][control_block] & control_inner) &&
 				(this->z_stabilizers[i][target_block] & target_inner) &&
 				!(this->x_stabilizers[i][target_block] & target_inner) &&
 				!(this->z_stabilizers[i][control_block] & control_inner)) {
-			this->phases[i] = (this->phases[i] + 2) % 4;
+			this->phases[i] ^= 0b10;
 		}
 	}
 }
