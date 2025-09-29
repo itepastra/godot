@@ -29,6 +29,9 @@ protected:
 	void rowmult(uint32_t i, uint32_t k);
 	int_fast8_t clifford(uint32_t i, uint32_t k);
 
+	uint32_t gaussian();
+	void seed(uint32_t log_amount);
+
 public:
 	// qubit gates for godot to use
 	void cnot(uint32_t control, uint32_t target); // CNOT
