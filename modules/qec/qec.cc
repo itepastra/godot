@@ -101,7 +101,63 @@ void Qec::phase(size_t qubit) {
 }
 
 bool Qec::measure(size_t qubit) {
-	// TODO
+    if (qubit >= n_qubits) {
+        throw std::out_of_range("Qubit index out of range");
+    }
+    
+    // Find first stabilizer with x_pa = 1
+    size_t p = 2 * n_qubits; // invalid idx
+    for (size_t i = n_qubits; i < 2 * n_qubits; i++) {
+        if (x[i][qubit]) {
+            p = i;
+            break;
+        }
+    }
+
+    // case 1 rndom measurement
+    if (p < 2 * n_qubits) {
+        for (size_t i = 0; i < 2 * n_qubits; i++) {
+            if (i != p && x[i][qubit]) {
+                rowsum(i, p);
+            }
+        }
+        
+        // setting (p-n)th destabilizer row equal to p-th stabilizer row
+        size_t destab_index = p - n_qubits;
+        for (size_t j = 0; j < n_qubits; j++) {
+            x[destab_index][j] = x[p][j];
+            z[destab_index][j] = z[p][j];
+        }
+        r[destab_index] = r[p];
+        
+        // resetting p-th stabilizer row
+        for (size_t j = 0; j < n_qubits; j++) {
+            x[p][j] = false;
+            z[p][j] = false;
+        }
+        z[p][qubit] = true;
+        
+        // random outcome
+        std::uniform_int_distribution<int> dist(0, 1);
+        r[p] = dist(rng);
+        
+        return r[p];
+    } else { // case 2 deterministic
+        // resetting scratch row (index 2n)
+        for (size_t j = 0; j < n_qubits; j++) {
+            x[2 * n_qubits][j] = false;
+            z[2 * n_qubits][j] = false;
+        }
+        r[2 * n_qubits] = false;
+
+        // sum correct stabilizer rows
+        for (size_t i = 0; i < n_qubits; i++) {
+            if (x[i][qubit]) {
+                rowsum(2 * n_qubits, n_qubits + i);
+            }
+        }
+        return r[2 * n_qubits];
+    }
 }
 
 void Qec::print_tableau() const {
