@@ -59,48 +59,62 @@ PackedInt64Array Qec::z_stabs() {
 }
 
 int Qec::measure(uint32_t target) {
-	if (!this->initialized) {
-		return 0;
-	}
-	uint32_t block = target >> BLOCK_BITS;
-	uint64_t inner = powers[target & 63];
+    if (!this->initialized) {
+        return 0;
+    }
 
-	for (uint32_t other = 0; other < this->n; other++) {
-		if (this->x_stabilizers[other + this->n][block] & inner) {
-			this->rowcopy(other, other + this->n);
-			this->rowset(other + this->n, target + this->n);
-			this->phases[other + this->n] = 2 * (rand() & 0b1); // NOTE: I don't trust the p + n index
-			for (uint32_t i = 0; i < 2 * this->n; i++) {
-				if ((i != other) && (this->x_stabilizers[i][block] & inner)) {
-					this->rowmult(i, other);
-				}
-			}
-			if (this->phases[other + this->n]) {
-				return 3;
-			} else {
-				return 2;
-			}
-		}
-	}
+    uint32_t block = target >> BLOCK_BITS;
+    uint64_t inner = powers[target & 63];
 
-	uint32_t m;
-	// the outcome is determinate
-	for (m = 0; m < this->n; m++) {
-		if (this->x_stabilizers[m][block] & inner) {
-			break;
-		}
-	}
-	this->rowcopy(2 * this->n, m + this->n);
-	for (uint32_t i = m + 1; i < this->n; i++) {
-		if (this->x_stabilizers[i][block] & inner) {
-			this->rowmult(2 * this->n, i + this->n);
-		}
-	}
-	if (this->phases[2 * this->n]) {
-		return 1;
-	} else {
-		return 0;
-	}
+    // Find first stabilizer with x_pa = 1
+    uint32_t p = 2 * this->n; // invalid index
+    for (uint32_t i = this->n; i < 2 * this->n; i++) {
+        if (this->x_stabilizers[i][block] & inner) {
+            p = i;
+            break;
+        }
+    }
+
+    // Case 1: Random measurement
+    if (p < 2 * this->n) {
+        // For all other rows with x[target] = 1, multiply by row p
+        for (uint32_t i = 0; i < 2 * this->n; i++) {
+            if (i != p && (this->x_stabilizers[i][block] & inner)) {
+                this->rowmult(i, p);
+            }
+        }
+
+        // Set destabilizer row (p - n) equal to stabilizer row p
+        uint32_t destab_index = p - this->n;
+        this->rowcopy(destab_index, p);
+
+        // Reset p-th stabilizer row to Z on target qubit
+        this->rowset(p, target + this->n);
+
+        // Random outcome
+        this->phases[p] = (rand() & 1) ? 2 : 0;
+
+        return this->phases[p] ? 3 : 2; // Map 2->3 for -1, 0->2 for +1
+    } 
+    // Case 2: Deterministic measurement
+    else {
+        // Reset scratch row (index 2n)
+        this->phases[2 * this->n] = 0;
+        uint32_t whole_blocks = (this->n >> BLOCK_BITS) + 1;
+        for (uint32_t j = 0; j < whole_blocks; j++) {
+            this->x_stabilizers[2 * this->n][j] = 0;
+            this->z_stabilizers[2 * this->n][j] = 0;
+        }
+
+        // Sum correct stabilizer rows
+        for (uint32_t i = 0; i < this->n; i++) {
+            if (this->x_stabilizers[i][block] & inner) {
+                this->rowmult(2 * this->n, this->n + i);
+            }
+        }
+
+        return this->phases[2 * this->n] ? 1 : 0;
+    }
 }
 
 uint_fast16_t Qec::get_phase(uint32_t i) {
@@ -119,32 +133,27 @@ void Qec::cnot(uint32_t control, uint32_t target) {
 	uint64_t control_inner = powers[control & 63];
 	uint64_t target_inner = powers[target & 63];
 
-	for (uint32_t i = 0; i < 2 * this->n; i++) {
-		// Flip the x stabilizer on the target, if the control contains 1
-		if (this->x_stabilizers[i][control_block] & control_inner) {
-			this->x_stabilizers[i][target_block] ^= target_inner;
-		}
-		// Flip the z stabilizer on the control, if the target contains +
-		if (this->z_stabilizers[i][target_block] & target_inner) {
-			this->z_stabilizers[i][control_block] ^= control_inner;
-		}
-		// do the phase kickback when all the stabilizers are 1
-		if ((this->x_stabilizers[i][control_block] & control_inner) &&
-				(this->z_stabilizers[i][target_block] & target_inner) &&
-				(this->x_stabilizers[i][target_block] & target_inner) &&
-				(this->z_stabilizers[i][control_block] & control_inner)) {
-			// TODO: check if doing `phase ^= 0b10` is equivalent and faster
-			this->phases[i] ^= 0b10;
-		}
-		// do the phase kickback in another case TODO: figure out what case this represents
-		if ((this->x_stabilizers[i][control_block] & control_inner) &&
-				(this->z_stabilizers[i][target_block] & target_inner) &&
-				!(this->x_stabilizers[i][target_block] & target_inner) &&
-				!(this->z_stabilizers[i][control_block] & control_inner)) {
-			this->phases[i] ^= 0b10;
-		}
-	}
+    for (uint32_t i = 0; i < 2 * this->n; i++) {
+        // update phase formula r_i x= x_ia * z_ib * (x_ib x z_ia x 1)
+        bool x_ia = this->x_stabilizers[i][control_block] & control_inner;
+        bool z_ib = this->z_stabilizers[i][target_block] & target_inner;
+        bool x_ib = this->x_stabilizers[i][target_block] & target_inner;
+        bool z_ia = this->z_stabilizers[i][control_block] & control_inner;
+        
+        if (x_ia && z_ib && (x_ib ^ z_ia ^ 1)) {
+            this->phases[i] ^= 2; // flip phase bit
+        }
+        
+        // x and z bits
+        if (x_ia) {
+            this->x_stabilizers[i][target_block] ^= target_inner;
+        }
+        if (z_ib) {
+            this->z_stabilizers[i][control_block] ^= control_inner;
+        }
+    }
 }
+
 void Qec::cphase(uint32_t control, uint32_t target) {
 	if (!this->initialized) {
 		return;
