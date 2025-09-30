@@ -4,8 +4,12 @@
 #include <random>
 #include <stdexcept>
 
-Qec::Qec(size_t num_qubits) {
-	n_qubits = num_qubits;
+Qec::Qec() {
+    
+}
+
+void Qec::init(u_int32_t num_qubits) {
+    n_qubits = num_qubits;
     x = std::vector<std::vector<bool>>(2 * n_qubits + 1, std::vector<bool>(n_qubits, false));
     z = std::vector<std::vector<bool>>(2 * n_qubits + 1, std::vector<bool>(n_qubits, false));
     r = std::vector<bool>(2 * n_qubits + 1, false);
@@ -17,10 +21,10 @@ Qec::Qec(size_t num_qubits) {
     // Row 2n is scratch space
     
     for (size_t i = 0; i < n_qubits; i++) {
-        // Destabilizer rows x_ij = δ_ij, z_ij = 0
+        // Destabilizer rows x_ij = delta_ij, z_ij = 0
         x[i][i] = true;
         
-        // Stabilizer rows x_ij = 0, z_ij = δ_{(i-n)j}
+        // Stabilizer rows x_ij = 0, z_ij = delta_{(i-n)j}
         z[n_qubits + i][i] = true;
     }
 }
@@ -187,9 +191,12 @@ void Qec::print_tableau() const {
 }
 
 void Qec::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("init", "num_qubits"), &Qec::init);
+
 	ClassDB::bind_method(D_METHOD("cnot", "control", "target"), &Qec::cnot);
 	ClassDB::bind_method(D_METHOD("hadamard", "qubit"), &Qec::hadamard);
 	ClassDB::bind_method(D_METHOD("phase", "qubit"), &Qec::phase);
+
 	ClassDB::bind_method(D_METHOD("measure", "qubit"), &Qec::measure);
 	ClassDB::bind_method(D_METHOD("print_tableau"), &Qec::print_tableau);
 }

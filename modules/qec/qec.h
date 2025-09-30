@@ -10,7 +10,7 @@
 class Qec : public RefCounted {
 	GDCLASS(Qec, RefCounted);
 private:
-    size_t n_qubits;
+    u_int32_t n_qubits;
     std::vector<std::vector<bool>> x; // 2n x n matrix for X
     std::vector<std::vector<bool>> z; // 2n x n matrix for Z  
     std::vector<bool> r; // 2n phase bits
@@ -24,7 +24,9 @@ protected:
 	static void _bind_methods();
 
 public:
-	Qec(size_t n_qubits);
+	Qec();
+
+    void init(u_int32_t num_qubits);
 
     // operations
     void cnot(size_t control, size_t target);
