@@ -1,18 +1,19 @@
 #include "qec.h"
+#include <algorithm>
 #include <cstdint>
 #include <cstdlib>
 
 void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("init", "qubit_amount"), &Qec::init);
-	//
-	// ClassDB::bind_method(D_METHOD("cnot", "control", "target"), &Qec::cnot);
-	// ClassDB::bind_method(D_METHOD("cphase", "control", "target"), &Qec::cphase);
-	// ClassDB::bind_method(D_METHOD("hadamard", "qubit"), &Qec::hadamard);
-	// ClassDB::bind_method(D_METHOD("phase", "qubit"), &Qec::phase);
-	// ClassDB::bind_method(D_METHOD("phase_dag", "qubit"), &Qec::phase_dag);
-	// ClassDB::bind_method(D_METHOD("xgate", "qubit"), &Qec::xgate);
-	// ClassDB::bind_method(D_METHOD("ygate", "qubit"), &Qec::ygate);
-	// ClassDB::bind_method(D_METHOD("zgate", "qubit"), &Qec::zgate);
+
+	ClassDB::bind_method(D_METHOD("cnot", "control", "target"), &Qec::cnot);
+	ClassDB::bind_method(D_METHOD("cphase", "control", "target"), &Qec::cphase);
+	ClassDB::bind_method(D_METHOD("hadamard", "qubit"), &Qec::hadamard);
+	ClassDB::bind_method(D_METHOD("phase", "qubit"), &Qec::phase);
+	ClassDB::bind_method(D_METHOD("phase_dag", "qubit"), &Qec::phase_dag);
+	ClassDB::bind_method(D_METHOD("xgate", "qubit"), &Qec::xgate);
+	ClassDB::bind_method(D_METHOD("ygate", "qubit"), &Qec::ygate);
+	ClassDB::bind_method(D_METHOD("zgate", "qubit"), &Qec::zgate);
 	//
 	// ClassDB::bind_method(D_METHOD("measure", "qubit"), &Qec::measure);
 	//
@@ -61,37 +62,51 @@ void Qec::zgate(node_idx target) {
 void Qec::cphase(node_idx control, node_idx target) {
 	if ((this->nodes[control].adjacent.size() > 1) ||
 			(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) {
-		// remove_VOP(control,target)
+		remove_VOP(control, target);
 	}
 	if ((this->nodes[target].adjacent.size() > 1) ||
 			(this->nodes[target].adjacent.size() == 1 && this->nodes[target].adjacent[0] != control)) {
-		// remove_VOP(target,control)
+		remove_VOP(target, control);
 	}
 
 	if ((this->nodes[control].adjacent.size() > 1) ||
 			(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) {
-		// remove_VOP(control,target)
+		remove_VOP(control, target);
 	}
 
-	return;
+	uint8_t controlvop = this->nodes[control].vop;
+	uint8_t targetvop = this->nodes[target].vop;
+	bool had_edge = std::find(this->nodes[control].adjacent.begin(),
+							this->nodes[control].adjacent.end(), target) !=
+			this->nodes[control].adjacent.end();
 
-	// Case 1: both control and target are in {I,Z,S,S^}
-	// toggle the adjacency
-	{
-		if (erase(this->nodes[control].adjacent, target)) {
-			// target was in adjacency, also erase the other way
-			erase(this->nodes[target].adjacent, control);
-		} else {
-			this->nodes[control].adjacent.push_back(target);
-			this->nodes[target].adjacent.push_back(control);
-		}
+	if (cphase_table[had_edge][controlvop][targetvop][0]) {
+		this->nodes[control].adjacent.push_back(target);
+		this->nodes[target].adjacent.push_back(control);
+	} else {
+		erase(this->nodes[control].adjacent, target);
+		erase(this->nodes[target].adjacent, control);
 	}
-	// Case 2: at least one of control and target is not in there
+
+	this->nodes[control].vop = cphase_table[had_edge][controlvop][targetvop][1];
+	this->nodes[target].vop = cphase_table[had_edge][controlvop][targetvop][2];
+}
+
+void Qec::cnot(node_idx control, node_idx target) {
+	this->hadamard(target);
+	this->cphase(control, target);
+	this->hadamard(target);
 }
 
 void Qec::remove_VOP(node_idx a, node_idx b) {
+	if (this->nodes[a].adjacent.size() == 0) {
+		// This should never be called without any adjacent on the a side
+		abort();
+	}
+
+	// if necessary we'll use b, but otherwise try using the first other adjacency
 	node_idx c = b;
-	for (uint32_t i = 0; i < this->nodes[a].adjacent.size(); ++i) {
+	for (uint32_t i = 0; i < this->nodes[a].adjacent.size(); i++) {
 		if (this->nodes[a].adjacent[i] != b) {
 			c = i;
 			break;
@@ -100,28 +115,27 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 	std::vector<uint8_t> decomp = decompositions[this->nodes[a].vop];
 
 	for (uint32_t i = decomp.size(); i > 0; --i) {
-		if (decomp[i] == 0) { // decomp[i] == sqrt(-iX)
+		if (decomp[i] == 0) { // 0 == U
 			this->local_complementation(a);
-		} else { // decomp[i] == sqrt(iZ)
-			this->local_complementation(b);
+		} else { // 1 == V
+			this->local_complementation(c);
 		}
 	}
 }
 
 void Qec::local_complementation(node_idx a) {
-	for (uint32_t i = 0; i < this->nodes[a].adjacent.size(); i++) {
-		for (uint32_t j = 0; j < this->nodes[a].adjacent.size(); j++) {
-			if (i < j) {
-				if (erase(this->nodes[i].adjacent, j)) {
-					// target was in adjacency, also erase the other way
-					erase(this->nodes[j].adjacent, i);
-				} else {
-					this->nodes[i].adjacent.push_back(j);
-					this->nodes[j].adjacent.push_back(i);
-				}
+	uint32_t size = this->nodes[a].adjacent.size();
+	for (uint32_t i = 0; i < size; i++) {
+		for (uint32_t j = i + 1; j < size; j++) {
+			if (erase(this->nodes[i].adjacent, j)) {
+				// target was in adjacency, also erase the other way
+				erase(this->nodes[j].adjacent, i);
+			} else {
+				this->nodes[i].adjacent.push_back(j);
+				this->nodes[j].adjacent.push_back(i);
 			}
 		}
-		this->nodes[i].vop = vop_table[this->nodes[i].vop][xb];
-		this->nodes[a].vop = vop_table[this->nodes[a].vop][zd];
+		this->nodes[i].vop = vop_table[this->nodes[i].vop][yb];
 	}
+	this->nodes[a].vop = vop_table[this->nodes[a].vop][yd];
 }
