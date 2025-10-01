@@ -17,11 +17,8 @@ void Qec::_bind_methods() {
 	//
 	// ClassDB::bind_method(D_METHOD("measure", "qubit"), &Qec::measure);
 	//
-	// ClassDB::bind_method(D_METHOD("get_x_stab", "i", "j"), &Qec::get_x_stab);
-	// ClassDB::bind_method(D_METHOD("get_z_stab", "i", "j"), &Qec::get_z_stab);
-	// ClassDB::bind_method(D_METHOD("x_stabs"), &Qec::x_stabs);
-	// ClassDB::bind_method(D_METHOD("z_stabs"), &Qec::z_stabs);
-	// ClassDB::bind_method(D_METHOD("get_phase", "i"), &Qec::get_phase);
+	ClassDB::bind_method(D_METHOD("get_vop", "node"), &Qec::get_vop);
+	ClassDB::bind_method(D_METHOD("get_adjacent", "node"), &Qec::get_adjacent);
 }
 
 Qec::Qec() {
@@ -138,4 +135,16 @@ void Qec::local_complementation(node_idx a) {
 		this->nodes[i].vop = vop_table[this->nodes[i].vop][yb];
 	}
 	this->nodes[a].vop = vop_table[this->nodes[a].vop][yd];
+}
+
+uint8_t Qec::get_vop(node_idx node) {
+	return this->nodes[node].vop;
+}
+
+PackedInt32Array Qec::get_adjacent(node_idx node) {
+	PackedInt32Array array;
+	for (uint32_t i = 0; i < this->nodes[node].adjacent.size(); i++) {
+		array.append(this->nodes[node].adjacent[i]);
+	};
+	return array;
 }

@@ -63,6 +63,8 @@ public:
 	void ygate(node_idx target); // Y = X Y = H S S H S S
 	void zgate(node_idx target); // Z = S S
 	void cphase(node_idx control, node_idx target); // CZ = H_target CNOT H_target
+	uint8_t get_vop(node_idx node);
+	PackedInt32Array get_adjacent(node_idx node);
 
 	// initialisation
 	Qec();
