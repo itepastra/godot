@@ -3,6 +3,10 @@
 #include <cstdint>
 #include <cstdlib>
 
+Qec::Qec() {
+	this->initialized = false;
+}
+
 void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("init", "qubit_amount"), &Qec::init);
 
@@ -112,7 +116,6 @@ int Qec::measure(uint32_t target) {
                 this->rowmult(2 * this->n, this->n + i);
             }
         }
-
         return this->phases[2 * this->n] ? 1 : 0;
     }
 }
@@ -243,7 +246,7 @@ void Qec::init(uint32_t qubit_amount) {
 	for (uint32_t i = 0; i < rows; i++) {
 		std::vector<uint64_t> line_x(whole_blocks, 0);
 		std::vector<uint64_t> line_z(whole_blocks, 0);
-		// TODO: what is this for?? gotta either figure it out or ask scott
+
 		if (i < qubit_amount) {
 			line_x[i >> BLOCK_BITS] = powers[i & 63]; // we create a diagonal
 		} else if (i < rows - 1) {
@@ -256,9 +259,7 @@ void Qec::init(uint32_t qubit_amount) {
 	this->initialized = true;
 }
 
-Qec::Qec() {
-	this->initialized = false;
-}
+
 
 void Qec::rowcopy(uint32_t i, uint32_t k)
 // copy row k to row i
@@ -267,17 +268,6 @@ void Qec::rowcopy(uint32_t i, uint32_t k)
 	this->z_stabilizers[i].assign(this->z_stabilizers[k].begin(), this->z_stabilizers[k].end());
 }
 
-void Qec::rowswap(uint32_t i, uint32_t k)
-// swap row i and row k
-{
-	// NOTE: currently I'm just swapping the pointers around, I don't know if this works as expected
-	std::vector<uint64_t> tmp_x = this->x_stabilizers[i];
-	this->x_stabilizers[i] = this->x_stabilizers[k];
-	this->x_stabilizers[k] = tmp_x;
-	std::vector<uint64_t> tmp_z = this->z_stabilizers[i];
-	this->z_stabilizers[i] = this->z_stabilizers[k];
-	this->z_stabilizers[k] = tmp_z;
-}
 
 int_fast8_t Qec::clifford(uint32_t i, uint32_t k) {
 	int_fast32_t e = 0; // NOTE: check on how it overflows
@@ -306,12 +296,37 @@ int_fast8_t Qec::clifford(uint32_t i, uint32_t k) {
 }
 
 void Qec::rowmult(uint32_t i, uint32_t k) {
-	uint32_t whole_blocks = (this->n >> BLOCK_BITS) + 1;
-	this->phases[i] = this->clifford(i, k);
-	for (uint32_t j = 0; j < whole_blocks; j++) {
-		this->x_stabilizers[i][j] ^= this->x_stabilizers[k][j];
-		this->z_stabilizers[i][j] ^= this->z_stabilizers[k][j];
-	}
+    int_fast8_t total = 2*this->phases[i] + 2*this->phases[k];
+    for (uint32_t j = 0; j < this->n; j++) {
+        uint32_t block = j >> BLOCK_BITS;
+        uint64_t inner = powers[j & 63];
+        
+        bool x_ij = this->x_stabilizers[i][block] & inner;
+        bool z_ij = this->z_stabilizers[i][block] & inner;
+        bool x_kj = this->x_stabilizers[k][block] & inner;
+        bool z_kj = this->z_stabilizers[k][block] & inner;
+        
+        //  g function implementation from the paper
+        if (x_ij == 0 && z_ij == 0) {
+            // g = 0 do nothing
+        } else if (x_ij == 1 && z_ij == 1) {
+            total += (z_kj ? 1 : -1) - (x_kj ? 1 : -1);
+        } else if (x_ij == 1 && z_ij == 0) {
+            total += z_kj ? (2*(x_kj?1:-1) - 1) : 0;
+        } else { // x_ij == 0 && z_ij == 1
+            total += x_kj ? (1 - 2*(z_kj?1:-1)) : 0;
+        }
+    }
+    
+    // set phase based on mod 4 result
+    this->phases[i] = (total % 4 == 0) ? 0 : 2;
+    
+    // Update X and Z bits
+    uint32_t whole_blocks = (this->n >> BLOCK_BITS) + 1;
+    for (uint32_t j = 0; j < whole_blocks; j++) {
+        this->x_stabilizers[i][j] ^= this->x_stabilizers[k][j];
+        this->z_stabilizers[i][j] ^= this->z_stabilizers[k][j];
+    }
 }
 
 void Qec::rowset(uint32_t i, uint32_t k) {
@@ -327,85 +342,5 @@ void Qec::rowset(uint32_t i, uint32_t k) {
 		this->x_stabilizers[i][block] = inner;
 	} else {
 		this->z_stabilizers[i][block] = inner;
-	}
-}
-
-uint32_t Qec::gaussian() {
-	uint32_t i = this->n; // index to swap the next found row to
-	for (uint32_t j = 0; j < this->n; j++)
-	// Go over the x_stabilizers and check for any generators with an X below the triangle
-	{
-		uint32_t block = j >> BLOCK_BITS;
-		uint64_t inner = powers[j & 63];
-		uint32_t k = 0;
-		for (k = this->n; k < 2 * this->n; k++) {
-			if (this->x_stabilizers[k][block] & inner) {
-				break;
-			}
-		}
-		if (k < 2 * this->n) {
-			// there was a generator X in any column
-			this->rowswap(i, k); // move the row k to the first row
-			this->rowswap(i - this->n, k - this->n); // swap row 0 with row k of the top part
-			for (uint32_t a = i + 1; a < 2 * this->n; a++) {
-				if (this->x_stabilizers[a][block] & inner) {
-					this->rowmult(a, i);
-					this->rowmult(i - this->n, a - this->n);
-				}
-			}
-			i++;
-		}
-	}
-	uint32_t g = i - this->n; // log2 of nonzero basis states
-	// Do the same for the Z_stabilizers
-	for (uint32_t j = 0; j < this->n; j++) {
-		uint32_t block = j >> BLOCK_BITS;
-		uint64_t inner = powers[j & 63];
-		uint32_t k = 0;
-		for (k = i; k < 2 * this->n; k++) {
-			if (this->z_stabilizers[k][block] & inner) {
-				break;
-			}
-		}
-		if (k < 2 * this->n) {
-			this->rowswap(i, k);
-			this->rowswap(i - this->n, k - this->n);
-			for (uint32_t a = i + 1; a < 2 * this->n; a++) {
-				if (this->z_stabilizers[a][block] & inner) {
-					this->rowmult(a, i);
-					this->rowmult(i - this->n, a - this->n);
-				}
-			}
-			i++;
-		}
-	}
-
-	return g;
-}
-
-void Qec::seed(uint32_t log_amount) {
-	// Wipe the scratch space
-	this->phases[2 * this->n] = 0;
-	std::fill(this->x_stabilizers[2 * this->n].begin(), this->x_stabilizers[2 * this->n].end(), 0);
-	std::fill(this->z_stabilizers[2 * this->n].begin(), this->z_stabilizers[2 * this->n].end(), 0);
-
-	uint32_t min;
-	for (uint32_t i = 2 * this->n - 1; i >= this->n + log_amount; i--) {
-		uint_fast8_t tmp_phase = this->phases[i];
-		for (uint32_t j = this->n - i; j >= 0; j--) {
-			uint32_t block = j >> BLOCK_BITS;
-			uint64_t inner = powers[j & 63];
-			if (this->z_stabilizers[i][block] & inner) {
-				min = j;
-				if (this->x_stabilizers[2 * this->n][block] & inner) {
-					tmp_phase ^= 0b10;
-				}
-			}
-		}
-		if (tmp_phase == 2) {
-			uint32_t block = min >> BLOCK_BITS;
-			uint64_t inner = powers[min & 63];
-			this->x_stabilizers[2 * this->n][block] ^= inner;
-		}
 	}
 }
