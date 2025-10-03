@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <random>
 
 #define BLOCK_BITS 6
 
@@ -18,19 +19,17 @@ class Qec : public RefCounted {
 	std::vector<std::vector<uint64_t>> z_stabilizers; // same but for z stabilizers
 	std::vector<uint_fast8_t> phases;
 
+	std::mt19937 rng;
+	std::uniform_int_distribution<int> bit_dist;
+
 protected:
 	// godot helper functions
 	static void _bind_methods();
 
 	// tableau helper functions
 	void rowcopy(uint32_t i, uint32_t k); // set row i equal to row k
-	void rowswap(uint32_t i, uint32_t k); // swap row i and row k
 	void rowset(uint32_t i, uint32_t b); // set row i to the b-th observable
 	void rowmult(uint32_t i, uint32_t k);
-	int_fast8_t clifford(uint32_t i, uint32_t k);
-
-	uint32_t gaussian();
-	void seed(uint32_t log_amount);
 
 public:
 	// qubit gates for godot to use
@@ -58,7 +57,7 @@ public:
 	void init(uint32_t qubit_amount);
 };
 
-const uint64_t powers[1 << BLOCK_BITS] = {
+inline constexpr uint64_t powers[1 << BLOCK_BITS] = {
 	1ull << 0,
 	1ull << 1,
 	1ull << 2,
