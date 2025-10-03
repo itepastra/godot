@@ -113,7 +113,7 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 	node_idx c = b;
 	for (uint32_t i = 0; i < this->nodes[a].adjacent.size(); i++) {
 		if (this->nodes[a].adjacent[i] != b) {
-			c = i;
+			c = this->nodes[a].adjacent[i];
 			break;
 		}
 	}
