@@ -167,8 +167,8 @@ void Qec::erase_connection(node_idx a, node_idx b) {
 }
 
 struct edge_hash {
-	uint32_t operator()(const std::pair<node_idx, node_idx> &e) const {
-		return e.first << 16 ^ e.second;
+	static uint32_t hash(const std::pair<unsigned int, unsigned int> &p_key) {
+		return uint32_t(p_key.first ^ (p_key.second << 16));
 	}
 };
 
@@ -249,7 +249,8 @@ void Qec::toggle_edge(node_idx i, node_idx j) {
 		// target was in adjacency, also erase the other way
 		erase(this->nodes[j].adjacent, i);
 	} else {
-		printf("adding") this->nodes[i].adjacent.push_back(j);
+		printf("adding");
+		this->nodes[i].adjacent.push_back(j);
 		this->nodes[j].adjacent.push_back(i);
 	}
 }
