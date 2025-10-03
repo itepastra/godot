@@ -126,6 +126,8 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 			this->local_complementation(c);
 		}
 	}
+
+	assert(this->nodes[a].vop == ia);
 }
 
 void Qec::local_complementation(node_idx a) {
