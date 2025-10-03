@@ -52,6 +52,8 @@ protected:
 
 	void remove_VOP(node_idx a, node_idx b);
 	void local_complementation(node_idx a);
+	void erase_connection(node_idx a, node_idx b);
+	void toggle_edge(node_idx i, node_idx j);
 
 public:
 	// qubit gates for godot to use
@@ -65,11 +67,16 @@ public:
 	void cphase(node_idx control, node_idx target); // CZ = H_target CNOT H_target
 	uint8_t get_vop(node_idx node);
 	PackedInt32Array get_adjacent(node_idx node);
+	uint8_t measure_x(node_idx node);
+	uint8_t measure_y(node_idx node);
+	uint8_t measure_z(node_idx node);
 
 	// initialisation
 	Qec();
 	void init(node_idx qubit_amount);
 };
+
+bool contains(std::vector<node_idx> vec, node_idx val);
 
 const uint32_t SYMMETRIES = 24;
 // I = Ia
