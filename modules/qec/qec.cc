@@ -63,18 +63,18 @@ void Qec::zgate(node_idx target) {
 void Qec::cphase(node_idx control, node_idx target) {
 	if ((this->nodes[control].adjacent.size() > 1) ||
 			(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) {
-		printf("removing Vertex Operator of %d, avoiding %d", control, target);
+		printf("removing Vertex Operator of %d, avoiding %d\n", control, target);
 		remove_VOP(control, target);
 	}
 	if ((this->nodes[target].adjacent.size() > 1) ||
 			(this->nodes[target].adjacent.size() == 1 && this->nodes[target].adjacent[0] != control)) {
-		printf("removing Vertex Operator of %d, avoiding %d", target, control);
+		printf("removing Vertex Operator of %d, avoiding %d\n", target, control);
 		remove_VOP(target, control);
 	}
 
 	if ((this->nodes[control].adjacent.size() > 1) ||
 			(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) {
-		printf("removing Vertex Operator of %d, avoiding %d", control, target);
+		printf("removing Vertex Operator of %d, avoiding %d\n", control, target);
 		remove_VOP(control, target);
 	}
 
@@ -92,7 +92,7 @@ void Qec::cphase(node_idx control, node_idx target) {
 		erase(this->nodes[target].adjacent, control);
 	}
 
-	printf("looking in cphase_table for %b, %d, %d", had_edge, controlvop, targetvop);
+	printf("looking in cphase_table for %b, %d, %d\n", had_edge, controlvop, targetvop);
 	this->nodes[control].vop = cphase_table[had_edge][controlvop][targetvop][1];
 	this->nodes[target].vop = cphase_table[had_edge][controlvop][targetvop][2];
 }
@@ -245,13 +245,13 @@ uint8_t Qec::measure_x(node_idx node) {
 }
 
 void Qec::toggle_edge(node_idx i, node_idx j) {
-	printf("toggling edge between %d and %d", i, j);
+	printf("toggling edge between %d and %d...", i, j);
 	if (erase(this->nodes[i].adjacent, j)) {
-		printf("removing...");
+		printf(" removing\n");
 		// target was in adjacency, also erase the other way
 		erase(this->nodes[j].adjacent, i);
 	} else {
-		printf("adding");
+		printf(" adding\n");
 		this->nodes[i].adjacent.push_back(j);
 		this->nodes[j].adjacent.push_back(i);
 	}
