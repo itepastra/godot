@@ -11,28 +11,28 @@
 #define BLOCK_BITS 6
 #define node_idx uint32_t
 const int ia = 0;
-const int ya = 1;
-const int xa = 2;
+const int xa = 1;
+const int ya = 2;
 const int za = 3;
 const int ib = 4;
-const int yb = 5;
-const int xb = 6;
+const int xb = 5;
+const int yb = 6;
 const int zb = 7;
 const int ic = 8;
-const int yc = 9;
-const int xc = 10;
+const int xc = 9;
+const int yc = 10;
 const int zc = 11;
 const int ip = 12;
-const int yd = 13;
-const int xd = 14;
+const int xd = 13;
+const int yd = 14;
 const int zd = 15;
 const int ie = 16;
-const int ye = 17;
-const int xe = 18;
+const int xe = 17;
+const int ye = 18;
 const int ze = 19;
 const int il = 20;
-const int yf = 21;
-const int xf = 22;
+const int xf = 21;
+const int yf = 22;
 const int zf = 23;
 
 struct QecNode {
