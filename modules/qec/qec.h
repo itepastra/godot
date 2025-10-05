@@ -84,8 +84,8 @@ const uint32_t SYMMETRIES = 24;
 // H = Yc
 // S^ = Yb
 // S = Xb
-// Z = S S Ia = Za
-// X = H S S H Ia = Xa
+// Z = S S = Za
+// X = H S S H = Xa
 // Y = Ya
 
 // This table is copied from page 30 of https://archive.org/download/thesis-anders/Thesis_Anders.pdf

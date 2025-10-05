@@ -133,16 +133,12 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 void Qec::local_complementation(node_idx a) {
 	uint32_t size = this->nodes[a].adjacent.size();
 	for (uint32_t i = 0; i < size; i++) {
+		node_idx ni = this->nodes[a].adjacent[i];
 		for (uint32_t j = i + 1; j < size; j++) {
-			if (erase(this->nodes[this->nodes[a].adjacent[i]].adjacent, this->nodes[a].adjacent[j])) {
-				// target was in adjacency, also erase the other way
-				erase(this->nodes[this->nodes[a].adjacent[j]].adjacent, this->nodes[a].adjacent[i]);
-			} else {
-				this->nodes[this->nodes[a].adjacent[i]].adjacent.push_back(this->nodes[a].adjacent[j]);
-				this->nodes[this->nodes[a].adjacent[j]].adjacent.push_back(this->nodes[a].adjacent[i]);
-			}
+			node_idx nj = this->nodes[a].adjacent[j];
+			toggle_edge(ni, nj);
 		}
-		this->nodes[i].vop = vop_table[this->nodes[i].vop][yb];
+		this->nodes[ni].vop = vop_table[this->nodes[ni].vop][yb];
 	}
 	this->nodes[a].vop = vop_table[this->nodes[a].vop][yd];
 }
