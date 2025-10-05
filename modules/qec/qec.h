@@ -10,30 +10,30 @@
 
 #define BLOCK_BITS 6
 #define node_idx uint32_t
-#define ia 0
-#define xa 1
-#define ya 2
-#define za 3
-#define ib 4
-#define xb 5
-#define yb 6
-#define zb 7
-#define ic 8
-#define xc 9
-#define yc 10
-#define zc 11
-#define id 12
-#define xd 13
-#define yd 14
-#define zd 15
-#define ie 16
-#define xe 17
-#define ye 18
-#define ze 19
-#define il 20
-#define xf 21
-#define yf 22
-#define zf 23
+const int ia = 0;
+const int ya = 1;
+const int xa = 2;
+const int za = 3;
+const int ib = 4;
+const int yb = 5;
+const int xb = 6;
+const int zb = 7;
+const int ic = 8;
+const int yc = 9;
+const int xc = 10;
+const int zc = 11;
+const int ip = 12;
+const int yd = 13;
+const int xd = 14;
+const int zd = 15;
+const int ie = 16;
+const int ye = 17;
+const int xe = 18;
+const int ze = 19;
+const int il = 20;
+const int yf = 21;
+const int xf = 22;
+const int zf = 23;
 
 struct Node {
 	uint8_t vop = ia;
@@ -90,30 +90,30 @@ const uint32_t SYMMETRIES = 24;
 
 // This table is copied from page 30 of https://archive.org/download/thesis-anders/Thesis_Anders.pdf
 const uint8_t vop_table[SYMMETRIES][SYMMETRIES] = {
-	{ ia, xa, ya, za, ib, xb, yb, zb, ic, xc, yc, zc, id, xd, yd, zd, ie, xe, ye, ze, il, xf, yf, zf },
-	{ xa, ia, za, ya, yb, zb, ib, xb, zc, yc, xc, ic, xd, id, zd, yd, ze, ye, xe, ie, yf, zf, il, xf },
-	{ ya, za, ia, xa, xb, ib, zb, yb, yc, zc, ic, xc, zd, yd, xd, id, xe, ie, ze, ye, zf, yf, xf, il },
-	{ za, ya, xa, ia, zb, yb, xb, ib, xc, ic, zc, yc, yd, zd, id, xd, ye, ze, ie, xe, xf, il, zf, yf },
-	{ ib, xb, yb, zb, ia, xa, ya, za, il, xf, yf, zf, ie, xe, ye, ze, id, xd, yd, zd, ic, xc, yc, zc },
-	{ xb, ib, zb, yb, ya, za, ia, xa, zf, yf, xf, il, xe, ie, ze, ye, zd, yd, xd, id, yc, zc, ic, xc },
-	{ yb, zb, ib, xb, xa, ia, za, ya, yf, zf, il, xf, ze, ye, xe, ie, xd, id, zd, yd, zc, yc, xc, ic },
-	{ zb, yb, xb, ib, za, ya, xa, ia, xf, il, zf, yf, ye, ze, ie, xe, yd, zd, id, xd, xc, ic, zc, yc },
-	{ ic, xc, yc, zc, ie, xe, ye, ze, ia, xa, ya, za, il, xf, yf, zf, ib, xb, yb, zb, id, xd, yd, zd },
-	{ xc, ic, zc, yc, ye, ze, ie, xe, za, ya, xa, ia, xf, il, zf, yf, zb, yb, xb, ib, yd, zd, id, xd },
-	{ yc, zc, ic, xc, xe, ie, ze, ye, ya, za, ia, xa, zf, yf, xf, il, xb, ib, zb, yb, zd, yd, xd, id },
-	{ zc, yc, xc, ic, ze, ye, xe, ie, xa, ia, za, ya, yf, zf, il, xf, yb, zb, ib, xb, xd, id, zd, yd },
-	{ id, xd, yd, zd, il, xf, yf, zf, ie, xe, ye, ze, ia, xa, ya, za, ic, xc, yc, zc, ib, xb, yb, zb },
-	{ xd, id, zd, yd, yf, zf, il, xf, ze, ye, xe, ie, xa, ia, za, ya, zc, yc, xc, ic, yb, zb, ib, xb },
-	{ yd, zd, id, xd, xf, il, zf, yf, ye, ze, ie, xe, za, ya, xa, ia, xc, ic, zc, yc, zb, yb, xb, ib },
-	{ zd, yd, xd, id, zf, yf, xf, il, xe, ie, ze, ye, ya, za, ia, xa, yc, zc, ic, xc, xb, ib, zb, yb },
-	{ ie, xe, ye, ze, ic, xc, yc, zc, id, xd, yd, zd, ib, xb, yb, zb, il, xf, yf, zf, ia, xa, ya, za },
-	{ xe, ie, ze, ye, yc, zc, ic, xc, zd, yd, xd, id, xb, ib, zb, yb, zf, yf, xf, il, ya, za, ia, xa },
-	{ ye, ze, ie, xe, xc, ic, zc, yc, yd, zd, id, xd, zb, yb, xb, ib, xf, il, zf, yf, za, ya, xa, ia },
-	{ ze, ye, xe, ie, zc, yc, xc, ic, xd, id, zd, yd, yb, zb, ib, xb, yf, zf, il, xf, xa, ia, za, ya },
-	{ il, xf, yf, zf, id, xd, yd, zd, ib, xb, yb, zb, ic, xc, yc, zc, ia, xa, ya, za, ie, xe, ye, ze },
-	{ xf, il, zf, yf, yd, zd, id, xd, zb, yb, xb, ib, xc, ic, zc, yc, za, ya, xa, ia, ye, ze, ie, xe },
-	{ yf, zf, il, xf, xd, id, zd, yd, yb, zb, ib, xb, zc, yc, xc, ic, xa, ia, za, ya, ze, ye, xe, ie },
-	{ zf, yf, xf, il, zd, yd, xd, id, xb, ib, zb, yb, yc, zc, ic, xc, ya, za, ia, xa, xe, ie, ze, ye },
+	{ ia, xa, ya, za, ib, xb, yb, zb, ic, xc, yc, zc, ip, xd, yd, zd, ie, xe, ye, ze, il, xf, yf, zf },
+	{ xa, ia, za, ya, yb, zb, ib, xb, zc, yc, xc, ic, xd, ip, zd, yd, ze, ye, xe, ie, yf, zf, il, xf },
+	{ ya, za, ia, xa, xb, ib, zb, yb, yc, zc, ic, xc, zd, yd, xd, ip, xe, ie, ze, ye, zf, yf, xf, il },
+	{ za, ya, xa, ia, zb, yb, xb, ib, xc, ic, zc, yc, yd, zd, ip, xd, ye, ze, ie, xe, xf, il, zf, yf },
+	{ ib, xb, yb, zb, ia, xa, ya, za, il, xf, yf, zf, ie, xe, ye, ze, ip, xd, yd, zd, ic, xc, yc, zc },
+	{ xb, ib, zb, yb, ya, za, ia, xa, zf, yf, xf, il, xe, ie, ze, ye, zd, yd, xd, ip, yc, zc, ic, xc },
+	{ yb, zb, ib, xb, xa, ia, za, ya, yf, zf, il, xf, ze, ye, xe, ie, xd, ip, zd, yd, zc, yc, xc, ic },
+	{ zb, yb, xb, ib, za, ya, xa, ia, xf, il, zf, yf, ye, ze, ie, xe, yd, zd, ip, xd, xc, ic, zc, yc },
+	{ ic, xc, yc, zc, ie, xe, ye, ze, ia, xa, ya, za, il, xf, yf, zf, ib, xb, yb, zb, ip, xd, yd, zd },
+	{ xc, ic, zc, yc, ye, ze, ie, xe, za, ya, xa, ia, xf, il, zf, yf, zb, yb, xb, ib, yd, zd, ip, xd },
+	{ yc, zc, ic, xc, xe, ie, ze, ye, ya, za, ia, xa, zf, yf, xf, il, xb, ib, zb, yb, zd, yd, xd, ip },
+	{ zc, yc, xc, ic, ze, ye, xe, ie, xa, ia, za, ya, yf, zf, il, xf, yb, zb, ib, xb, xd, ip, zd, yd },
+	{ ip, xd, yd, zd, il, xf, yf, zf, ie, xe, ye, ze, ia, xa, ya, za, ic, xc, yc, zc, ib, xb, yb, zb },
+	{ xd, ip, zd, yd, yf, zf, il, xf, ze, ye, xe, ie, xa, ia, za, ya, zc, yc, xc, ic, yb, zb, ib, xb },
+	{ yd, zd, ip, xd, xf, il, zf, yf, ye, ze, ie, xe, za, ya, xa, ia, xc, ic, zc, yc, zb, yb, xb, ib },
+	{ zd, yd, xd, ip, zf, yf, xf, il, xe, ie, ze, ye, ya, za, ia, xa, yc, zc, ic, xc, xb, ib, zb, yb },
+	{ ie, xe, ye, ze, ic, xc, yc, zc, ip, xd, yd, zd, ib, xb, yb, zb, il, xf, yf, zf, ia, xa, ya, za },
+	{ xe, ie, ze, ye, yc, zc, ic, xc, zd, yd, xd, ip, xb, ib, zb, yb, zf, yf, xf, il, ya, za, ia, xa },
+	{ ye, ze, ie, xe, xc, ic, zc, yc, yd, zd, ip, xd, zb, yb, xb, ib, xf, il, zf, yf, za, ya, xa, ia },
+	{ ze, ye, xe, ie, zc, yc, xc, ic, xd, ip, zd, yd, yb, zb, ib, xb, yf, zf, il, xf, xa, ia, za, ya },
+	{ il, xf, yf, zf, ip, xd, yd, zd, ib, xb, yb, zb, ic, xc, yc, zc, ia, xa, ya, za, ie, xe, ye, ze },
+	{ xf, il, zf, yf, yd, zd, ip, xd, zb, yb, xb, ib, xc, ic, zc, yc, za, ya, xa, ia, ye, ze, ie, xe },
+	{ yf, zf, il, xf, xd, ip, zd, yd, yb, zb, ib, xb, zc, yc, xc, ic, xa, ia, za, ya, ze, ye, xe, ie },
+	{ zf, yf, xf, il, zd, yd, xd, ip, xb, ib, zb, yb, yc, zc, ic, xc, ya, za, ia, xa, xe, ie, ze, ye },
 };
 
 // 0 = U
