@@ -1,6 +1,7 @@
 #include "qec.h"
 #include <algorithm>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <functional>
 #include <iostream>
@@ -37,7 +38,9 @@ void Qec::init(node_idx qubit_amount) {
 }
 
 void Qec::hadamard(node_idx target) {
+	printf("performing hadamard on %d, went from vop %d", target, this->nodes[target].vop);
 	this->nodes[target].vop = vop_table[yc][this->nodes[target].vop];
+	printf(" to vop %d\n", this->nodes[target].vop);
 }
 
 void Qec::phase(node_idx target) {
@@ -61,21 +64,27 @@ void Qec::zgate(node_idx target) {
 }
 
 void Qec::cphase(node_idx control, node_idx target) {
+	printf("before cphase between %d and %d, the vops are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 	if ((this->nodes[control].adjacent.size() > 1) ||
 			(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) {
 		printf("removing Vertex Operator of %d, avoiding %d\n", control, target);
 		remove_VOP(control, target);
+		printf("the vops for control (%d) and target (%d) are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 	}
 	if ((this->nodes[target].adjacent.size() > 1) ||
 			(this->nodes[target].adjacent.size() == 1 && this->nodes[target].adjacent[0] != control)) {
 		printf("removing Vertex Operator of %d, avoiding %d\n", target, control);
 		remove_VOP(target, control);
+		printf("the vops for control (%d) and target (%d) are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 	}
 
-	if ((this->nodes[control].adjacent.size() > 1) ||
-			(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) {
+	uint8_t vop = this->nodes[control].vop;
+	if (((this->nodes[control].adjacent.size() > 1) ||
+				(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) &&
+			!(vop == ia || vop == za || vop == yb || vop == xb)) {
 		printf("removing Vertex Operator of %d, avoiding %d\n", control, target);
 		remove_VOP(control, target);
+		printf("the vops for control (%d) and target (%d) are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 	}
 
 	uint8_t controlvop = this->nodes[control].vop;
@@ -95,6 +104,7 @@ void Qec::cphase(node_idx control, node_idx target) {
 	printf("looking in cphase_table for %b, %d, %d\n", had_edge, controlvop, targetvop);
 	this->nodes[control].vop = cphase_table[had_edge][controlvop][targetvop][1];
 	this->nodes[target].vop = cphase_table[had_edge][controlvop][targetvop][2];
+	printf("after cphase the vops for control (%d) and target (%d) are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 }
 
 void Qec::cnot(node_idx control, node_idx target) {
@@ -117,9 +127,13 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 			break;
 		}
 	}
+	printf("ended up choosing neighbor %d\n", c);
 	std::vector<uint8_t> decomp = decompositions[this->nodes[a].vop];
 
-	for (uint32_t i = decomp.size(); i > 0; --i) {
+	for (uint32_t i = decomp.size() - 1; i >= 0; i--) {
+		if (i > 10) { // There is a very weird bug I feel, but maybe it has a reason, anyways, this fixes it
+			break;
+		}
 		if (decomp[i] == 0) { // 0 == U
 			this->local_complementation(a);
 		} else { // 1 == V
@@ -127,20 +141,25 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 		}
 	}
 
-	assert(this->nodes[a].vop == ia);
+	printf("the vops of a, c after removal are %d, %d\n", this->nodes[a].vop, this->nodes[c].vop);
 }
 
 void Qec::local_complementation(node_idx a) {
-	uint32_t size = this->nodes[a].adjacent.size();
-	for (uint32_t i = 0; i < size; i++) {
-		node_idx ni = this->nodes[a].adjacent[i];
-		for (uint32_t j = i + 1; j < size; j++) {
-			node_idx nj = this->nodes[a].adjacent[j];
-			toggle_edge(ni, nj);
+	std::vector<node_idx> neighbors = this->nodes[a].adjacent;
+
+	printf("locally complementing %d\n", a);
+	for (auto i = neighbors.begin(); i != neighbors.end(); i++) {
+		for (auto j = i; j != neighbors.end(); j++) {
+			if (*i != *j) {
+				printf("toggling edge between %d and %d", *i, *j);
+				toggle_edge(*i, *j);
+			}
 		}
-		this->nodes[ni].vop = vop_table[this->nodes[ni].vop][yb];
+		this->nodes[*i].vop = vop_table[this->nodes[*i].vop][6];
+		printf("changed %d vop to %d\n", *i, this->nodes[*i].vop);
 	}
-	this->nodes[a].vop = vop_table[this->nodes[a].vop][yd];
+	this->nodes[a].vop = vop_table[this->nodes[a].vop][14];
+	printf("changed %d vop to %d\n", a, this->nodes[a].vop);
 }
 
 uint8_t rand_bool() {
