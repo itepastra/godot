@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/object/ref_counted.h"
+#include <cassert>
 #include <cstdint>
 #include <memory>
 #include <sstream>
