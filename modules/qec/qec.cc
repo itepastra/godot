@@ -134,12 +134,12 @@ void Qec::local_complementation(node_idx a) {
 	uint32_t size = this->nodes[a].adjacent.size();
 	for (uint32_t i = 0; i < size; i++) {
 		for (uint32_t j = i + 1; j < size; j++) {
-			if (erase(this->nodes[i].adjacent, j)) {
+			if (erase(this->nodes[this->nodes[a].adjacent[i]].adjacent, this->nodes[a].adjacent[j])) {
 				// target was in adjacency, also erase the other way
-				erase(this->nodes[j].adjacent, i);
+				erase(this->nodes[this->nodes[a].adjacent[j]].adjacent, this->nodes[a].adjacent[i]);
 			} else {
-				this->nodes[i].adjacent.push_back(j);
-				this->nodes[j].adjacent.push_back(i);
+				this->nodes[this->nodes[a].adjacent[i]].adjacent.push_back(this->nodes[a].adjacent[j]);
+				this->nodes[this->nodes[a].adjacent[j]].adjacent.push_back(this->nodes[a].adjacent[i]);
 			}
 		}
 		this->nodes[i].vop = vop_table[this->nodes[i].vop][yb];
@@ -280,12 +280,12 @@ uint8_t Qec::measure_y(node_idx node) {
 	neighbors.push_back(node);
 	for (uint32_t i = 0; i < neighbors.size(); i++) {
 		for (uint32_t j = i + 1; j < neighbors.size(); j++) {
-			if (erase(this->nodes[i].adjacent, j)) {
+			if (erase(this->nodes[neighbors[i]].adjacent, neighbors[j])) {
 				// target was in adjacency, also erase the other way
-				erase(this->nodes[j].adjacent, i);
+				erase(this->nodes[neighbors[j]].adjacent, neighbors[i]);
 			} else {
-				this->nodes[i].adjacent.push_back(j);
-				this->nodes[j].adjacent.push_back(i);
+				this->nodes[neighbors[i]].adjacent.push_back(neighbors[j]);
+				this->nodes[neighbors[j]].adjacent.push_back(neighbors[i]);
 			}
 		}
 	}

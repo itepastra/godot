@@ -35,7 +35,7 @@ const int yf = 21;
 const int xf = 22;
 const int zf = 23;
 
-struct Node {
+struct QecNode {
 	uint8_t vop = ia;
 	std::vector<node_idx> adjacent;
 };
@@ -45,7 +45,7 @@ class Qec : public RefCounted {
 
 	bool initialized;
 	node_idx qubit_count;
-	std::vector<Node> nodes;
+	std::vector<QecNode> nodes;
 
 protected:
 	// godot helper functions
