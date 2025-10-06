@@ -55,6 +55,15 @@ protected:
 	void local_complementation(node_idx a);
 	void erase_connection(node_idx a, node_idx b);
 	void toggle_edge(node_idx i, node_idx j);
+	uint8_t measure_x(node_idx node);
+	uint8_t measure_y(node_idx node);
+	uint8_t measure_z(node_idx node);
+	// measure in the Z basis (|0> or |1>)
+	// 0b00 = |0> (random)
+	// 0b01 = |1> (random)
+	// 0b10 = |0> (deterministic)
+	// 0b11 = |1> (deterministic)
+	uint8_t measure(node_idx node);
 
 public:
 	// qubit gates for godot to use
@@ -68,9 +77,10 @@ public:
 	void cphase(node_idx control, node_idx target); // CZ = H_target CNOT H_target
 	uint8_t get_vop(node_idx node);
 	PackedInt32Array get_adjacent(node_idx node);
-	uint8_t measure_x(node_idx node);
-	uint8_t measure_y(node_idx node);
-	uint8_t measure_z(node_idx node);
+
+	uint8_t mx(node_idx node);
+	uint8_t my(node_idx node);
+	uint8_t mz(node_idx node);
 
 	// initialisation
 	Qec();
@@ -87,34 +97,6 @@ const uint32_t SYMMETRIES = 24;
 // Z = S S = Za
 // X = H S S H = Xa
 // Y = Ya
-
-// This table is copied from page 30 of https://archive.org/download/thesis-anders/Thesis_Anders.pdf
-// const uint8_t vop_table[SYMMETRIES][SYMMETRIES] = {
-// 	{ ia, xa, ya, za, ib, xb, yb, zb, ic, xc, yc, zc, ip, xd, yd, zd, ie, xe, ye, ze, il, xf, yf, zf },
-// 	{ xa, ia, za, ya, yb, zb, ib, xb, zc, yc, xc, ic, xd, ip, zd, yd, ze, ye, xe, ie, yf, zf, il, xf },
-// 	{ ya, za, ia, xa, xb, ib, zb, yb, yc, zc, ic, xc, zd, yd, xd, ip, xe, ie, ze, ye, zf, yf, xf, il },
-// 	{ za, ya, xa, ia, zb, yb, xb, ib, xc, ic, zc, yc, yd, zd, ip, xd, ye, ze, ie, xe, xf, il, zf, yf },
-// 	{ ib, xb, yb, zb, ia, xa, ya, za, il, xf, yf, zf, ie, xe, ye, ze, ip, xd, yd, zd, ic, xc, yc, zc },
-// 	{ xb, ib, zb, yb, ya, za, ia, xa, zf, yf, xf, il, xe, ie, ze, ye, zd, yd, xd, ip, yc, zc, ic, xc },
-// 	{ yb, zb, ib, xb, xa, ia, za, ya, yf, zf, il, xf, ze, ye, xe, ie, xd, ip, zd, yd, zc, yc, xc, ic },
-// 	{ zb, yb, xb, ib, za, ya, xa, ia, xf, il, zf, yf, ye, ze, ie, xe, yd, zd, ip, xd, xc, ic, zc, yc },
-// 	{ ic, xc, yc, zc, ie, xe, ye, ze, ia, xa, ya, za, il, xf, yf, zf, ib, xb, yb, zb, ip, xd, yd, zd },
-// 	{ xc, ic, zc, yc, ye, ze, ie, xe, za, ya, xa, ia, xf, il, zf, yf, zb, yb, xb, ib, yd, zd, ip, xd },
-// 	{ yc, zc, ic, xc, xe, ie, ze, ye, ya, za, ia, xa, zf, yf, xf, il, xb, ib, zb, yb, zd, yd, xd, ip },
-// 	{ zc, yc, xc, ic, ze, ye, xe, ie, xa, ia, za, ya, yf, zf, il, xf, yb, zb, ib, xb, xd, ip, zd, yd },
-// 	{ ip, xd, yd, zd, il, xf, yf, zf, ie, xe, ye, ze, ia, xa, ya, za, ic, xc, yc, zc, ib, xb, yb, zb },
-// 	{ xd, ip, zd, yd, yf, zf, il, xf, ze, ye, xe, ie, xa, ia, za, ya, zc, yc, xc, ic, yb, zb, ib, xb },
-// 	{ yd, zd, ip, xd, xf, il, zf, yf, ye, ze, ie, xe, za, ya, xa, ia, xc, ic, zc, yc, zb, yb, xb, ib },
-// 	{ zd, yd, xd, ip, zf, yf, xf, il, xe, ie, ze, ye, ya, za, ia, xa, yc, zc, ic, xc, xb, ib, zb, yb },
-// 	{ ie, xe, ye, ze, ic, xc, yc, zc, ip, xd, yd, zd, ib, xb, yb, zb, il, xf, yf, zf, ia, xa, ya, za },
-// 	{ xe, ie, ze, ye, yc, zc, ic, xc, zd, yd, xd, ip, xb, ib, zb, yb, zf, yf, xf, il, ya, za, ia, xa },
-// 	{ ye, ze, ie, xe, xc, ic, zc, yc, yd, zd, ip, xd, zb, yb, xb, ib, xf, il, zf, yf, za, ya, xa, ia },
-// 	{ ze, ye, xe, ie, zc, yc, xc, ic, xd, ip, zd, yd, yb, zb, ib, xb, yf, zf, il, xf, xa, ia, za, ya },
-// 	{ il, xf, yf, zf, ip, xd, yd, zd, ib, xb, yb, zb, ic, xc, yc, zc, ia, xa, ya, za, ie, xe, ye, ze },
-// 	{ xf, il, zf, yf, yd, zd, ip, xd, zb, yb, xb, ib, xc, ic, zc, yc, za, ya, xa, ia, ye, ze, ie, xe },
-// 	{ yf, zf, il, xf, xd, ip, zd, yd, yb, zb, ib, xb, zc, yc, xc, ic, xa, ia, za, ya, ze, ye, xe, ie },
-// 	{ zf, yf, xf, il, zd, yd, xd, ip, xb, ib, zb, yb, yc, zc, ic, xc, ya, za, ia, xa, xe, ie, ze, ye },
-// };
 
 const uint8_t vop_table[SYMMETRIES][SYMMETRIES] = {
 	{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 },
@@ -142,6 +124,15 @@ const uint8_t vop_table[SYMMETRIES][SYMMETRIES] = {
 	{ 22, 23, 20, 21, 13, 12, 15, 14, 6, 7, 4, 5, 11, 10, 9, 8, 1, 0, 3, 2, 19, 18, 17, 16 },
 	{ 23, 22, 21, 20, 15, 14, 13, 12, 5, 4, 7, 6, 10, 11, 8, 9, 2, 3, 0, 1, 17, 16, 19, 18 },
 };
+
+const uint8_t measurement_conj_table[3][SYMMETRIES] = {
+	{ 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3 },
+	{ 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1 },
+	{ 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 1, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2 },
+};
+
+const short adj_tbl[24] = { 0, 1, 2, 3, 4, 6, 5, 7, 8, 11, 10, 9,
+	12, 13, 15, 14, 20, 22, 23, 21, 16, 19, 17, 18 };
 
 // 0 = U
 // 1 = V
