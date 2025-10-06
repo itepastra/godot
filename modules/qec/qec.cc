@@ -189,6 +189,51 @@ struct edge_hash {
 	}
 };
 
+// measures a qubit in the Z basis
+uint8_t Qec::measure(node_idx node) {
+	uint8_t original_basis = za;
+	uint8_t zeta;
+	uint8_t real_basis;
+
+	{
+		uint8_t nop = this->nodes[node].vop;
+		if ((nop & 0x03) == 0 || (nop & 0x03) == za) {
+			if (nop >= 4 && nop <= 15) {
+				zeta = 2;
+			} else {
+				zeta = 0;
+			}
+		} else {
+			if (nop >= 4 && nop <= 15) {
+				zeta = 0;
+			} else {
+				zeta = 2;
+			}
+		}
+
+		real_basis = measurement_conj_table[original_basis - xa][nop];
+	}
+
+	uint8_t res;
+	switch (real_basis) {
+		case 1:
+			res = this->measure_x(node);
+			break;
+		case 2:
+			res = this->measure_y(node);
+			break;
+		case 3:
+			res = this->measure_z(node);
+			break;
+		default:
+			abort();
+	}
+	if (zeta == 2) {
+		res ^= 0b01;
+	}
+	return res;
+}
+
 // collapses the graph to what would happen if a measurement in X happened
 uint8_t Qec::measure_x(node_idx node) {
 	if (this->nodes[node].adjacent.size() == 0) {
