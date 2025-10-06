@@ -58,6 +58,12 @@ protected:
 	uint8_t measure_x(node_idx node);
 	uint8_t measure_y(node_idx node);
 	uint8_t measure_z(node_idx node);
+	// measure in the Z basis (|0> or |1>)
+	// 0b00 = |0> (random)
+	// 0b01 = |1> (random)
+	// 0b10 = |0> (deterministic)
+	// 0b11 = |1> (deterministic)
+	uint8_t measure(node_idx node);
 
 public:
 	// qubit gates for godot to use
@@ -71,12 +77,10 @@ public:
 	void cphase(node_idx control, node_idx target); // CZ = H_target CNOT H_target
 	uint8_t get_vop(node_idx node);
 	PackedInt32Array get_adjacent(node_idx node);
-	// measure in the Z basis (|0> or |1>)
-	// 0b00 = |0> (random)
-	// 0b01 = |1> (random)
-	// 0b10 = |0> (deterministic)
-	// 0b11 = |1> (deterministic)
-	uint8_t measure(node_idx node);
+
+	uint8_t mx(node_idx node);
+	uint8_t my(node_idx node);
+	uint8_t mz(node_idx node);
 
 	// initialisation
 	Qec();

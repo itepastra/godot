@@ -20,7 +20,9 @@ void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("ygate", "qubit"), &Qec::ygate);
 	ClassDB::bind_method(D_METHOD("zgate", "qubit"), &Qec::zgate);
 	//
-	// ClassDB::bind_method(D_METHOD("measure", "qubit"), &Qec::measure);
+	ClassDB::bind_method(D_METHOD("mx", "qubit"), &Qec::mx);
+	ClassDB::bind_method(D_METHOD("my", "qubit"), &Qec::my);
+	ClassDB::bind_method(D_METHOD("mz", "qubit"), &Qec::mz);
 	//
 	ClassDB::bind_method(D_METHOD("get_vop", "node"), &Qec::get_vop);
 	ClassDB::bind_method(D_METHOD("get_adjacent", "node"), &Qec::get_adjacent);
@@ -188,6 +190,25 @@ struct edge_hash {
 		return uint32_t(p_key.first ^ (p_key.second << 16));
 	}
 };
+
+uint8_t mx(node_idx node) {
+	this->hadamard(node);
+	uint8_t res = this->measure(node);
+	this->hadamard(node);
+	return res;
+}
+uint8_t my(node_idx node) {
+	this->phase_dag(node);
+	this->hadamard(node);
+	uint8_t res = this->measure(node);
+	this->hadamard(node);
+	this->phase(node);
+	return res;
+}
+uint8_t mz(node_idx node) {
+	uint8_t res = this->measure(node);
+	return res;
+}
 
 // measures a qubit in the Z basis
 uint8_t Qec::measure(node_idx node) {
