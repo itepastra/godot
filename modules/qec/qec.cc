@@ -191,13 +191,13 @@ struct edge_hash {
 	}
 };
 
-uint8_t mx(node_idx node) {
+uint8_t Qec::mx(node_idx node) {
 	this->hadamard(node);
 	uint8_t res = this->measure(node);
 	this->hadamard(node);
 	return res;
 }
-uint8_t my(node_idx node) {
+uint8_t Qec::my(node_idx node) {
 	this->phase_dag(node);
 	this->hadamard(node);
 	uint8_t res = this->measure(node);
@@ -205,7 +205,7 @@ uint8_t my(node_idx node) {
 	this->phase(node);
 	return res;
 }
-uint8_t mz(node_idx node) {
+uint8_t Qec::mz(node_idx node) {
 	uint8_t res = this->measure(node);
 	return res;
 }
