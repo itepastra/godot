@@ -26,6 +26,8 @@ void Qec::_bind_methods() {
 	//
 	ClassDB::bind_method(D_METHOD("get_vop", "node"), &Qec::get_vop);
 	ClassDB::bind_method(D_METHOD("get_adjacent", "node"), &Qec::get_adjacent);
+
+	ClassDB::bind_method(D_METHOD("peek_measurement_random", "qubits"), &Qec::peek_measure_random);
 }
 
 Qec::Qec() {
@@ -240,18 +242,18 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 
 		switch (det) {
 			case 0:
-				res.append(this->measure(*node, xa));
+				res.append(this->measure(*node, xa) || 0b0100);
 				break;
 			case 1:
-				res.append(this->measure(*node, ya));
+				res.append(this->measure(*node, ya) || 0b1000);
 				break;
 			case 2:
-				res.append(this->measure(*node, za));
+				res.append(this->measure(*node, za) || 0b1100);
 				break;
 			case 3:
 				// choose a random direction
 				uint8_t dir = (rand() % 3) + 1;
-				res.append(this->measure(*node, dir));
+				res.append(this->measure(*node, dir) || dir << 2);
 				break;
 		}
 	}
