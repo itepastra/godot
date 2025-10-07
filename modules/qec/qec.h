@@ -82,6 +82,9 @@ public:
 	uint8_t my(node_idx node);
 	uint8_t mz(node_idx node);
 
+	uint8_t peek_measure_random(node_idx node);
+	uint8_t peek_determinism(node_idx node);
+
 	// initialisation
 	Qec();
 	void init(node_idx qubit_amount);

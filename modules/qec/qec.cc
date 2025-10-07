@@ -210,15 +210,62 @@ uint8_t Qec::mz(node_idx node) {
 	return res;
 }
 
+uint8_t Qec::peek_determinism(node_idx node) {
+	uint8_t nop = this->nodes[node].vop;
+	uint8_t bx = measurement_conj_table[xa - xa];
+	uint8_t by = measurement_conj_table[ya - xa];
+	uint8_t bz = measurement_conj_table[za - xa];
+
+	if (bx == 1 && this->nodes[node].adjacent.size() == 0) {
+		// measuring in the X basis is deterministic
+		return 0;
+	} else if (by == 1 && this->nodes[node].adjacent.size() == 0) {
+		// measuring in the Y basis is deterministic
+		return 1;
+	} else if (bz == 1 && this->nodes[node].adjacent.size() == 0) {
+		// measuring in the Z basis is deterministic
+		return 2;
+	} else {
+		// no measurement is deterministic
+		return 3;
+	}
+}
+
+uint8_t Qec::peek_measure_random(node_idx node) {
+	uint8_t det = this->peek_determinism(node);
+	std::vector<QecNode> before_state = this->nodes;
+	uint8_t res;
+
+	switch (det) {
+		case 0:
+			res = this->measure(node, xa);
+			break;
+		case 1:
+			res = this->measure(node, ya);
+			break;
+		case 2:
+			res = this->measure(node, za);
+			break;
+		case 3:
+			// choose a random direction
+			uint8_t dir = (rand() % 3) + 1;
+			res = this->measure(node, dir);
+			break;
+	}
+
+	this->nodes = before_state;
+	return res;
+}
+
 // measures a qubit in the Z basis
-uint8_t Qec::measure(node_idx node) {
-	uint8_t original_basis = za;
+uint8_t Qec::measure(node_idx node, uint8_t basis = za) {
+	uint8_t original_basis = basis;
 	uint8_t zeta;
 	uint8_t real_basis;
 
 	{
 		uint8_t nop = this->nodes[node].vop;
-		if ((nop & 0x03) == 0 || (nop & 0x03) == za) {
+		if ((nop & 0b11) == 0 || (nop & 0b11) == original_basis) {
 			if (nop >= 4 && nop <= 15) {
 				zeta = 2;
 			} else {
