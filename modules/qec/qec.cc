@@ -244,19 +244,16 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 
 		switch (det) {
 			case 0:
-				this->measure(*node, xa);
 				resp = this->nodes[*node].vop | 0b0100000;
 				printf("x measurement gave %d\n", resp);
 				res.append(resp & 0b11111);
 				break;
 			case 1:
-				this->measure(*node, ya);
 				resp = this->nodes[*node].vop | 0b1000000;
 				printf("y measurement gave %d\n", resp);
 				res.append(resp & 0b11111);
 				break;
 			case 2:
-				this->measure(*node, za);
 				resp = this->nodes[*node].vop | 0b1100000;
 				printf("z measurement gave %d\n", resp);
 				res.append(resp & 0b11111);
@@ -264,7 +261,6 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 			case 3:
 				// choose a random direction
 				uint8_t dir = (rand() % 3) + 1;
-				this->measure(*node, dir);
 				resp = this->nodes[*node].vop | (dir << 5);
 				printf("was random, picking direction %d which gave %d\n", dir, resp);
 				res.append(resp & 0b11111);
@@ -458,9 +454,10 @@ uint8_t Qec::measure_z(node_idx node) {
 		}
 	}
 	if (res) {
-		this->nodes[node].vop = vop_table[this->nodes[node].vop][yc];
+		uint8_t right = vop_table[xa][yc];
+		this->nodes[node].vop = vop_table[this->nodes[node].vop][right];
 	} else {
-		this->nodes[node].vop = vop_table[vop_table[this->nodes[node].vop][xa]][yc];
+		this->nodes[node].vop = vop_table[this->nodes[node].vop][yc];
 	}
 	return res;
 }
