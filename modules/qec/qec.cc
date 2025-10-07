@@ -42,9 +42,7 @@ void Qec::init(node_idx qubit_amount) {
 }
 
 void Qec::hadamard(node_idx target) {
-	printf("performing hadamard on %d, went from vop %d", target, this->nodes[target].vop);
 	this->nodes[target].vop = vop_table[yc][this->nodes[target].vop];
-	printf(" to vop %d\n", this->nodes[target].vop);
 }
 
 void Qec::phase(node_idx target) {
@@ -68,27 +66,20 @@ void Qec::zgate(node_idx target) {
 }
 
 void Qec::cphase(node_idx control, node_idx target) {
-	printf("before cphase between %d and %d, the vops are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 	if ((this->nodes[control].adjacent.size() > 1) ||
 			(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) {
-		printf("removing Vertex Operator of %d, avoiding %d\n", control, target);
 		remove_VOP(control, target);
-		printf("the vops for control (%d) and target (%d) are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 	}
 	if ((this->nodes[target].adjacent.size() > 1) ||
 			(this->nodes[target].adjacent.size() == 1 && this->nodes[target].adjacent[0] != control)) {
-		printf("removing Vertex Operator of %d, avoiding %d\n", target, control);
 		remove_VOP(target, control);
-		printf("the vops for control (%d) and target (%d) are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 	}
 
 	uint8_t vop = this->nodes[control].vop;
 	if (((this->nodes[control].adjacent.size() > 1) ||
 				(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) &&
 			!(vop == ia || vop == za || vop == yb || vop == xb)) {
-		printf("removing Vertex Operator of %d, avoiding %d\n", control, target);
 		remove_VOP(control, target);
-		printf("the vops for control (%d) and target (%d) are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 	}
 
 	uint8_t controlvop = this->nodes[control].vop;
@@ -105,10 +96,8 @@ void Qec::cphase(node_idx control, node_idx target) {
 		erase(this->nodes[target].adjacent, control);
 	}
 
-	printf("looking in cphase_table for %b, %d, %d\n", had_edge, controlvop, targetvop);
 	this->nodes[control].vop = cphase_table[had_edge][controlvop][targetvop][1];
 	this->nodes[target].vop = cphase_table[had_edge][controlvop][targetvop][2];
-	printf("after cphase the vops for control (%d) and target (%d) are %d and %d\n", control, target, this->nodes[control].vop, this->nodes[target].vop);
 }
 
 void Qec::cnot(node_idx control, node_idx target) {
@@ -131,7 +120,6 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 			break;
 		}
 	}
-	printf("ended up choosing neighbor %d\n", c);
 	std::vector<uint8_t> decomp = decompositions[this->nodes[a].vop];
 
 	for (uint32_t i = decomp.size() - 1; i >= 0; i--) {
@@ -144,26 +132,20 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 			this->local_complementation(c);
 		}
 	}
-
-	printf("the vops of a, c after removal are %d, %d\n", this->nodes[a].vop, this->nodes[c].vop);
 }
 
 void Qec::local_complementation(node_idx a) {
 	std::vector<node_idx> neighbors = this->nodes[a].adjacent;
 
-	printf("locally complementing %d\n", a);
 	for (auto i = neighbors.begin(); i != neighbors.end(); i++) {
 		for (auto j = i; j != neighbors.end(); j++) {
 			if (*i != *j) {
-				printf("toggling edge between %d and %d", *i, *j);
 				toggle_edge(*i, *j);
 			}
 		}
 		this->nodes[*i].vop = vop_table[this->nodes[*i].vop][6];
-		printf("changed %d vop to %d\n", *i, this->nodes[*i].vop);
 	}
 	this->nodes[a].vop = vop_table[this->nodes[a].vop][14];
-	printf("changed %d vop to %d\n", a, this->nodes[a].vop);
 }
 
 uint8_t rand_bool() {
@@ -240,33 +222,27 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 	for (auto node = meas_nodes.begin(); node != meas_nodes.end(); ++node) {
 		uint8_t det = this->peek_determinism(*node);
 		uint8_t resp;
-		printf("det = %d, vop = %d\n", det, this->nodes[*node].vop);
 
 		switch (det) {
 			case 0:
 				resp = this->nodes[*node].vop | 0b0100000;
-				printf("x measurement gave %d\n", resp);
 				res.append(resp & 0b11111);
 				break;
 			case 1:
 				resp = this->nodes[*node].vop | 0b1000000;
-				printf("y measurement gave %d\n", resp);
 				res.append(resp & 0b11111);
 				break;
 			case 2:
 				resp = this->nodes[*node].vop | 0b1100000;
-				printf("z measurement gave %d\n", resp);
 				res.append(resp & 0b11111);
 				break;
 			case 3:
 				// choose a random direction
 				uint8_t dir = (rand() % 3) + 1;
 				resp = this->nodes[*node].vop | (dir << 5);
-				printf("was random, picking direction %d which gave %d\n", dir, resp);
 				res.append(resp & 0b11111);
 				break;
 		}
-		printf("vop after = %d\n", this->nodes[*node].vop);
 	}
 
 	this->nodes = before_state;
@@ -299,7 +275,6 @@ uint8_t Qec::measure(node_idx node, uint8_t basis) {
 	}
 
 	uint8_t res;
-	printf("real basis: %d\n", real_basis);
 	switch (real_basis) {
 		case 1:
 			res = this->measure_x(node);
@@ -390,13 +365,10 @@ uint8_t Qec::measure_x(node_idx node) {
 }
 
 void Qec::toggle_edge(node_idx i, node_idx j) {
-	printf("toggling edge between %d and %d...", i, j);
 	if (erase(this->nodes[i].adjacent, j)) {
-		printf(" removing\n");
 		// target was in adjacency, also erase the other way
 		erase(this->nodes[j].adjacent, i);
 	} else {
-		printf(" adding\n");
 		this->nodes[i].adjacent.push_back(j);
 		this->nodes[j].adjacent.push_back(i);
 	}
