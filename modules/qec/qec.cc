@@ -239,23 +239,38 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 
 	for (auto node = meas_nodes.begin(); node != meas_nodes.end(); ++node) {
 		uint8_t det = this->peek_determinism(*node);
+		uint8_t resp;
+		printf("det = %d, vop = %d\n", det, this->nodes[*node].vop);
 
 		switch (det) {
 			case 0:
-				res.append(this->measure(*node, xa) || 0b0100);
+				this->measure(*node, xa);
+				resp = this->nodes[*node].vop | 0b0100000;
+				printf("x measurement gave %d\n", resp);
+				res.append(resp & 0b11111);
 				break;
 			case 1:
-				res.append(this->measure(*node, ya) || 0b1000);
+				this->measure(*node, ya);
+				resp = this->nodes[*node].vop | 0b1000000;
+				printf("y measurement gave %d\n", resp);
+				res.append(resp & 0b11111);
 				break;
 			case 2:
-				res.append(this->measure(*node, za) || 0b1100);
+				this->measure(*node, za);
+				resp = this->nodes[*node].vop | 0b1100000;
+				printf("z measurement gave %d\n", resp);
+				res.append(resp & 0b11111);
 				break;
 			case 3:
 				// choose a random direction
 				uint8_t dir = (rand() % 3) + 1;
-				res.append(this->measure(*node, dir) || dir << 2);
+				this->measure(*node, dir);
+				resp = this->nodes[*node].vop | (dir << 5);
+				printf("was random, picking direction %d which gave %d\n", dir, resp);
+				res.append(resp & 0b11111);
 				break;
 		}
+		printf("vop after = %d\n", this->nodes[*node].vop);
 	}
 
 	this->nodes = before_state;
@@ -288,6 +303,7 @@ uint8_t Qec::measure(node_idx node, uint8_t basis) {
 	}
 
 	uint8_t res;
+	printf("real basis: %d\n", real_basis);
 	switch (real_basis) {
 		case 1:
 			res = this->measure_x(node);
