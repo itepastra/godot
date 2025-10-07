@@ -1,11 +1,17 @@
 #pragma once
 
 #include "core/object/ref_counted.h"
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <functional>
+#include <iostream>
 #include <memory>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #define BLOCK_BITS 6

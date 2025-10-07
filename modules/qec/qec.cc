@@ -1,12 +1,4 @@
 #include "qec.h"
-#include <algorithm>
-#include <cstdint>
-#include <cstdio>
-#include <cstdlib>
-#include <functional>
-#include <iostream>
-#include <utility>
-#include <vector>
 
 void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("init", "qubit_amount"), &Qec::init);
@@ -225,20 +217,24 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 
 		switch (det) {
 			case 0:
+				this->measure(*node, xa);
 				resp = this->nodes[*node].vop | 0b0100000;
 				res.append(resp & 0b11111);
 				break;
 			case 1:
+				this->measure(*node, ya);
 				resp = this->nodes[*node].vop | 0b1000000;
 				res.append(resp & 0b11111);
 				break;
 			case 2:
+				this->measure(*node, za);
 				resp = this->nodes[*node].vop | 0b1100000;
 				res.append(resp & 0b11111);
 				break;
 			case 3:
 				// choose a random direction
 				uint8_t dir = (rand() % 3) + 1;
+				this->measure(*node, dir);
 				resp = this->nodes[*node].vop | (dir << 5);
 				res.append(resp & 0b11111);
 				break;
