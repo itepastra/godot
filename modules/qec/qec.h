@@ -1,11 +1,17 @@
 #pragma once
 
 #include "core/object/ref_counted.h"
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <functional>
+#include <iostream>
 #include <memory>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #define BLOCK_BITS 6
@@ -63,7 +69,7 @@ protected:
 	// 0b01 = |1> (random)
 	// 0b10 = |0> (deterministic)
 	// 0b11 = |1> (deterministic)
-	uint8_t measure(node_idx node);
+	uint8_t measure(node_idx node, uint8_t basis = za);
 
 public:
 	// qubit gates for godot to use
@@ -81,6 +87,9 @@ public:
 	uint8_t mx(node_idx node);
 	uint8_t my(node_idx node);
 	uint8_t mz(node_idx node);
+
+	PackedByteArray peek_measure_random(PackedInt32Array meas_nodes);
+	uint8_t peek_determinism(node_idx node);
 
 	// initialisation
 	Qec();
