@@ -101,8 +101,8 @@ bool contains(std::vector<node_idx> vec, node_idx val);
 const uint32_t SYMMETRIES = 24;
 // I = Ia
 // H = Yc
-// S^ = Yb
 // S = Xb
+// S^ = Yb
 // Z = S S = Za
 // X = H S S H = Xa
 // Y = Ya

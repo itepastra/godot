@@ -188,9 +188,10 @@ uint8_t Qec::mz(node_idx node) {
 
 uint8_t Qec::peek_determinism(node_idx node) {
 	uint8_t nop = this->nodes[node].vop;
-	uint8_t bx = measurement_conj_table[xa - xa][nop];
-	uint8_t by = measurement_conj_table[ya - xa][nop];
-	uint8_t bz = measurement_conj_table[za - xa][nop];
+	uint8_t hnop = adj_tbl[nop];
+	uint8_t bx = measurement_conj_table[xa - xa][hnop];
+	uint8_t by = measurement_conj_table[ya - xa][hnop];
+	uint8_t bz = measurement_conj_table[za - xa][hnop];
 
 	if (bx == 1 && this->nodes[node].adjacent.size() == 0) {
 		// measuring in the X basis is deterministic
@@ -267,7 +268,7 @@ uint8_t Qec::measure(node_idx node, uint8_t basis) {
 			}
 		}
 
-		real_basis = measurement_conj_table[original_basis - xa][nop];
+		real_basis = measurement_conj_table[original_basis - xa][adj_tbl[nop]];
 	}
 
 	uint8_t res;
