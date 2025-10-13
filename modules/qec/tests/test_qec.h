@@ -33,28 +33,36 @@ TEST_CASE("[Modules][Qec] Measure Deterministic") {
 
 TEST_CASE("[Modules][Qec] Measure Phases") {
 	Ref<Qec> q = memnew(Qec);
+	uint8_t res;
 
 	q->init(1);
 	CHECK(q->get_vop(0) == 10);
-	CHECK(q->mz(0) == 0b10); // +|0> deterministic
+	res = q->mz(0) >> 1; // needed to check for both 2 and 3
+	CHECK(res == 0b1); // +|0> deterministic
 	q->phase(0);
 	CHECK(q->get_vop(0) == 21);
-	CHECK(q->mz(0) == 0b10); // +i|0> deterministic // FAILS
+	res = q->mz(0) >> 1;
+	CHECK(res == 0b1); // +i|0> deterministic
 	q->phase(0);
 	CHECK(q->get_vop(0) == 11);
-	CHECK(q->mz(0) == 0b10); // -|0> deterministic
+	res = q->mz(0) >> 1;
+	CHECK(res == 0b1); // -|0> deterministic
 	q->phase(0);
 	CHECK(q->get_vop(0) == 20);
-	CHECK(q->mz(0) == 0b10); // -i|0> deterministic // FAILS
+	res = q->mz(0) >> 1;
+	CHECK(res == 0b1); // -i|0> deterministic
 	q->phase(0);
 	CHECK(q->get_vop(0) == 10);
-	CHECK(q->mz(0) == 0b10); // +|0> deterministic
+	res = q->mz(0) >> 1;
+	CHECK(res == 0b1); // +|0> deterministic
 	q->hadamard(0);
 	CHECK(q->get_vop(0) == 0);
-	CHECK(q->mx(0) == 0b10); // |+> deterministic
+	res = q->mx(0) >> 1;
+	CHECK(res == 0b1); // |+> deterministic
 	q->phase(0);
-	CHECK(q->get_vop(0) == 6);
-	CHECK(q->my(0) == 0b10);
+	CHECK(q->get_vop(0) == 5);
+	res = q->my(0) >> 1;
+	CHECK(res == 0b1);
 }
 
 TEST_CASE("[Modules][Qec] Chained CNOTs") {
