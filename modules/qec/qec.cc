@@ -430,3 +430,15 @@ uint8_t Qec::measure_z(node_idx node) {
 	}
 	return res;
 }
+
+const char* Qec::phase_to_str(uint8_t code) {
+    switch (code) {
+        case PLUS:  return "+";
+        case MINUS: return "-";
+        case PLUS_I: return "+i";
+        case MINUS_I:return "-i";
+        case ONE:   return "1";
+        case ZERO:  return "0";
+    }
+    return "?";
+}
