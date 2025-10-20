@@ -13,6 +13,9 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "core/variant/array.h"
+#include "core/variant/dictionary.h"
+#include "core/variant/typed_array.h"
 
 #define BLOCK_BITS 6
 #define node_idx uint32_t
@@ -68,6 +71,7 @@ protected:
 	void local_complementation(node_idx a);
 	void erase_connection(node_idx a, node_idx b);
 	void toggle_edge(node_idx i, node_idx j);
+	bool has_edge(node_idx a, node_idx b) const;
 	uint8_t measure_x(node_idx node);
 	uint8_t measure_y(node_idx node);
 	uint8_t measure_z(node_idx node);
@@ -99,6 +103,11 @@ public:
 
 	PackedByteArray peek_measure_random(PackedInt32Array meas_nodes);
 	uint8_t peek_determinism(node_idx node);
+
+	// snapshot of entanglement group
+	PackedInt32Array get_entanglement_group(node_idx seed) const; // BFS to get connected component
+	Dictionary snapshot_entanglement_group(node_idx seed) const; // snapshot vops + edges for redo
+	void restore_entanglement_group(const Dictionary &snapshot); // restore vops + edges for undo
 
 	// initialisation
 	Qec();
