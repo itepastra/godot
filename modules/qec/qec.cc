@@ -481,7 +481,7 @@ PackedInt32Array Qec::get_entanglement_group(node_idx seed) const {
 	PackedInt32Array out = PackedInt32Array();
 	out.resize((int)order.size());
 	for (int i = 0; i < (int)order.size(); ++i) {
-		out[i] = order[i];
+		out.set(i, order[i]);
 	}
 	return out;
 }
@@ -494,7 +494,7 @@ Dictionary Qec::snapshot_entanglement_group(node_idx seed) const {
 	const int M = group.size();
 
 	// map: node_id -> compact index [0..M)
-	// (vector<int> of size total_n works; -1 means not in group)
+	// (vector of size total_n works, -1 means not in group)
 	std::vector<int> idx_map(this->nodes.size(), -1);
 	for (int i = 0; i < M; ++i) idx_map[(node_idx)group[i]] = i;
 
@@ -503,7 +503,7 @@ Dictionary Qec::snapshot_entanglement_group(node_idx seed) const {
 	vops.resize(M);
 	for (int i = 0; i < M; ++i) {
 		node_idx u = (node_idx)group[i];
-		vops[i] = this->nodes[u].vop;
+		vops.set(i, this->nodes[u].vop);
 	}
 
 	// capture edges internal to the group (store as list of pairs u,v with u < v)
@@ -519,8 +519,8 @@ Dictionary Qec::snapshot_entanglement_group(node_idx seed) const {
 	}
 	edges.resize((int)(pairs.size() * 2));
 	for (int i = 0; i < (int)pairs.size(); ++i) {
-		edges[2*i + 0] = pairs[i].first;
-		edges[2*i + 1] = pairs[i].second;
+		edges.set(2*i + 0, pairs[i].first);
+		edges.set(2*i + 1, pairs[i].second);
 	}
 
 	snap["nodes"] = group;
@@ -550,14 +550,14 @@ void Qec::restore_entanglement_group(const Dictionary &snapshot) {
 		this->nodes[u].vop = vops[i];
 	}
 
-	// remove ALL current edges incident to group nodes (both inside and to outside),
-	// so we can add back exactly what the snapshot had.
-	// We must iterate over a copy because we mutate adjacency.
+	// remove all current edges incident to group nodes (both inside and to outside),
+	// so we can add back exactly what the snapshot had
+	//  must iterate over a copy because we mutate adjacency
 	for (int i = 0; i < M; ++i) {
 		node_idx u = (node_idx)group[i];
 		std::vector<node_idx> current = this->nodes[u].adjacent; // copy
 		for (auto v : current) {
-			// remove edge (u,v) once; erase_connection does symmetric remove
+			// remove edge (u,v) once, erase_connection does symmetric remove
 			this->erase_connection(u, v);
 		}
 	}
@@ -567,7 +567,7 @@ void Qec::restore_entanglement_group(const Dictionary &snapshot) {
 	for (int i = 0; i < edges.size(); i += 2) {
 		node_idx a = (node_idx)edges[i + 0];
 		node_idx b = (node_idx)edges[i + 1];
-		// safeguard: only add if both endpoints are in the group
+		// only add if both endpoints are in the group
 		if (!in_group[a] || !in_group[b]) continue;
 
 		// add edge (a,b) if it's not already present
