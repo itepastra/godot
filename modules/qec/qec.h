@@ -88,6 +88,8 @@ public:
 	uint8_t my(node_idx node);
 	uint8_t mz(node_idx node);
 
+	void relax(node_idx node);
+
 	PackedByteArray peek_measure_random(PackedInt32Array meas_nodes);
 	uint8_t peek_determinism(node_idx node);
 
