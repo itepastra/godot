@@ -41,6 +41,13 @@ const int xf = 21;
 const int yf = 22;
 const int zf = 23;
 
+constexpr uint8_t PLUS  = 0;
+constexpr uint8_t MINUS = 1;
+constexpr uint8_t PLUS_I = 2;
+constexpr uint8_t MINUS_I= 3;
+constexpr uint8_t ONE   = 4;
+constexpr uint8_t ZERO  = 5;
+
 struct QecNode {
 	uint8_t vop = ia;
 	std::vector<node_idx> adjacent;
@@ -89,6 +96,7 @@ public:
 	uint8_t mz(node_idx node);
 
 	void relax(node_idx node);
+	const char* phase_to_str(uint8_t code);
 
 	PackedByteArray peek_measure_random(PackedInt32Array meas_nodes);
 	uint8_t peek_determinism(node_idx node);
@@ -177,6 +185,15 @@ const std::vector<uint8_t> decompositions[SYMMETRIES] = {
 	{ 0, 1, 1, 1 },
 	{ 0, 1 },
 	{ 0, 1, 0, 0 },
+};
+
+const std::array<uint8_t,24> phases = {
+	PLUS, PLUS, MINUS, MINUS,
+	PLUS_I, PLUS_I, MINUS_I, MINUS_I,
+	ONE,  ONE,  ZERO, ZERO,
+	MINUS, MINUS, PLUS, PLUS,
+	MINUS_I, MINUS_I, PLUS_I, PLUS_I,
+	ZERO, ZERO, ONE,  ONE
 };
 
 const uint8_t cphase_table[2][SYMMETRIES][SYMMETRIES][3] = {
