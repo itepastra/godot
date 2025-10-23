@@ -163,7 +163,7 @@ PackedInt32Array Qec::get_adjacent(node_idx node) {
 }
 
 bool Qec::has_edge(node_idx a, node_idx b) const {
-	for (auto v : this->nodes[a].adjacent) {
+	for (node_idx v : this->nodes[a].adjacent) {
 		if (v == b) return true;
 	}
 	return false;
@@ -462,35 +462,44 @@ const char* Qec::phase_to_str(uint8_t code) {
 }
 
 PackedInt32Array Qec::get_entanglement_group(node_idx seed) const {
-	// BFS over adjacency
-	const node_idx N = (node_idx)this->nodes.size();
-	std::vector<uint8_t> seen(N, 0);
-	std::vector<node_idx> order;
-	order.reserve(32);
+    std::vector<node_idx> group;
+    compute_entanglement_group_vec(seed, group);
+    return pack_vector(group);
+}
 
-	std::vector<node_idx> q;
-	q.reserve(32);
-	q.push_back(seed);
-	seen[seed] = 1;
+void Qec::compute_entanglement_group_vec(node_idx seed, std::vector<node_idx>& queue) const {
+    const node_idx N = (node_idx)this->nodes.size();
 
-	for (size_t qi = 0; qi < q.size(); ++qi) {
-		node_idx u = q[qi];
-		order.push_back(u);
-		for (auto v : this->nodes[u].adjacent) {
-			if (!seen[v]) {
-				seen[v] = 1;
-				q.push_back(v);
-			}
-		}
-	}
+    // reuse seen (thread-unsafe)
+    bfs_seen_.assign(N, 0);
 
-	std::sort(order.begin(), order.end());
-	PackedInt32Array out = PackedInt32Array();
-	out.resize((int)order.size());
-	for (int i = 0; i < (int)order.size(); ++i) {
-		out.set(i, order[i]);
-	}
-	return out;
+    queue.clear();
+    queue.reserve(N); // worst case
+    queue.push_back(seed);
+    bfs_seen_[seed] = 1;
+
+    for (size_t i = 0; i < queue.size(); ++i) {
+        node_idx u = queue[i];
+        const std::vector<node_idx> &adj = this->nodes[u].adjacent;
+        for (node_idx v : adj) {
+            if (!bfs_seen_[v]) {
+                bfs_seen_[v] = 1;
+                queue.push_back(v);
+            }
+        }
+    }
+
+    std::sort(queue.begin(), queue.end());
+}
+
+PackedInt32Array Qec::pack_vector(const std::vector<node_idx>& v) {
+    PackedInt32Array out;
+    const int n = (int)v.size();
+    out.resize(n);
+    for (int i = 0; i < n; ++i) {
+        out.set(i, (int32_t)v[i]);
+    }
+    return out;
 }
 
 Dictionary Qec::snapshot_entanglement_group(node_idx seed) const {
@@ -518,7 +527,7 @@ Dictionary Qec::snapshot_entanglement_group(node_idx seed) const {
 	std::vector<std::pair<node_idx,node_idx>> pairs;
 	for (int i = 0; i < M; ++i) {
 		node_idx u = (node_idx)group[i];
-		for (auto v : this->nodes[u].adjacent) {
+		for (node_idx v : this->nodes[u].adjacent) {
 			if (idx_map[v] >= 0 && u < v) {
 				pairs.emplace_back(u, v);
 			}
@@ -563,7 +572,7 @@ void Qec::restore_entanglement_group(const Dictionary &snapshot) {
 	for (int i = 0; i < M; ++i) {
 		node_idx u = (node_idx)group[i];
 		std::vector<node_idx> current = this->nodes[u].adjacent; // copy
-		for (auto v : current) {
+		for (node_idx v : current) {
 			// remove edge (u,v) once, erase_connection does symmetric remove
 			this->erase_connection(u, v);
 		}

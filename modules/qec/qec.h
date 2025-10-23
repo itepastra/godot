@@ -63,6 +63,8 @@ class Qec : public RefCounted {
 	node_idx qubit_count;
 	std::vector<QecNode> nodes;
 
+
+
 protected:
 	// godot helper functions
 	static void _bind_methods();
@@ -81,6 +83,10 @@ protected:
 	// 0b10 = |0> (deterministic)
 	// 0b11 = |1> (deterministic)
 	uint8_t measure(node_idx node, uint8_t basis = za);
+
+    void compute_entanglement_group_vec(node_idx seed, std::vector<node_idx>& out) const;
+    static inline PackedInt32Array pack_vector(const std::vector<node_idx>& v);
+    mutable std::vector<uint8_t> bfs_seen_; // scratch buffer to avoid per-call allocations ( but thread-unsafe)
 
 public:
 	// qubit gates for godot to use
