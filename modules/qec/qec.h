@@ -13,6 +13,9 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include "core/variant/array.h"
+#include "core/variant/dictionary.h"
+#include "core/variant/typed_array.h"
 
 #define BLOCK_BITS 6
 #define node_idx uint32_t
@@ -60,6 +63,8 @@ class Qec : public RefCounted {
 	node_idx qubit_count;
 	std::vector<QecNode> nodes;
 
+
+
 protected:
 	// godot helper functions
 	static void _bind_methods();
@@ -68,6 +73,7 @@ protected:
 	void local_complementation(node_idx a);
 	void erase_connection(node_idx a, node_idx b);
 	void toggle_edge(node_idx i, node_idx j);
+	bool has_edge(node_idx a, node_idx b) const;
 	uint8_t measure_x(node_idx node);
 	uint8_t measure_y(node_idx node);
 	uint8_t measure_z(node_idx node);
@@ -77,6 +83,10 @@ protected:
 	// 0b10 = |0> (deterministic)
 	// 0b11 = |1> (deterministic)
 	uint8_t measure(node_idx node, uint8_t basis = za);
+
+    void compute_entanglement_group_vec(node_idx seed, std::vector<node_idx>& out) const;
+    static inline PackedInt32Array pack_vector(const std::vector<node_idx>& v);
+    mutable std::vector<uint8_t> bfs_seen_; // scratch buffer to avoid per-call allocations ( but thread-unsafe)
 
 public:
 	// qubit gates for godot to use
@@ -100,6 +110,11 @@ public:
 
 	PackedByteArray peek_measure_random(PackedInt32Array meas_nodes);
 	uint8_t peek_determinism(node_idx node);
+
+	// snapshot of entanglement group
+	PackedInt32Array get_entanglement_group(node_idx seed) const; // BFS to get connected component
+	Dictionary snapshot_entanglement_group(node_idx seed) const; // snapshot vops + edges for redo
+	void restore_entanglement_group(const Dictionary &snapshot); // restore vops + edges for undo
 
 	// initialisation
 	Qec();

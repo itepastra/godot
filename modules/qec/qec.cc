@@ -22,6 +22,10 @@ void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("relax", "qubit"), &Qec::relax);
 
 	ClassDB::bind_method(D_METHOD("peek_measurement_random", "qubits"), &Qec::peek_measure_random);
+
+	ClassDB::bind_method(D_METHOD("get_entanglement_group", "seed"), &Qec::get_entanglement_group);
+	ClassDB::bind_method(D_METHOD("snapshot_entanglement_group", "seed"), &Qec::snapshot_entanglement_group);
+	ClassDB::bind_method(D_METHOD("restore_entanglement_group", "snapshot"), &Qec::restore_entanglement_group);
 }
 
 Qec::Qec() {
@@ -156,6 +160,13 @@ PackedInt32Array Qec::get_adjacent(node_idx node) {
 		array.append(this->nodes[node].adjacent[i]);
 	};
 	return array;
+}
+
+bool Qec::has_edge(node_idx a, node_idx b) const {
+	for (node_idx v : this->nodes[a].adjacent) {
+		if (v == b) return true;
+	}
+	return false;
 }
 
 void Qec::erase_connection(node_idx a, node_idx b) {
@@ -448,4 +459,137 @@ const char* Qec::phase_to_str(uint8_t code) {
         case ZERO:  return "0";
     }
     return "?";
+}
+
+PackedInt32Array Qec::get_entanglement_group(node_idx seed) const {
+    std::vector<node_idx> group;
+    compute_entanglement_group_vec(seed, group);
+    return pack_vector(group);
+}
+
+void Qec::compute_entanglement_group_vec(node_idx seed, std::vector<node_idx>& queue) const {
+    const node_idx N = (node_idx)this->nodes.size();
+
+    // reuse seen (thread-unsafe)
+    bfs_seen_.assign(N, 0);
+
+    queue.clear();
+    queue.reserve(N); // worst case
+    queue.push_back(seed);
+    bfs_seen_[seed] = 1;
+
+    for (size_t i = 0; i < queue.size(); ++i) {
+        node_idx u = queue[i];
+        const std::vector<node_idx> &adj = this->nodes[u].adjacent;
+        for (node_idx v : adj) {
+            if (!bfs_seen_[v]) {
+                bfs_seen_[v] = 1;
+                queue.push_back(v);
+            }
+        }
+    }
+
+    std::sort(queue.begin(), queue.end());
+}
+
+PackedInt32Array Qec::pack_vector(const std::vector<node_idx>& v) {
+    PackedInt32Array out;
+    const int n = (int)v.size();
+    out.resize(n);
+    for (int i = 0; i < n; ++i) {
+        out.set(i, (int32_t)v[i]);
+    }
+    return out;
+}
+
+Dictionary Qec::snapshot_entanglement_group(node_idx seed) const {
+	Dictionary snap;
+
+	// nodes in component
+	PackedInt32Array group = get_entanglement_group(seed);
+	const int M = group.size();
+
+	// map: node_id -> compact index [0..M)
+	// (vector of size total_n works, -1 means not in group)
+	std::vector<int> idx_map(this->nodes.size(), -1);
+	for (int i = 0; i < M; ++i) idx_map[(node_idx)group[i]] = i;
+
+	// capture vops in same order
+	PackedByteArray vops;
+	vops.resize(M);
+	for (int i = 0; i < M; ++i) {
+		node_idx u = (node_idx)group[i];
+		vops.set(i, this->nodes[u].vop);
+	}
+
+	// capture edges internal to the group (store as list of pairs u,v with u < v)
+	PackedInt32Array edges; // flattened [u0,v0,u1,v1,...] using absolute node indices
+	std::vector<std::pair<node_idx,node_idx>> pairs;
+	for (int i = 0; i < M; ++i) {
+		node_idx u = (node_idx)group[i];
+		for (node_idx v : this->nodes[u].adjacent) {
+			if (idx_map[v] >= 0 && u < v) {
+				pairs.emplace_back(u, v);
+			}
+		}
+	}
+	edges.resize((int)(pairs.size() * 2));
+	for (int i = 0; i < (int)pairs.size(); ++i) {
+		edges.set(2*i + 0, pairs[i].first);
+		edges.set(2*i + 1, pairs[i].second);
+	}
+
+	snap["nodes"] = group;
+	snap["vops"]  = vops;
+	snap["edges"] = edges;
+	return snap;
+}
+
+void Qec::restore_entanglement_group(const Dictionary &snapshot) {
+	ERR_FAIL_COND_MSG(!snapshot.has("nodes") || !snapshot.has("vops") || !snapshot.has("edges"),
+	                  "restore_entanglement_group: snapshot missing fields");
+
+	PackedInt32Array group = snapshot["nodes"];
+	PackedByteArray  vops  = snapshot["vops"];
+	PackedInt32Array edges = snapshot["edges"];
+
+	const int M = group.size();
+	ERR_FAIL_COND_MSG(vops.size() != M, "restore_entanglement_group: vops size mismatch");
+
+	// build membership map for fast checks
+	std::vector<uint8_t> in_group(this->nodes.size(), 0);
+	for (int i = 0; i < M; ++i) in_group[(node_idx)group[i]] = 1;
+
+	// restore vops
+	for (int i = 0; i < M; ++i) {
+		node_idx u = (node_idx)group[i];
+		this->nodes[u].vop = vops[i];
+	}
+
+	// remove all current edges incident to group nodes (both inside and to outside),
+	// so we can add back exactly what the snapshot had
+	//  must iterate over a copy because we mutate adjacency
+	for (int i = 0; i < M; ++i) {
+		node_idx u = (node_idx)group[i];
+		std::vector<node_idx> current = this->nodes[u].adjacent; // copy
+		for (node_idx v : current) {
+			// remove edge (u,v) once, erase_connection does symmetric remove
+			this->erase_connection(u, v);
+		}
+	}
+
+	// add back internal edges from snapshot
+	ERR_FAIL_COND_MSG(edges.size() % 2 != 0, "restore_entanglement_group: edges length not even");
+	for (int i = 0; i < edges.size(); i += 2) {
+		node_idx a = (node_idx)edges[i + 0];
+		node_idx b = (node_idx)edges[i + 1];
+		// only add if both endpoints are in the group
+		if (!in_group[a] || !in_group[b]) continue;
+
+		// add edge (a,b) if it's not already present
+		if (!this->has_edge(a, b)) {
+			this->nodes[a].adjacent.push_back(b);
+			this->nodes[b].adjacent.push_back(a);
+		}
+	}
 }
