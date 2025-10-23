@@ -19,6 +19,8 @@ void Qec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_vop", "node"), &Qec::get_vop);
 	ClassDB::bind_method(D_METHOD("get_adjacent", "node"), &Qec::get_adjacent);
 
+	ClassDB::bind_method(D_METHOD("relax", "qubit"), &Qec::relax);
+
 	ClassDB::bind_method(D_METHOD("peek_measurement_random", "qubits"), &Qec::peek_measure_random);
 
 	ClassDB::bind_method(D_METHOD("get_entanglement_group", "seed"), &Qec::get_entanglement_group);
@@ -195,6 +197,11 @@ uint8_t Qec::my(node_idx node) {
 uint8_t Qec::mz(node_idx node) {
 	uint8_t res = this->measure(node);
 	return res;
+}
+
+void Qec::relax(node_idx node) {
+	this->measure(node);
+	this->nodes[node].vop = 10;
 }
 
 uint8_t Qec::peek_determinism(node_idx node) {
