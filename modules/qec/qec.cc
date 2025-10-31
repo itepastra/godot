@@ -40,27 +40,27 @@ void Qec::init(node_idx qubit_amount) {
 }
 
 void Qec::hadamard(node_idx target) {
-	this->nodes[target].vop = vop_table[yc][this->nodes[target].vop];
+	this->nodes[target].vop = QecConst::vop_table[QecConst::yc][this->nodes[target].vop];
 }
 
 void Qec::phase(node_idx target) {
-	this->nodes[target].vop = vop_table[xb][this->nodes[target].vop];
+	this->nodes[target].vop = QecConst::vop_table[QecConst::xb][this->nodes[target].vop];
 }
 
 void Qec::phase_dag(node_idx target) {
-	this->nodes[target].vop = vop_table[yb][this->nodes[target].vop];
+	this->nodes[target].vop = QecConst::vop_table[QecConst::yb][this->nodes[target].vop];
 }
 
 void Qec::xgate(node_idx target) {
-	this->nodes[target].vop = vop_table[xa][this->nodes[target].vop];
+	this->nodes[target].vop = QecConst::vop_table[QecConst::xa][this->nodes[target].vop];
 }
 
 void Qec::ygate(node_idx target) {
-	this->nodes[target].vop = vop_table[ya][this->nodes[target].vop];
+	this->nodes[target].vop = QecConst::vop_table[QecConst::ya][this->nodes[target].vop];
 }
 
 void Qec::zgate(node_idx target) {
-	this->nodes[target].vop = vop_table[za][this->nodes[target].vop];
+	this->nodes[target].vop = QecConst::vop_table[QecConst::za][this->nodes[target].vop];
 }
 
 void Qec::cphase(node_idx control, node_idx target) {
@@ -76,7 +76,7 @@ void Qec::cphase(node_idx control, node_idx target) {
 	uint8_t vop = this->nodes[control].vop;
 	if (((this->nodes[control].adjacent.size() > 1) ||
 				(this->nodes[control].adjacent.size() == 1 && this->nodes[control].adjacent[0] != target)) &&
-			!(vop == ia || vop == za || vop == yb || vop == xb)) {
+			!(vop == QecConst::ia || vop == QecConst::za || vop == QecConst::yb || vop == QecConst::xb)) {
 		remove_VOP(control, target);
 	}
 
@@ -86,7 +86,7 @@ void Qec::cphase(node_idx control, node_idx target) {
 							this->nodes[control].adjacent.end(), target) !=
 			this->nodes[control].adjacent.end();
 
-	if (cphase_table[had_edge][controlvop][targetvop][0]) {
+	if (QecConst::cphase_table[had_edge][controlvop][targetvop][0]) {
 		this->nodes[control].adjacent.push_back(target);
 		this->nodes[target].adjacent.push_back(control);
 	} else {
@@ -94,8 +94,8 @@ void Qec::cphase(node_idx control, node_idx target) {
 		erase(this->nodes[target].adjacent, control);
 	}
 
-	this->nodes[control].vop = cphase_table[had_edge][controlvop][targetvop][1];
-	this->nodes[target].vop = cphase_table[had_edge][controlvop][targetvop][2];
+	this->nodes[control].vop = QecConst::cphase_table[had_edge][controlvop][targetvop][1];
+	this->nodes[target].vop = QecConst::cphase_table[had_edge][controlvop][targetvop][2];
 }
 
 void Qec::cnot(node_idx control, node_idx target) {
@@ -118,7 +118,7 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 			break;
 		}
 	}
-	std::vector<uint8_t> decomp = decompositions[this->nodes[a].vop];
+	std::vector<uint8_t> decomp = QecConst::decompositions[this->nodes[a].vop];
 
 	for (uint32_t i = decomp.size() - 1; i >= 0; i--) {
 		if (i > 10) { // There is a very weird bug I feel, but maybe it has a reason, anyways, this fixes it
@@ -141,9 +141,9 @@ void Qec::local_complementation(node_idx a) {
 				toggle_edge(*i, *j);
 			}
 		}
-		this->nodes[*i].vop = vop_table[this->nodes[*i].vop][6];
+		this->nodes[*i].vop = QecConst::vop_table[this->nodes[*i].vop][6];
 	}
-	this->nodes[a].vop = vop_table[this->nodes[a].vop][14];
+	this->nodes[a].vop = QecConst::vop_table[this->nodes[a].vop][14];
 }
 
 uint8_t rand_bool() {
@@ -203,15 +203,15 @@ uint8_t Qec::mz(node_idx node) {
 
 void Qec::relax(node_idx node) {
 	this->measure(node);
-	this->nodes[node].vop = 10;
+	this->nodes[node].vop = QecConst::yc;
 }
 
 uint8_t Qec::peek_determinism(node_idx node) {
 	uint8_t nop = this->nodes[node].vop;
-	uint8_t hnop = adj_tbl[nop];
-	uint8_t bx = measurement_conj_table[xa - xa][hnop];
-	uint8_t by = measurement_conj_table[ya - xa][hnop];
-	uint8_t bz = measurement_conj_table[za - xa][hnop];
+	uint8_t hnop = QecConst::adj_tbl[nop];
+	uint8_t bx = QecConst::measurement_conj_table[QecConst::xa - QecConst::xa][hnop];
+	uint8_t by = QecConst::measurement_conj_table[QecConst::ya - QecConst::xa][hnop];
+	uint8_t bz = QecConst::measurement_conj_table[QecConst::za - QecConst::xa][hnop];
 
 	if (bx == 1 && this->nodes[node].adjacent.size() == 0) {
 		// measuring in the X basis is deterministic
@@ -240,17 +240,17 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 
 		switch (det) {
 			case 0:
-				this->measure(*node, xa);
+				this->measure(*node, QecConst::xa);
 				resp = this->nodes[*node].vop | 0b0100000;
 				res.append(resp & 0b11111);
 				break;
 			case 1:
-				this->measure(*node, ya);
+				this->measure(*node, QecConst::ya);
 				resp = this->nodes[*node].vop | 0b1000000;
 				res.append(resp & 0b11111);
 				break;
 			case 2:
-				this->measure(*node, za);
+				this->measure(*node, QecConst::za);
 				resp = this->nodes[*node].vop | 0b1100000;
 				res.append(resp & 0b11111);
 				break;
@@ -288,7 +288,7 @@ uint8_t Qec::measure(node_idx node, uint8_t basis) {
 			}
 		}
 
-		real_basis = measurement_conj_table[original_basis - xa][adj_tbl[nop]];
+		real_basis = QecConst::measurement_conj_table[original_basis - QecConst::xa][QecConst::adj_tbl[nop]];
 	}
 
 	uint8_t res;
@@ -326,23 +326,23 @@ uint8_t Qec::measure_x(node_idx node) {
 
 	if (res) {
 		// measured a |->
-		this->nodes[other].vop = vop_table[this->nodes[other].vop][xc];
-		this->nodes[node].vop = vop_table[this->nodes[node].vop][za];
+		this->nodes[other].vop = QecConst::vop_table[this->nodes[other].vop][QecConst::xc];
+		this->nodes[node].vop = QecConst::vop_table[this->nodes[node].vop][QecConst::za];
 
 		for (uint32_t i = 0; i < this->nodes[other].adjacent.size(); i++) {
 			node_idx waa = this->nodes[other].adjacent[i];
 			if (waa != node && !contains(this->nodes[node].adjacent, waa)) {
-				this->nodes[waa].vop = vop_table[this->nodes[waa].vop][za];
+				this->nodes[waa].vop = QecConst::vop_table[this->nodes[waa].vop][QecConst::za];
 			}
 		}
 	} else {
 		// measured a |+>
-		this->nodes[other].vop = vop_table[this->nodes[other].vop][zc];
+		this->nodes[other].vop = QecConst::vop_table[this->nodes[other].vop][QecConst::zc];
 
 		for (uint32_t i = 0; i < this->nodes[node].adjacent.size(); i++) {
 			node_idx waa = this->nodes[node].adjacent[i];
 			if (waa != other && !contains(this->nodes[other].adjacent, waa)) {
-				this->nodes[waa].vop = vop_table[this->nodes[waa].vop][za];
+				this->nodes[waa].vop = QecConst::vop_table[this->nodes[waa].vop][QecConst::za];
 			}
 		}
 	}
@@ -406,9 +406,9 @@ uint8_t Qec::measure_y(node_idx node) {
 	std::vector<node_idx> neighbors = this->nodes[node].adjacent;
 	for (uint32_t i = 0; i < neighbors.size(); i++) {
 		if (res) {
-			this->nodes[neighbors[i]].vop = vop_table[this->nodes[neighbors[i]].vop][xb]; // S
+			this->nodes[neighbors[i]].vop = QecConst::vop_table[this->nodes[neighbors[i]].vop][QecConst::xb]; // S
 		} else {
-			this->nodes[neighbors[i]].vop = vop_table[this->nodes[neighbors[i]].vop][yb]; // Sdag
+			this->nodes[neighbors[i]].vop = QecConst::vop_table[this->nodes[neighbors[i]].vop][QecConst::yb]; // Sdag
 		}
 	}
 	neighbors.push_back(node);
@@ -424,9 +424,9 @@ uint8_t Qec::measure_y(node_idx node) {
 		}
 	}
 	if (res) {
-		this->nodes[node].vop = vop_table[this->nodes[node].vop][yb];
+		this->nodes[node].vop = QecConst::vop_table[this->nodes[node].vop][QecConst::yb];
 	} else {
-		this->nodes[node].vop = vop_table[this->nodes[node].vop][xb];
+		this->nodes[node].vop = QecConst::vop_table[this->nodes[node].vop][QecConst::xb];
 	}
 	return res;
 }
@@ -439,31 +439,31 @@ uint8_t Qec::measure_z(node_idx node) {
 	for (uint32_t i = 0; i < neighbors.size(); i++) {
 		this->erase_connection(node, neighbors[i]);
 		if (res) {
-			this->nodes[neighbors[i]].vop = vop_table[this->nodes[neighbors[i]].vop][za];
+			this->nodes[neighbors[i]].vop = QecConst::vop_table[this->nodes[neighbors[i]].vop][QecConst::za];
 		}
 	}
 	if (res) {
-		uint8_t right = vop_table[xa][yc];
-		this->nodes[node].vop = vop_table[this->nodes[node].vop][right];
+		uint8_t right = QecConst::vop_table[QecConst::xa][QecConst::yc];
+		this->nodes[node].vop = QecConst::vop_table[this->nodes[node].vop][right];
 	} else {
-		this->nodes[node].vop = vop_table[this->nodes[node].vop][yc];
+		this->nodes[node].vop = QecConst::vop_table[this->nodes[node].vop][QecConst::yc];
 	}
 	return res;
 }
 
 const char *Qec::phase_to_str(uint8_t code) {
 	switch (code) {
-		case PLUS:
+		case QecConst::PLUS:
 			return "+";
-		case MINUS:
+		case QecConst::MINUS:
 			return "-";
-		case PLUS_I:
+		case QecConst::PLUS_I:
 			return "+i";
-		case MINUS_I:
+		case QecConst::MINUS_I:
 			return "-i";
-		case ONE:
+		case QecConst::ONE:
 			return "1";
-		case ZERO:
+		case QecConst::ZERO:
 			return "0";
 	}
 	return "?";

@@ -19,6 +19,15 @@
 
 #define BLOCK_BITS 6
 #define node_idx uint32_t
+
+namespace QecConst {
+constexpr uint8_t PLUS = 0;
+constexpr uint8_t MINUS = 1;
+constexpr uint8_t PLUS_I = 2;
+constexpr uint8_t MINUS_I = 3;
+constexpr uint8_t ONE = 4;
+constexpr uint8_t ZERO = 5;
+
 const int ia = 0;
 const int xa = 1;
 const int ya = 2;
@@ -43,83 +52,6 @@ const int il = 20;
 const int xf = 21;
 const int yf = 22;
 const int zf = 23;
-
-constexpr uint8_t PLUS = 0;
-constexpr uint8_t MINUS = 1;
-constexpr uint8_t PLUS_I = 2;
-constexpr uint8_t MINUS_I = 3;
-constexpr uint8_t ONE = 4;
-constexpr uint8_t ZERO = 5;
-
-struct QecNode {
-	uint8_t vop = ia;
-	std::vector<node_idx> adjacent;
-};
-
-class Qec : public RefCounted {
-	GDCLASS(Qec, RefCounted);
-
-	bool initialized;
-	node_idx qubit_count;
-	std::vector<QecNode> nodes;
-
-protected:
-	// godot helper functions
-	static void _bind_methods();
-
-	void remove_VOP(node_idx a, node_idx b);
-	void local_complementation(node_idx a);
-	void erase_connection(node_idx a, node_idx b);
-	void toggle_edge(node_idx i, node_idx j);
-	bool has_edge(node_idx a, node_idx b) const;
-	uint8_t measure_x(node_idx node);
-	uint8_t measure_y(node_idx node);
-	uint8_t measure_z(node_idx node);
-	// measure in the Z basis (|0> or |1>)
-	// 0b00 = |0> (random)
-	// 0b01 = |1> (random)
-	// 0b10 = |0> (deterministic)
-	// 0b11 = |1> (deterministic)
-	uint8_t measure(node_idx node, uint8_t basis = za);
-
-	void compute_entanglement_group_vec(node_idx seed, std::vector<node_idx> &out) const;
-	static inline PackedInt32Array pack_vector(const std::vector<node_idx> &v);
-	mutable std::vector<uint8_t> bfs_seen_; // scratch buffer to avoid per-call allocations ( but thread-unsafe)
-
-public:
-	// qubit gates for godot to use
-	void cnot(node_idx control, node_idx target); // CNOT
-	void hadamard(node_idx target); // H
-	void phase(node_idx target); // S
-	void phase_dag(node_idx target); // S^+ = S S S
-	void xgate(node_idx target); // X = H S S H
-	void ygate(node_idx target); // Y = X Y = H S S H S S
-	void zgate(node_idx target); // Z = S S
-	void cphase(node_idx control, node_idx target); // CZ = H_target CNOT H_target
-	uint8_t get_vop(node_idx node);
-	PackedInt32Array get_adjacent(node_idx node);
-
-	uint8_t mx(node_idx node);
-	uint8_t my(node_idx node);
-	uint8_t mz(node_idx node);
-
-	void relax(node_idx node);
-	const char *phase_to_str(uint8_t code);
-
-	PackedByteArray peek_measure_random(PackedInt32Array meas_nodes);
-	uint8_t peek_determinism(node_idx node);
-
-	// snapshot of entanglement group
-	PackedInt32Array get_entanglement_group(node_idx seed) const; // BFS to get connected component
-	Dictionary snapshot_entanglement_group(node_idx seed) const; // snapshot vops + edges for redo
-	void restore_entanglement_group(const Dictionary &snapshot); // restore vops + edges for undo
-
-	// initialisation
-	Qec();
-	void init(node_idx qubit_amount);
-};
-
-bool contains(std::vector<node_idx> vec, node_idx val);
 
 const uint32_t SYMMETRIES = 24;
 // I = Ia
@@ -1454,3 +1386,74 @@ const uint8_t cphase_table[2][SYMMETRIES][SYMMETRIES][3] = {
 			},
 	},
 };
+} //namespace QecConst
+
+struct QecNode {
+	uint8_t vop = QecConst::ia;
+	std::vector<node_idx> adjacent;
+};
+
+class Qec : public RefCounted {
+	GDCLASS(Qec, RefCounted);
+
+	bool initialized;
+	node_idx qubit_count;
+	std::vector<QecNode> nodes;
+
+protected:
+	// godot helper functions
+	static void _bind_methods();
+
+	void remove_VOP(node_idx a, node_idx b);
+	void local_complementation(node_idx a);
+	void erase_connection(node_idx a, node_idx b);
+	void toggle_edge(node_idx i, node_idx j);
+	bool has_edge(node_idx a, node_idx b) const;
+	uint8_t measure_x(node_idx node);
+	uint8_t measure_y(node_idx node);
+	uint8_t measure_z(node_idx node);
+	// measure in the Z basis (|0> or |1>)
+	// 0b00 = |0> (random)
+	// 0b01 = |1> (random)
+	// 0b10 = |0> (deterministic)
+	// 0b11 = |1> (deterministic)
+	uint8_t measure(node_idx node, uint8_t basis = QecConst::za);
+
+	void compute_entanglement_group_vec(node_idx seed, std::vector<node_idx> &out) const;
+	static inline PackedInt32Array pack_vector(const std::vector<node_idx> &v);
+	mutable std::vector<uint8_t> bfs_seen_; // scratch buffer to avoid per-call allocations ( but thread-unsafe)
+
+public:
+	// qubit gates for godot to use
+	void cnot(node_idx control, node_idx target); // CNOT
+	void hadamard(node_idx target); // H
+	void phase(node_idx target); // S
+	void phase_dag(node_idx target); // S^+ = S S S
+	void xgate(node_idx target); // X = H S S H
+	void ygate(node_idx target); // Y = X Y = H S S H S S
+	void zgate(node_idx target); // Z = S S
+	void cphase(node_idx control, node_idx target); // CZ = H_target CNOT H_target
+	uint8_t get_vop(node_idx node);
+	PackedInt32Array get_adjacent(node_idx node);
+
+	uint8_t mx(node_idx node);
+	uint8_t my(node_idx node);
+	uint8_t mz(node_idx node);
+
+	void relax(node_idx node);
+	const char *phase_to_str(uint8_t code);
+
+	PackedByteArray peek_measure_random(PackedInt32Array meas_nodes);
+	uint8_t peek_determinism(node_idx node);
+
+	// snapshot of entanglement group
+	PackedInt32Array get_entanglement_group(node_idx seed) const; // BFS to get connected component
+	Dictionary snapshot_entanglement_group(node_idx seed) const; // snapshot vops + edges for redo
+	void restore_entanglement_group(const Dictionary &snapshot); // restore vops + edges for undo
+
+	// initialisation
+	Qec();
+	void init(node_idx qubit_amount);
+};
+
+bool contains(std::vector<node_idx> vec, node_idx val);

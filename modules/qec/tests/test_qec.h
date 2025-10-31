@@ -167,7 +167,7 @@ TEST_CASE("[Modules][Qec] Bell: determinism of partner after Z on first") {
 	Ref<Qec> q = memnew(Qec);
 	q->init(2);
 
-	// entanglement 
+	// entanglement
 	q->hadamard(0);
 	q->cnot(0, 1);
 
@@ -272,7 +272,7 @@ TEST_CASE("[Modules][Qec] GHZ collapse after Z on leaf PARITY") {
 
 	// measure leaf (q1) get VOP before measuring to compute zeta1.
 	uint8_t v1_pre = q->get_vop(1);
-	uint8_t z1 = zeta_for(v1_pre, za); // 0 or 2
+	uint8_t z1 = zeta_for(v1_pre, QecConst::za); // 0 or 2
 	uint8_t m1 = q->mz(1);
 	uint8_t r1 = (m1 & 1);
 	uint8_t fr1 = r1 ^ (z1 == 2); // frame-invariant Z bit for qubit 1
@@ -285,14 +285,14 @@ TEST_CASE("[Modules][Qec] GHZ collapse after Z on leaf PARITY") {
 
 	// q0 compute zeta from its VOP before measuring 0
 	uint8_t v0_pre = q->get_vop(0);
-	uint8_t z0 = zeta_for(v0_pre, za);
+	uint8_t z0 = zeta_for(v0_pre, QecConst::za);
 	uint8_t m0 = q->mz(0);
 	uint8_t r0 = (m0 & 1);
 	uint8_t fr0 = r0 ^ (z0 == 2);
 
 	// same for q2
 	uint8_t v2_pre = q->get_vop(2);
-	uint8_t z2 = zeta_for(v2_pre, za);
+	uint8_t z2 = zeta_for(v2_pre, QecConst::za);
 	uint8_t m2 = q->mz(2);
 	uint8_t r2 = (m2 & 1);
 	uint8_t fr2 = r2 ^ (z2 == 2);
@@ -307,7 +307,6 @@ TEST_CASE("[Modules][Qec] GHZ collapse after Z on leaf PARITY") {
 	CHECK((q->mz(2) & 1) == r2);
 }
 
-
 // some helpers ---
 
 static inline PackedInt32Array sort_copy(const PackedInt32Array &a) {
@@ -317,7 +316,7 @@ static inline PackedInt32Array sort_copy(const PackedInt32Array &a) {
 		tmp[i] = b[i];
 	}
 	std::sort(tmp.begin(), tmp.end());
-	for (int i = 0; i < (int)tmp.size(); ++i){
+	for (int i = 0; i < (int)tmp.size(); ++i) {
 		b.set(i, tmp[i]);
 	}
 	return b;
@@ -325,20 +324,26 @@ static inline PackedInt32Array sort_copy(const PackedInt32Array &a) {
 
 static inline bool adj_eq_as_set(const PackedInt32Array &adj, std::initializer_list<int> expect) {
 	std::vector<int> lhs(adj.size());
-	for (int i = 0; i < adj.size(); ++i) lhs[i] = adj[i];
+	for (int i = 0; i < adj.size(); ++i) {
+		lhs[i] = adj[i];
+	}
 	std::sort(lhs.begin(), lhs.end());
 	std::vector<int> rhs(expect);
 	std::sort(rhs.begin(), rhs.end());
 	return lhs == rhs;
 }
 
-static inline std::vector<std::pair<int,int>> normalize_edge_pairs(const PackedInt32Array &flat /* [u0,v0,u1,v1,...] */) {
-	std::vector<std::pair<int,int>> out;
+static inline std::vector<std::pair<int, int>> normalize_edge_pairs(const PackedInt32Array &flat /* [u0,v0,u1,v1,...] */) {
+	std::vector<std::pair<int, int>> out;
 	out.reserve(flat.size() / 2);
 	for (int i = 0; i + 1 < flat.size(); i += 2) {
-		int a = flat[i], b = flat[i+1];
-		if (a == b) continue;
-		if (b < a) std::swap(a, b);
+		int a = flat[i], b = flat[i + 1];
+		if (a == b) {
+			continue;
+		}
+		if (b < a) {
+			std::swap(a, b);
+		}
 		out.emplace_back(a, b);
 	}
 	std::sort(out.begin(), out.end());
@@ -346,16 +351,18 @@ static inline std::vector<std::pair<int,int>> normalize_edge_pairs(const PackedI
 	return out;
 }
 
-static inline bool edge_set_equals(const PackedInt32Array &flat, std::initializer_list<std::pair<int,int>> expect_pairs) {
+static inline bool edge_set_equals(const PackedInt32Array &flat, std::initializer_list<std::pair<int, int>> expect_pairs) {
 	auto got = normalize_edge_pairs(flat);
-	std::vector<std::pair<int,int>> exp(expect_pairs);
-	for (auto &p : exp) if (p.second < p.first) std::swap(p.first, p.second);
+	std::vector<std::pair<int, int>> exp(expect_pairs);
+	for (auto &p : exp) {
+		if (p.second < p.first) {
+			std::swap(p.first, p.second);
+		}
+	}
 	std::sort(exp.begin(), exp.end());
 	exp.erase(std::unique(exp.begin(), exp.end()), exp.end());
 	return got == exp;
 }
-
-
 
 TEST_CASE("[Modules][Qec] Entanglement group test Bell collapse") {
 	Ref<Qec> q = memnew(Qec);
@@ -368,14 +375,14 @@ TEST_CASE("[Modules][Qec] Entanglement group test Bell collapse") {
 	{
 		auto g0 = q->get_entanglement_group(0);
 		auto g1 = q->get_entanglement_group(1);
-		CHECK(sort_copy(g0) == PackedInt32Array{0,1});
-		CHECK(sort_copy(g1) == PackedInt32Array{0,1});
+		CHECK(sort_copy(g0) == PackedInt32Array{ 0, 1 });
+		CHECK(sort_copy(g1) == PackedInt32Array{ 0, 1 });
 	}
 
 	// Collapse
 	(void)q->mz(0);
-	CHECK(sort_copy(q->get_entanglement_group(0)) == PackedInt32Array{0});
-	CHECK(sort_copy(q->get_entanglement_group(1)) == PackedInt32Array{1});
+	CHECK(sort_copy(q->get_entanglement_group(0)) == PackedInt32Array{ 0 });
+	CHECK(sort_copy(q->get_entanglement_group(1)) == PackedInt32Array{ 1 });
 }
 
 TEST_CASE("[Modules][Qec] Snapshot contents GHZ star {0,1,2}") {
@@ -388,15 +395,15 @@ TEST_CASE("[Modules][Qec] Snapshot contents GHZ star {0,1,2}") {
 	q->cnot(0, 2);
 
 	// check star shape
-	CHECK(adj_eq_as_set(q->get_adjacent(0), {1,2}));
-	CHECK(adj_eq_as_set(q->get_adjacent(1), {0}));
-	CHECK(adj_eq_as_set(q->get_adjacent(2), {0}));
+	CHECK(adj_eq_as_set(q->get_adjacent(0), { 1, 2 }));
+	CHECK(adj_eq_as_set(q->get_adjacent(1), { 0 }));
+	CHECK(adj_eq_as_set(q->get_adjacent(2), { 0 }));
 
 	Dictionary snap = q->snapshot_entanglement_group(0);
 
 	// nodes field must be the whole component {0,1,2}
 	PackedInt32Array nodes = snap["nodes"];
-	CHECK(sort_copy(nodes) == PackedInt32Array{0,1,2});
+	CHECK(sort_copy(nodes) == PackedInt32Array{ 0, 1, 2 });
 
 	// vops must match live vops in same order as 'nodes'
 	PackedByteArray vops = snap["vops"];
@@ -407,7 +414,7 @@ TEST_CASE("[Modules][Qec] Snapshot contents GHZ star {0,1,2}") {
 
 	// edges must contain exactly (0,1) and (0,2), nothing else
 	PackedInt32Array edges = snap["edges"];
-	CHECK(edge_set_equals(edges, {{0,1}, {0,2}}));
+	CHECK(edge_set_equals(edges, { { 0, 1 }, { 0, 2 } }));
 }
 
 TEST_CASE("[Modules][Qec] Undo collapse on Bell via snapshot/restore") {
@@ -424,7 +431,7 @@ TEST_CASE("[Modules][Qec] Undo collapse on Bell via snapshot/restore") {
 	uint8_t v0 = q->get_vop(0), v1 = q->get_vop(1);
 	PackedInt32Array a0 = q->get_adjacent(0), a1 = q->get_adjacent(1);
 
-	// Collapse 
+	// Collapse
 	(void)q->mz(0);
 	CHECK(adj_eq_as_set(q->get_adjacent(0), {}));
 	CHECK(adj_eq_as_set(q->get_adjacent(1), {}));
@@ -496,8 +503,8 @@ TEST_CASE("[Modules][Qec] Restore removes edges that were added to the group lat
 	// Restore should drop the 0-2 edge and revert to the original {0,1} only
 	q->restore_entanglement_group(snap);
 
-	CHECK(adj_eq_as_set(q->get_adjacent(0), {1}));
-	CHECK(adj_eq_as_set(q->get_adjacent(1), {0}));
+	CHECK(adj_eq_as_set(q->get_adjacent(0), { 1 }));
+	CHECK(adj_eq_as_set(q->get_adjacent(1), { 0 }));
 	CHECK(adj_eq_as_set(q->get_adjacent(2), {}));
 }
 
