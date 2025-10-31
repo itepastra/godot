@@ -120,7 +120,7 @@ void Qec::remove_VOP(node_idx a, node_idx b) {
 	}
 	std::vector<uint8_t> decomp = QecConst::decompositions[this->nodes[a].vop];
 
-	for (uint32_t i = decomp.size() - 1; i >= 0; i--) {
+	for (int32_t i = decomp.size() - 1; i >= 0; i--) {
 		if (i > 10) { // There is a very weird bug I feel, but maybe it has a reason, anyways, this fixes it
 			break;
 		}
