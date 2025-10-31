@@ -271,11 +271,12 @@ TEST_CASE("[Modules][Qec] GHZ collapse after Z on leaf PARITY") {
 	q->cnot(0, 2);
 
 	// measure leaf (q1) get VOP before measuring to compute zeta1.
-	uint8_t v1_pre = q->get_vop(1);
-	uint8_t z1 = zeta_for(v1_pre, QecConst::za); // 0 or 2
-	uint8_t m1 = q->mz(1);
-	uint8_t r1 = (m1 & 1);
-	uint8_t fr1 = r1 ^ (z1 == 2); // frame-invariant Z bit for qubit 1
+	// uint8_t v1_pre = q->get_vop(1);
+	// uint8_t z1 = zeta_for(v1_pre, QecConst::za); // 0 or 2
+	// uint8_t m1 = q->mz(1);
+	// uint8_t r1 = (m1 & 1);
+	// uint8_t fr1 = r1 ^ (z1 == 2); // frame-invariant Z bit for qubit 1
+	q->mz(1);
 
 	// after measuring q1, 0 and 2 should be deterministic and not entangled
 	CHECK(q->get_adjacent(0) == PackedInt32Array{});
@@ -284,18 +285,18 @@ TEST_CASE("[Modules][Qec] GHZ collapse after Z on leaf PARITY") {
 	CHECK(q->peek_determinism(2) == 2);
 
 	// q0 compute zeta from its VOP before measuring 0
-	uint8_t v0_pre = q->get_vop(0);
-	uint8_t z0 = zeta_for(v0_pre, QecConst::za);
+	// uint8_t v0_pre = q->get_vop(0);
+	// uint8_t z0 = zeta_for(v0_pre, QecConst::za);
 	uint8_t m0 = q->mz(0);
 	uint8_t r0 = (m0 & 1);
-	uint8_t fr0 = r0 ^ (z0 == 2);
+	// uint8_t fr0 = r0 ^ (z0 == 2);
 
 	// same for q2
-	uint8_t v2_pre = q->get_vop(2);
-	uint8_t z2 = zeta_for(v2_pre, QecConst::za);
+	// uint8_t v2_pre = q->get_vop(2);
+	// uint8_t z2 = zeta_for(v2_pre, QecConst::za);
 	uint8_t m2 = q->mz(2);
 	uint8_t r2 = (m2 & 1);
-	uint8_t fr2 = r2 ^ (z2 == 2);
+	// uint8_t fr2 = r2 ^ (z2 == 2);
 
 	// // strict GHZ parity in the computational basis:
 	// // frame-invariant bits must match the leaf's frame-invariant bit
