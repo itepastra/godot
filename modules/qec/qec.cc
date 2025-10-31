@@ -230,6 +230,8 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 	std::vector<QecNode> before_state = this->nodes;
 	PackedByteArray res;
 
+	uint8_t dir = (rand() % 3) + 1;
+
 	for (auto node = meas_nodes.begin(); node != meas_nodes.end(); ++node) {
 		uint8_t det = this->peek_determinism(*node);
 		uint8_t resp;
@@ -251,8 +253,6 @@ PackedByteArray Qec::peek_measure_random(PackedInt32Array meas_nodes) {
 				res.append(resp & 0b11111);
 				break;
 			case 3:
-				// choose a random direction
-				uint8_t dir = (rand() % 3) + 1;
 				this->measure(*node, dir);
 				resp = this->nodes[*node].vop | (dir << 5);
 				res.append(resp & 0b11111);
