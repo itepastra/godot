@@ -424,9 +424,9 @@ uint8_t Qec::measure_y(node_idx node) {
 		}
 	}
 	if (res) {
-		this->nodes[node].vop = QecConst::vop_table[this->nodes[node].vop][QecConst::yb];
-	} else {
 		this->nodes[node].vop = QecConst::vop_table[this->nodes[node].vop][QecConst::xb];
+	} else {
+		this->nodes[node].vop = QecConst::vop_table[this->nodes[node].vop][QecConst::yb];
 	}
 	return res;
 }
