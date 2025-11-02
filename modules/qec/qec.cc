@@ -362,7 +362,7 @@ uint8_t Qec::measure_x(node_idx node) {
 	std::vector<node_idx> intersection;
 	for (uint32_t i = 0; i < node_neighbors.size(); i++) {
 		if (contains(other_neighbors, node_neighbors[i])) {
-			intersection.push_back(i);
+			intersection.push_back(node_neighbors[i]);
 		}
 	}
 
